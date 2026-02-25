@@ -134,6 +134,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max", type=int, default=15)
     ap.add_argument("--tz", default="Asia/Seoul")
+    ap.add_argument("--days", type=int, default=None, help="Gmail lookback window in days (e.g., 90)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -144,7 +145,11 @@ def main():
     state = load_state(state_path)
 
     now_local = datetime.now()
-    q = parse.urlencode({"maxResults": args.max, "q": "in:inbox", "includeSpamTrash": "false"})
+    gmail_query = "in:inbox"
+    if args.days is not None:
+        after_date = (datetime.now() - timedelta(days=args.days)).strftime("%Y/%m/%d")
+        gmail_query = f"in:inbox after:{after_date}"
+    q = parse.urlencode({"maxResults": args.max, "q": gmail_query, "includeSpamTrash": "false"})
     ids = api_json(f"{API_GMAIL}/messages?{q}", key).get("messages", [])
 
     created = skipped = errors = 0
