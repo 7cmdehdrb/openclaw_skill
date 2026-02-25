@@ -182,6 +182,7 @@ def main():
     ap.add_argument("--max", type=int, default=15)
     ap.add_argument("--tz", default="Asia/Seoul")
     ap.add_argument("--days", type=int, default=None, help="Gmail lookback window in days (e.g., 90)")
+    ap.add_argument("--ignore-state", action="store_true", help="Ignore existing processed state for this run")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -189,7 +190,11 @@ def main():
     workspace = Path(__file__).resolve().parents[3]
     state_path = workspace / "memory/gmail-calendar-sync-state.json"
     log_path = workspace / "memory/gmail-calendar-processed.jsonl"
-    state = load_state(state_path)
+    state = {
+        "thread_latest_processed": {},
+        "created_event_by_message": {},
+        "last_run_at": None,
+    } if args.ignore_state else load_state(state_path)
 
     now_local = datetime.now()
     gmail_query = "in:inbox"
