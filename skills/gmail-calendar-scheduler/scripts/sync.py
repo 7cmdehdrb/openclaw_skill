@@ -67,6 +67,7 @@ def decode_body(payload):
 
 def parse_datetime(text, now_local):
     date_obj = None
+    date_match = None
     for p in DATE_PATTERNS:
         m = p.search(text)
         if not m:
@@ -79,6 +80,7 @@ def parse_datetime(text, now_local):
             mo, d = map(int, g[-2:])
         try:
             date_obj = datetime(y, mo, d)
+            date_match = m
             break
         except ValueError:
             continue
@@ -87,7 +89,9 @@ def parse_datetime(text, now_local):
         return None, None, True
 
     hour = minute = None
-    for p in TIME_PATTERNS:
+
+    # Prefer explicit Korean time expressions first: 오전/오후, N시
+    for p in TIME_PATTERNS[1:]:
         m = p.search(text)
         if not m:
             continue
@@ -103,6 +107,19 @@ def parse_datetime(text, now_local):
             break
         elif len(g) >= 2 and g[1] is not None:
             hour, minute = int(g[0]), int(g[1])
+            break
+
+    # HH:MM is accepted only when near the detected date context (avoid email header/noise time)
+    if hour is None:
+        for m in TIME_PATTERNS[0].finditer(text):
+            hh, mm = int(m.group(1)), int(m.group(2))
+            if hh > 23 or mm > 59:
+                continue
+            if date_match is not None:
+                dist = abs(m.start() - date_match.end())
+                if dist > 40:
+                    continue
+            hour, minute = hh, mm
             break
 
     if hour is None:
