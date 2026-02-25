@@ -46,14 +46,44 @@ Update Notion portfolio rows with latest market values in a fixed sequence.
   - If `통화 == USD`, update `환율 기록` with Step 1 rate.
   - If `통화` is cash (`KRW`, `USD`) and user asked to exclude cash, skip price updates.
 
+## Retry and failure policy (required)
+
+- If refresh fails, retry up to **3 times** (max attempts = 3).
+- Use lightweight backoff between retries (e.g., 5s → 15s → 30s).
+- A failure includes: exchange-rate fetch failure, DB query/update failure, or fatal auth/object errors.
+- If any retry succeeds, report success summary normally.
+- If all 3 attempts fail, send a **final failure alert** including:
+  - failure stage (rate fetch / DB query / page update)
+  - last error message
+  - attempt count (3/3)
+  - recommended fix (e.g., re-share Notion DB to integration)
+
 ## Output to user
 
-Return a short execution summary:
+Return a short execution summary (always, including scheduled auto-runs):
 
 - Applied USD/KRW rate
-- Updated row count
-- Skipped row count
-- Skipped reasons (ticker unresolved, price fetch failed, excluded cash)
+- Retry status (attempt n/3)
+- Final alert when failed after 3/3
+
+Conditional reporting rules:
+
+- Report `Updated row count` and `Skipped row count/reasons` **only when there is an anomaly or actionable issue**.
+  - Do not mention normal cash skips (`KRW`, `USD`) by default.
+  - Mention counts/reasons when ticker unresolved, price fetch failure, unexpected skip, or update failure exists.
+- Report `3%+ move alerts` **only when at least one symbol meets threshold**.
+  - Format: `- <티커/종목명> 종목이 <N%> 상승/하락 했습니다. (이전 <A> → 현재 <B>)`
+  - Compute change from each row's `현재가` before update to new fetched `현재가`.
+  - If none meet threshold, omit this section entirely.
+
+Additionally report portfolio value delta in KRW after update:
+
+- Compute `총 평가금액 변동(원화)` as:
+  - `KRW 자산 변동합` + `(적용 환율) × (USD 자산 변동합)`
+- Where each asset delta is `(업데이트 후 가격 - 업데이트 전 가격) × 보유량`.
+- Round to nearest KRW and present sign (+/-) clearly.
+- Include a one-line alert, e.g.:
+  - `- 포트폴리오 평가금액이 +123,456원 변동했습니다. (적용 환율: 1,433.18)`
 
 ## Safety / behavior
 
