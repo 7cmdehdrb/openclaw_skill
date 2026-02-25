@@ -13,6 +13,7 @@ Scan Gmail (latest 15), detect date/time intents, and create Calendar events.
 2. Detect schedule/task intent from subject/snippet/body
 3. Create Calendar event on detected date/time
    - If time is missing, create all-day event
+   - Event title should be task/appointment intent (not raw email subject)
 4. Record processed state/log so previously handled emails are skipped
 5. Avoid reply-vs-new confusion by tracking per-thread latest message timestamp
 

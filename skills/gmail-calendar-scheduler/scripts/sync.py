@@ -23,6 +23,10 @@ TIME_PATTERNS = [
     re.compile(r"\b(\d{1,2})\s*시(?:\s*(\d{1,2})\s*분)?\b"),
 ]
 
+ACTION_PATTERNS = [
+    re.compile(r"(발표|제출|미팅|회의|면담|콜|인터뷰|점검|리뷰|보고|작성|수정|검토|요청|마감)"),
+]
+
 
 def read_key():
     k = os.getenv("MATON_API_KEY", "").strip()
@@ -107,6 +111,32 @@ def parse_datetime(text, now_local):
     start = datetime(date_obj.year, date_obj.month, date_obj.day, hour, minute)
     end = start + timedelta(hours=1)
     return start.isoformat(), end.isoformat(), False
+
+
+def derive_event_title(subject, text):
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+
+    # Prefer explicit actionable line from body/snippet
+    for l in lines[:20]:
+        if any(k in l for k in ["요청", "회의", "미팅", "면담", "콜", "인터뷰", "발표", "제출", "마감", "점검", "리뷰", "보고", "작성", "검토"]):
+            cleaned = re.sub(r"^(re:|fwd:|fw:)\s*", "", l, flags=re.IGNORECASE)
+            cleaned = re.sub(r"\s+", " ", cleaned).strip()
+            if 4 <= len(cleaned) <= 80:
+                return cleaned
+
+    # Then use subject but strip mail prefixes/brackets noise
+    s = re.sub(r"^(re:|fwd:|fw:)\s*", "", subject or "", flags=re.IGNORECASE)
+    s = re.sub(r"\[[^\]]+\]\s*", "", s).strip()
+    s = re.sub(r"\s+", " ", s)
+
+    # If subject still looks email-ish and contains action keyword, keep compact chunk
+    if s:
+        for p in ACTION_PATTERNS:
+            m = p.search(s)
+            if m:
+                return s[:80]
+
+    return (s[:80] if s else "업무 일정")
 
 
 def load_state(path):
@@ -204,9 +234,10 @@ def main():
                 })
                 continue
 
+            event_title = derive_event_title(subject, text)
             event = {
-                "summary": subject[:120] or "메일 기반 일정",
-                "description": f"Gmail 자동생성\n\nThread: {thread_id}\nMessage: {mid}\n\nSnippet:\n{snippet}",
+                "summary": event_title[:120],
+                "description": f"Gmail 자동생성\n\n원본 메일 제목: {subject}\nThread: {thread_id}\nMessage: {mid}\n\nSnippet:\n{snippet}",
             }
             if all_day:
                 d = start
@@ -227,6 +258,7 @@ def main():
             created += 1
             created_details.append({
                 "subject": subject,
+                "event_summary": event["summary"],
                 "event_id": event_id,
                 "all_day": all_day,
                 "start": event["start"],
