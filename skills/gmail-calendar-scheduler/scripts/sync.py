@@ -148,6 +148,7 @@ def main():
     ids = api_json(f"{API_GMAIL}/messages?{q}", key).get("messages", [])
 
     created = skipped = errors = 0
+    created_details = []
 
     for m in ids:
         mid = m["id"]
@@ -219,6 +220,13 @@ def main():
 
             state["thread_latest_processed"][thread_id] = internal_ms
             created += 1
+            created_details.append({
+                "subject": subject,
+                "event_id": event_id,
+                "all_day": all_day,
+                "start": event["start"],
+                "end": event["end"],
+            })
             append_jsonl(log_path, {
                 "processed_at": datetime.now(timezone.utc).isoformat(),
                 "message_id": mid,
@@ -246,6 +254,7 @@ def main():
     print(json.dumps({
         "scanned": len(ids),
         "created": created,
+        "created_details": created_details,
         "skipped": skipped,
         "errors": errors,
         "state": str(state_path),

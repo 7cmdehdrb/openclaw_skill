@@ -71,5 +71,6 @@ If date found and time missing, create all-day event.
 
 - scanned messages
 - newly created events
+- created details: `메일 제목 -> 생성 일정(start/end, all-day, event_id)`
 - skipped (already processed / no parseable date / no intent)
 - errors
