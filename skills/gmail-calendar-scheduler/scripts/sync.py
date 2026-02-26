@@ -130,6 +130,37 @@ def llm_schedule_judgment(subject, snippet, body):
     return {"is_schedule": is_schedule, "confidence": round(confidence, 4), "reason": reason}
 
 
+def clean_email_text(subject, snippet, body):
+    raw = "\n".join([subject or "", snippet or "", body or ""])
+    lines = []
+    for ln in raw.splitlines():
+        s = ln.strip()
+        if not s:
+            continue
+        low = s.lower()
+        # Remove quoted/reply header lines and email metadata noise
+        if low.startswith('on ') and 'wrote:' in low:
+            continue
+        if re.search(r"\d{4}년\s*\d{1,2}월\s*\d{1,2}일.*님이\s*작성", s):
+            continue
+        if low.startswith('from:') or low.startswith('sent:') or low.startswith('to:') or low.startswith('subject:'):
+            continue
+        if s.startswith('>'):
+            continue
+        lines.append(s)
+    return "\n".join(lines)
+
+
+def hard_exclude_informational(text):
+    low = (text or '').lower()
+    patterns = [
+        '취소 완료', '처리 완료', '안내드립니다', '참고 바랍니다', '계정', '인증',
+        'verify your email', 'verify your account', 'newsletters', 'newsletter', 'issue covers',
+        'explore sensors', 'author experience', '광고', '프로모션', '구독'
+    ]
+    return any(p in low for p in patterns)
+
+
 def parse_datetime(text, now_local):
     date_obj = None
     date_match = None
@@ -198,28 +229,28 @@ def parse_datetime(text, now_local):
 def derive_event_title(subject, text):
     lines = [l.strip() for l in text.splitlines() if l.strip()]
 
-    # Prefer explicit actionable line from body/snippet
-    for l in lines[:20]:
-        if any(k in l for k in ["요청", "회의", "미팅", "면담", "콜", "인터뷰", "발표", "제출", "마감", "점검", "리뷰", "보고", "작성", "검토"]):
-            cleaned = re.sub(r"^(re:|fwd:|fw:)\s*", "", l, flags=re.IGNORECASE)
-            cleaned = re.sub(r"\s+", " ", cleaned).strip()
-            if 4 <= len(cleaned) <= 80:
-                return cleaned
+    # Build action-style title from actionable lines
+    for l in lines[:25]:
+        if any(k in l for k in ["요청", "회의", "미팅", "면담", "콜", "인터뷰", "발표", "제출", "마감", "점검", "리뷰", "보고", "작성", "검토", "사양"]):
+            cleaned = re.sub(r"\[[^\]]+\]", "", l)
+            cleaned = re.sub(r"^(re:|fwd:|fw:)\s*", "", cleaned, flags=re.IGNORECASE)
+            cleaned = re.sub(r"(안내드립니다|참고 바랍니다|처리 완료|취소 완료)", "", cleaned)
+            cleaned = re.sub(r"\s+", " ", cleaned).strip(" -:,")
+            if 5 <= len(cleaned) <= 60:
+                # normalize to action-like noun phrase
+                if "요청" in cleaned and not cleaned.endswith("요청"):
+                    return cleaned[:60]
+                return cleaned[:60]
 
-    # Then use subject but strip mail prefixes/brackets noise
+    # fallback to compact non-mail-ish phrase
     s = re.sub(r"^(re:|fwd:|fw:)\s*", "", subject or "", flags=re.IGNORECASE)
     s = re.sub(r"\[[^\]]+\]\s*", "", s).strip()
-    s = re.sub(r"\s+", " ", s)
+    s = re.sub(r"(안내드립니다|참고 바랍니다|처리 완료|취소 완료)", "", s)
+    s = re.sub(r"\s+", " ", s).strip(" -:,")
 
-    # If subject still looks email-ish and contains action keyword, keep compact chunk
-    if s:
-        for p in ACTION_PATTERNS:
-            m = p.search(s)
-            if m:
-                return s[:80]
-
-    return (s[:80] if s else "업무 일정")
-
+    if s and len(s) >= 3:
+        return ("업무: " + s[:40]).strip()
+    return "업무 일정"
 
 def load_state(path):
     if not path.exists():
@@ -292,10 +323,24 @@ def main():
             subject = headers.get("Subject", "")
             snippet = msg.get("snippet", "")
             body = decode_body(msg.get("payload", {}))
-            text = "\n".join([subject, snippet, body])
+            text = clean_email_text(subject, snippet, body)
+
+            # hard exclude obvious informational/marketing mails
+            if hard_exclude_informational(text):
+                state["thread_latest_processed"][thread_id] = internal_ms
+                skipped += 1
+                append_jsonl(log_path, {
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                    "message_id": mid,
+                    "thread_id": thread_id,
+                    "subject": subject,
+                    "action": "skip",
+                    "reason": "hard_exclude_informational",
+                })
+                continue
 
             # LLM-style semantic judgment for schedule/task intent
-            llm_judge = llm_schedule_judgment(subject, snippet, body)
+            llm_judge = llm_schedule_judgment(subject, snippet, text)
             if not llm_judge["is_schedule"]:
                 state["thread_latest_processed"][thread_id] = internal_ms
                 skipped += 1
