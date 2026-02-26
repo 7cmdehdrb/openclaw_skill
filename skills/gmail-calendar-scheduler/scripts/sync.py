@@ -151,14 +151,37 @@ def clean_email_text(subject, snippet, body):
     return "\n".join(lines)
 
 
-def hard_exclude_informational(text):
-    low = (text or '').lower()
+def hard_exclude_informational(subject, text, from_addr=''):
+    low = ((subject or '') + '\n' + (text or '') + '\n' + (from_addr or '')).lower()
     patterns = [
-        '취소 완료', '처리 완료', '안내드립니다', '참고 바랍니다', '계정', '인증',
-        'verify your email', 'verify your account', 'newsletters', 'newsletter', 'issue covers',
-        'explore sensors', 'author experience', '광고', '프로모션', '구독'
+        '취소 완료', '처리 완료', '안내드립니다', '참고 바랍니다', '회신 드립니다', '답변드립니다',
+        '계정', '인증', 'verify your email', 'verify your account', 'confirm your email',
+        'newsletter', 'newsletters', 'issue covers', 'explore sensors', 'springer nature',
+        'author experience', '광고', '프로모션', '구독', 'unsubscribe',
+        '수강 신청 문의의 건', '문의의 건'
     ]
-    return any(p in low for p in patterns)
+    sender_patterns = ['no-reply', 'noreply', 'newsletter', 'springer', 'mdpi', 'sensors', 'google']
+    if any(p in low for p in patterns):
+        return True
+    if any(p in (from_addr or '').lower() for p in sender_patterns):
+        return True
+    return False
+
+
+def needs_action(text):
+    low = (text or '').lower()
+    positive = ['요청', '필요', '검토 부탁', '회신 부탁', '제출', '작성', '마감', '확인 요청', '사양 확인', '리뷰 부탁']
+    negative = ['안내드립니다', '참고 바랍니다', '처리 완료', '취소 완료', '답변 드립니다', '회신드립니다', '완료했습니다']
+    return any(p in low for p in positive) and not any(n in low for n in negative)
+
+
+def has_explicit_date_or_time(text):
+    if not text:
+        return False
+    for p in DATE_PATTERNS + TIME_PATTERNS:
+        if p.search(text):
+            return True
+    return False
 
 
 def parse_datetime(text, now_local):
@@ -227,30 +250,38 @@ def parse_datetime(text, now_local):
 
 
 def derive_event_title(subject, text):
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    t = (text or '')
+    s = (subject or '')
 
-    # Build action-style title from actionable lines
-    for l in lines[:25]:
-        if any(k in l for k in ["요청", "회의", "미팅", "면담", "콜", "인터뷰", "발표", "제출", "마감", "점검", "리뷰", "보고", "작성", "검토", "사양"]):
+    # Intent-first concise title mapping
+    if '사양' in t and ('검토' in t or '리뷰' in t or '확인' in t):
+        return '최종 사양서 리뷰'
+    if '입찰' in t and '사양' in t:
+        return '입찰 사양 검토'
+    if '최종보고서' in t and ('작성' in t or '제출' in t):
+        return '최종보고서 작성'
+    if '최종발표' in t and ('작성' in t or '준비' in t):
+        return '최종발표 자료 준비'
+    if '요청자료' in t and ('전달' in t or '제출' in t):
+        return '요청자료 전달'
+    if '재요청' in t:
+        return '재요청 건 확인'
+
+    # Generic extraction from actionable line
+    lines = [l.strip() for l in t.splitlines() if l.strip()]
+    for l in lines[:20]:
+        if any(k in l for k in ['요청','검토','작성','제출','마감','회의','미팅','면담','리뷰','확인']):
             cleaned = re.sub(r"\[[^\]]+\]", "", l)
             cleaned = re.sub(r"^(re:|fwd:|fw:)\s*", "", cleaned, flags=re.IGNORECASE)
-            cleaned = re.sub(r"(안내드립니다|참고 바랍니다|처리 완료|취소 완료)", "", cleaned)
+            cleaned = re.sub(r"(안내드립니다|참고 바랍니다|처리 완료|취소 완료|회신 드립니다|답변드립니다)", "", cleaned)
             cleaned = re.sub(r"\s+", " ", cleaned).strip(" -:,")
-            if 5 <= len(cleaned) <= 60:
-                # normalize to action-like noun phrase
-                if "요청" in cleaned and not cleaned.endswith("요청"):
-                    return cleaned[:60]
-                return cleaned[:60]
+            if 4 <= len(cleaned) <= 30:
+                return cleaned
 
-    # fallback to compact non-mail-ish phrase
-    s = re.sub(r"^(re:|fwd:|fw:)\s*", "", subject or "", flags=re.IGNORECASE)
-    s = re.sub(r"\[[^\]]+\]\s*", "", s).strip()
-    s = re.sub(r"(안내드립니다|참고 바랍니다|처리 완료|취소 완료)", "", s)
-    s = re.sub(r"\s+", " ", s).strip(" -:,")
-
-    if s and len(s) >= 3:
-        return ("업무: " + s[:40]).strip()
-    return "업무 일정"
+    base = re.sub(r"^(re:|fwd:|fw:)\s*", "", s, flags=re.IGNORECASE)
+    base = re.sub(r"\[[^\]]+\]\s*", "", base)
+    base = re.sub(r"\s+", " ", base).strip()
+    return (base[:24] + ' 업무') if base else '업무 일정'
 
 def load_state(path):
     if not path.exists():
@@ -321,12 +352,13 @@ def main():
 
             headers = {h.get("name", ""): h.get("value", "") for h in msg.get("payload", {}).get("headers", [])}
             subject = headers.get("Subject", "")
+            from_addr = headers.get("From", "")
             snippet = msg.get("snippet", "")
             body = decode_body(msg.get("payload", {}))
             text = clean_email_text(subject, snippet, body)
 
             # hard exclude obvious informational/marketing mails
-            if hard_exclude_informational(text):
+            if hard_exclude_informational(subject, text, from_addr):
                 state["thread_latest_processed"][thread_id] = internal_ms
                 skipped += 1
                 append_jsonl(log_path, {
@@ -336,6 +368,20 @@ def main():
                     "subject": subject,
                     "action": "skip",
                     "reason": "hard_exclude_informational",
+                })
+                continue
+
+            # Must be actionable, not just conversational/info mail
+            if not needs_action(text):
+                state["thread_latest_processed"][thread_id] = internal_ms
+                skipped += 1
+                append_jsonl(log_path, {
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                    "message_id": mid,
+                    "thread_id": thread_id,
+                    "subject": subject,
+                    "action": "skip",
+                    "reason": "not_actionable",
                 })
                 continue
 
@@ -356,10 +402,10 @@ def main():
                 })
                 continue
 
-            start, end, all_day = parse_datetime(text, now_local)
+            explicit_dt = has_explicit_date_or_time(text)
+            start, end, all_day = parse_datetime(text, now_local) if explicit_dt else (None, None, True)
             if not start:
-                # ASAP rule: if schedule intent but no explicit date/time,
-                # create all-day event covering received day ~ +1 day (2-day window)
+                # ASAP rule: schedule intent but no reliable explicit date/time
                 received_local = datetime.fromtimestamp(internal_ms / 1000, tz=timezone.utc).astimezone(ZoneInfo(args.tz))
                 day0 = received_local.date().isoformat()
                 day2 = (received_local.date() + timedelta(days=2)).isoformat()  # end is exclusive
