@@ -5,13 +5,13 @@ import json
 import os
 import re
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib import parse, request
 
 API_GMAIL = "https://gateway.maton.ai/google-mail/gmail/v1/users/me"
 API_CAL = "https://gateway.maton.ai/google-calendar/calendar/v3/calendars/primary/events"
 
-INTENT_RE = re.compile(r"(회의|미팅|약속|일정|면담|콜|call|meeting|appointment|deadline)", re.IGNORECASE)
 DATE_PATTERNS = [
     re.compile(r"(20\d{2})[/-](\d{1,2})[/-](\d{1,2})"),
     re.compile(r"(\d{1,2})[/-](\d{1,2})"),
@@ -63,6 +63,98 @@ def decode_body(payload):
         if txt:
             return txt
     return ""
+
+
+def tokenize(text):
+    text = (text or "").lower()
+    # keep Korean/English/number tokens
+    return re.findall(r"[a-zA-Z0-9가-힣]+", text)
+
+
+def train_nb_from_logs(log_path):
+    """Train a tiny multinomial Naive Bayes from historical processed logs.
+    Positive: create_event, Negative: skip/no_intent_keyword/no_date_detected.
+    """
+    pos_counts = {}
+    neg_counts = {}
+    pos_docs = neg_docs = 0
+
+    if not log_path.exists():
+        return None
+
+    for line in log_path.read_text(encoding="utf-8").splitlines():
+        try:
+            o = json.loads(line)
+        except Exception:
+            continue
+        subject = o.get("subject", "")
+        reason = o.get("reason", "")
+        action = o.get("action", "")
+
+        label = None
+        if action in ("create_event", "dry_run_create"):
+            label = 1
+        elif action == "skip" and reason in ("no_intent_keyword", "no_date_detected"):
+            label = 0
+        if label is None:
+            continue
+
+        tokens = tokenize(subject)
+        if not tokens:
+            continue
+
+        if label == 1:
+            pos_docs += 1
+            for t in tokens:
+                pos_counts[t] = pos_counts.get(t, 0) + 1
+        else:
+            neg_docs += 1
+            for t in tokens:
+                neg_counts[t] = neg_counts.get(t, 0) + 1
+
+    if pos_docs < 3 or neg_docs < 3:
+        return None
+
+    vocab = set(pos_counts.keys()) | set(neg_counts.keys())
+    return {
+        "pos_counts": pos_counts,
+        "neg_counts": neg_counts,
+        "pos_docs": pos_docs,
+        "neg_docs": neg_docs,
+        "vocab_size": max(len(vocab), 1),
+        "pos_total": max(sum(pos_counts.values()), 1),
+        "neg_total": max(sum(neg_counts.values()), 1),
+    }
+
+
+def nb_predict_schedule_prob(model, text):
+    if model is None:
+        return 0.0
+    tokens = tokenize(text)
+    if not tokens:
+        return 0.0
+
+    import math
+    pos_prior = model["pos_docs"] / (model["pos_docs"] + model["neg_docs"])
+    neg_prior = 1.0 - pos_prior
+    log_pos = math.log(max(pos_prior, 1e-9))
+    log_neg = math.log(max(neg_prior, 1e-9))
+    V = model["vocab_size"]
+
+    for t in tokens:
+        pc = model["pos_counts"].get(t, 0)
+        nc = model["neg_counts"].get(t, 0)
+        # Laplace smoothing
+        log_pos += math.log((pc + 1) / (model["pos_total"] + V))
+        log_neg += math.log((nc + 1) / (model["neg_total"] + V))
+
+    # stable sigmoid from log odds
+    z = log_pos - log_neg
+    if z >= 0:
+        ez = math.exp(-z)
+        return 1.0 / (1.0 + ez)
+    ez = math.exp(z)
+    return ez / (1.0 + ez)
 
 
 def parse_datetime(text, now_local):
@@ -207,6 +299,8 @@ def main():
     created = skipped = errors = 0
     created_details = []
 
+    ml_model = train_nb_from_logs(log_path)
+
     for m in ids:
         mid = m["id"]
         try:
@@ -229,7 +323,11 @@ def main():
             body = decode_body(msg.get("payload", {}))
             text = "\n".join([subject, snippet, body])
 
-            if not INTENT_RE.search(text):
+            # ML-based schedule classification (subject+snippet+body)
+            prob = nb_predict_schedule_prob(ml_model, text)
+            is_schedule = prob >= 0.55
+
+            if not is_schedule:
                 state["thread_latest_processed"][thread_id] = internal_ms
                 skipped += 1
                 append_jsonl(log_path, {
@@ -238,23 +336,19 @@ def main():
                     "thread_id": thread_id,
                     "subject": subject,
                     "action": "skip",
-                    "reason": "no_intent_keyword",
+                    "reason": "ml_not_schedule",
+                    "ml_schedule_prob": round(prob, 4),
                 })
                 continue
 
             start, end, all_day = parse_datetime(text, now_local)
             if not start:
-                state["thread_latest_processed"][thread_id] = internal_ms
-                skipped += 1
-                append_jsonl(log_path, {
-                    "processed_at": datetime.now(timezone.utc).isoformat(),
-                    "message_id": mid,
-                    "thread_id": thread_id,
-                    "subject": subject,
-                    "action": "skip",
-                    "reason": "no_date_detected",
-                })
-                continue
+                # ASAP rule: if schedule intent but no explicit date/time,
+                # create all-day event covering received day ~ +1 day (2-day window)
+                received_local = datetime.fromtimestamp(internal_ms / 1000, tz=timezone.utc).astimezone(ZoneInfo(args.tz))
+                day0 = received_local.date().isoformat()
+                day2 = (received_local.date() + timedelta(days=2)).isoformat()  # end is exclusive
+                start, end, all_day = day0, day2, True
 
             event_title = derive_event_title(subject, text)
             event = {
@@ -263,9 +357,11 @@ def main():
             }
             if all_day:
                 d = start
-                next_day = (datetime.fromisoformat(d) + timedelta(days=1)).date().isoformat()
+                # For parsed date without time, end may be None -> one-day all-day.
+                # For ASAP fallback, end is precomputed as +2 days (exclusive end).
+                end_day = end if end else (datetime.fromisoformat(d) + timedelta(days=1)).date().isoformat()
                 event["start"] = {"date": d}
-                event["end"] = {"date": next_day}
+                event["end"] = {"date": end_day}
             else:
                 event["start"] = {"dateTime": start, "timeZone": args.tz}
                 event["end"] = {"dateTime": end, "timeZone": args.tz}
