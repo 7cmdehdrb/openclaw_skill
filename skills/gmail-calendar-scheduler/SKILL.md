@@ -10,7 +10,7 @@ Scan Gmail (latest 15), detect date/time intents, and create Calendar events.
 ## What this skill does
 
 1. Read latest 15 Gmail messages from inbox
-2. Detect schedule/task intent from subject/snippet/body using ML classification
+2. Detect schedule/task intent from subject/snippet/body using LLM-style semantic judgment
 3. Create Calendar event on detected date/time
    - If time is missing, create all-day event
    - If date/time is missing but ML says schedule, create ASAP all-day window: mail received day ~ +1 day (2-day window)

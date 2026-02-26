@@ -65,96 +65,69 @@ def decode_body(payload):
     return ""
 
 
-def tokenize(text):
-    text = (text or "").lower()
-    # keep Korean/English/number tokens
-    return re.findall(r"[a-zA-Z0-9가-힣]+", text)
-
-
-def train_nb_from_logs(log_path):
-    """Train a tiny multinomial Naive Bayes from historical processed logs.
-    Positive: create_event, Negative: skip/no_intent_keyword/no_date_detected.
+def llm_schedule_judgment(subject, snippet, body):
+    """LLM judgment first (OpenAI-compatible), fallback to heuristic if key missing/fails.
+    Returns dict: {is_schedule: bool, confidence: float, reason: str}
     """
-    pos_counts = {}
-    neg_counts = {}
-    pos_docs = neg_docs = 0
+    text_raw = "\n".join([subject or "", snippet or "", body or ""])
 
-    if not log_path.exists():
-        return None
-
-    for line in log_path.read_text(encoding="utf-8").splitlines():
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    if api_key:
         try:
-            o = json.loads(line)
+            payload = {
+                "model": "gpt-4o-mini",
+                "temperature": 0,
+                "response_format": {"type": "json_object"},
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "Classify whether an email should create a calendar task/schedule. Return JSON with keys: is_schedule(boolean), confidence(0-1), reason(short). Treat reminder/request/deadline/action-needed mails as schedule-worthy even if exact date/time is missing."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Subject: {subject}\nSnippet: {snippet}\nBody: {body}"
+                    }
+                ]
+            }
+            req = request.Request(
+                "https://api.openai.com/v1/chat/completions",
+                data=json.dumps(payload).encode("utf-8"),
+                method="POST",
+            )
+            req.add_header("Authorization", f"Bearer {api_key}")
+            req.add_header("Content-Type", "application/json")
+            with request.urlopen(req, timeout=25) as r:
+                resp = json.load(r)
+            content = resp["choices"][0]["message"]["content"]
+            o = json.loads(content)
+            return {
+                "is_schedule": bool(o.get("is_schedule", False)),
+                "confidence": float(o.get("confidence", 0.5)),
+                "reason": str(o.get("reason", "llm_classification"))[:200],
+            }
         except Exception:
-            continue
-        subject = o.get("subject", "")
-        reason = o.get("reason", "")
-        action = o.get("action", "")
+            pass
 
-        label = None
-        if action in ("create_event", "dry_run_create"):
-            label = 1
-        elif action == "skip" and reason in ("no_intent_keyword", "no_date_detected"):
-            label = 0
-        if label is None:
-            continue
+    # Fallback heuristic
+    text = text_raw.lower()
+    strong_task_terms = [
+        "요청", "리마인드", "마감", "제출", "작성", "검토", "회의", "미팅", "면담", "인터뷰", "콜", "일정",
+        "due", "deadline", "meeting", "appointment", "submit", "follow up", "reminder", "action required"
+    ]
+    weak_noise_terms = ["newsletter", "subscribe", "promotion", "advertisement", "digest", "광고", "뉴스레터", "구독"]
 
-        tokens = tokenize(subject)
-        if not tokens:
-            continue
+    score = 0
+    for t in strong_task_terms:
+        if t in text:
+            score += 1
+    for t in weak_noise_terms:
+        if t in text:
+            score -= 1
 
-        if label == 1:
-            pos_docs += 1
-            for t in tokens:
-                pos_counts[t] = pos_counts.get(t, 0) + 1
-        else:
-            neg_docs += 1
-            for t in tokens:
-                neg_counts[t] = neg_counts.get(t, 0) + 1
-
-    if pos_docs < 3 or neg_docs < 3:
-        return None
-
-    vocab = set(pos_counts.keys()) | set(neg_counts.keys())
-    return {
-        "pos_counts": pos_counts,
-        "neg_counts": neg_counts,
-        "pos_docs": pos_docs,
-        "neg_docs": neg_docs,
-        "vocab_size": max(len(vocab), 1),
-        "pos_total": max(sum(pos_counts.values()), 1),
-        "neg_total": max(sum(neg_counts.values()), 1),
-    }
-
-
-def nb_predict_schedule_prob(model, text):
-    if model is None:
-        return 0.0
-    tokens = tokenize(text)
-    if not tokens:
-        return 0.0
-
-    import math
-    pos_prior = model["pos_docs"] / (model["pos_docs"] + model["neg_docs"])
-    neg_prior = 1.0 - pos_prior
-    log_pos = math.log(max(pos_prior, 1e-9))
-    log_neg = math.log(max(neg_prior, 1e-9))
-    V = model["vocab_size"]
-
-    for t in tokens:
-        pc = model["pos_counts"].get(t, 0)
-        nc = model["neg_counts"].get(t, 0)
-        # Laplace smoothing
-        log_pos += math.log((pc + 1) / (model["pos_total"] + V))
-        log_neg += math.log((nc + 1) / (model["neg_total"] + V))
-
-    # stable sigmoid from log odds
-    z = log_pos - log_neg
-    if z >= 0:
-        ez = math.exp(-z)
-        return 1.0 / (1.0 + ez)
-    ez = math.exp(z)
-    return ez / (1.0 + ez)
+    is_schedule = score >= 1
+    confidence = min(0.95, max(0.05, 0.5 + (score * 0.12)))
+    reason = "heuristic_task_or_schedule_intent" if is_schedule else "heuristic_no_actionable_schedule_intent"
+    return {"is_schedule": is_schedule, "confidence": round(confidence, 4), "reason": reason}
 
 
 def parse_datetime(text, now_local):
@@ -299,8 +272,6 @@ def main():
     created = skipped = errors = 0
     created_details = []
 
-    ml_model = train_nb_from_logs(log_path)
-
     for m in ids:
         mid = m["id"]
         try:
@@ -323,11 +294,9 @@ def main():
             body = decode_body(msg.get("payload", {}))
             text = "\n".join([subject, snippet, body])
 
-            # ML-based schedule classification (subject+snippet+body)
-            prob = nb_predict_schedule_prob(ml_model, text)
-            is_schedule = prob >= 0.55
-
-            if not is_schedule:
+            # LLM-style semantic judgment for schedule/task intent
+            llm_judge = llm_schedule_judgment(subject, snippet, body)
+            if not llm_judge["is_schedule"]:
                 state["thread_latest_processed"][thread_id] = internal_ms
                 skipped += 1
                 append_jsonl(log_path, {
@@ -336,8 +305,9 @@ def main():
                     "thread_id": thread_id,
                     "subject": subject,
                     "action": "skip",
-                    "reason": "ml_not_schedule",
-                    "ml_schedule_prob": round(prob, 4),
+                    "reason": "llm_not_schedule",
+                    "llm_confidence": llm_judge["confidence"],
+                    "llm_reason": llm_judge["reason"],
                 })
                 continue
 
