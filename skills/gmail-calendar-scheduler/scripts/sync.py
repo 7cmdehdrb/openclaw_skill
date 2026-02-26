@@ -178,10 +178,15 @@ def needs_action(text):
 def has_explicit_date_or_time(text):
     if not text:
         return False
-    for p in DATE_PATTERNS + TIME_PATTERNS:
-        if p.search(text):
-            return True
-    return False
+    # Require schedule context near date/time to avoid accidental header/quoted times.
+    schedule_context = ['회의', '미팅', '면담', '콜', '인터뷰', '마감', '까지', '전까지', '제출', '발표', '일정', '예약', 'due', 'deadline', 'meeting']
+    low = text.lower()
+
+    has_date = any(p.search(text) for p in DATE_PATTERNS)
+    has_time = any(p.search(text) for p in TIME_PATTERNS)
+    has_ctx = any(k in low for k in schedule_context)
+
+    return (has_date or has_time) and has_ctx
 
 
 def parse_datetime(text, now_local):
