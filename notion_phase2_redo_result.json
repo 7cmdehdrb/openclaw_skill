@@ -1,0 +1,67 @@
+{
+  "updated": [],
+  "failed": [
+    [
+      "MRVL",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "QCOM",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "ON",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "MU",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "AMD",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "PLTR",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "PFE",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "DHR",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "SYK",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "TRGP",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "OXY",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "EQT",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "MS",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "C",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ],
+    [
+      "AXP",
+      "HTTPError:HTTP Error 401: Unauthorized"
+    ]
+  ],
+  "stopped": true,
+  "timestamp": "2026-02-26T02:32:27.156543"
+}

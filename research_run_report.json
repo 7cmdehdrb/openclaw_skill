@@ -1,0 +1,75 @@
+{
+  "etfs": [
+    "SOXX",
+    "VGT",
+    "XLV",
+    "XLE",
+    "XLF"
+  ],
+  "selected_companies_count": 15,
+  "completed_company_pages_count": 15,
+  "stopped_by_usage_threshold": false,
+  "parent_link": "https://www.notion.so/312bd3c55e1b80d6be49e2b6fbbcbc41",
+  "page_links": [
+    [
+      "MRVL (SOXX)",
+      "https://www.notion.so/312bd3c55e1b8194a9d7fafbd20495c0"
+    ],
+    [
+      "QCOM (SOXX)",
+      "https://www.notion.so/312bd3c55e1b81a4a2f1cfc5ae0c72f9"
+    ],
+    [
+      "ON (SOXX)",
+      "https://www.notion.so/312bd3c55e1b818dbc6af8f4a7fde388"
+    ],
+    [
+      "MU (VGT)",
+      "https://www.notion.so/312bd3c55e1b812e8ee4c35b206da405"
+    ],
+    [
+      "AMD (VGT)",
+      "https://www.notion.so/312bd3c55e1b8181ad69f730207f3552"
+    ],
+    [
+      "PLTR (VGT)",
+      "https://www.notion.so/312bd3c55e1b8125ae0ed9c72b353838"
+    ],
+    [
+      "PFE (XLV)",
+      "https://www.notion.so/312bd3c55e1b81ae8079d786df35256b"
+    ],
+    [
+      "DHR (XLV)",
+      "https://www.notion.so/312bd3c55e1b8148a257ff18ad78c26d"
+    ],
+    [
+      "SYK (XLV)",
+      "https://www.notion.so/312bd3c55e1b81fd938dcd619a678b31"
+    ],
+    [
+      "TRGP (XLE)",
+      "https://www.notion.so/312bd3c55e1b81e7b5d9ece23bc5e711"
+    ],
+    [
+      "OXY (XLE)",
+      "https://www.notion.so/312bd3c55e1b8107a890c738399861e7"
+    ],
+    [
+      "EQT (XLE)",
+      "https://www.notion.so/312bd3c55e1b8108ab5ff14f38fb48ed"
+    ],
+    [
+      "MS (XLF)",
+      "https://www.notion.so/312bd3c55e1b81aeac4cd1c24a310d66"
+    ],
+    [
+      "C (XLF)",
+      "https://www.notion.so/312bd3c55e1b81e59566e58230c02252"
+    ],
+    [
+      "AXP (XLF)",
+      "https://www.notion.so/312bd3c55e1b81ddba1ddc9e8bf3e909"
+    ]
+  ]
+}
