@@ -1,51 +1,46 @@
 ---
 name: chatgpt-pdf-to-notion-temporary
-description: Use when the user asks to analyze an attached PDF with ChatGPT and save the result to Notion while enforcing temporary (incognito-like) chat hygiene. Trigger for requests like: "GPT에 PDF 올려서 분석하고 노션에 정리", "임시 채팅으로 하고 끝나면 리셋", "논문 PDF를 문제상황/방법/결과로 정리해서 Notion에 붙여넣기".
+description: Use when the user asks to summarize/analyze attached PDFs and save to Notion with stable formatting. ChatGPT/browser relay is optional; default to low-cost local summary pipeline (PDF text extraction + structured summary + Notion upload). Trigger for requests like: "논문 PDF 정리해서 노션에", "문제상황/방법/결과 요약", "GPT 없이 안정적으로 노션 반영".
 ---
 
-# ChatGPT PDF → Notion (Temporary Chat Mode)
+# PDF Summary → Notion (Local-First)
 
-Follow this exact sequence.
+Use a local-first pipeline. Do NOT depend on browser automation unless the user explicitly demands ChatGPT web flow.
 
 ## Fixed Workflow
 
-1. Open ChatGPT in temporary mode: `https://chatgpt.com/?temporary-chat=true`.
-2. Verify temporary mode is ON (임시 채팅 체크 상태 확인).
-3. Refresh once before starting a new task.
-4. Upload the user PDF to ChatGPT.
-5. Send the fixed prompt from `references/prompt.txt`.
-6. Wait for response completion.
-7. If the response is truncated, ask for continuation without summarizing:
-   - `남은 부분을 같은 형식으로 이어서 출력해줘.`
-8. Extract final response text preserving markdown structure.
-9. Create a Notion page under:
+1. Read PDF metadata/title (e.g., `pdfinfo`).
+2. Extract text from key sections (abstract/introduction/method/results/conclusion) with local tools (e.g., `pdftotext`).
+3. Write structured markdown summary using schema from `references/prompt.txt`:
+   - 문제 상황
+   - Proposed method
+   - 정량/정성 결과
+4. Preserve useful technical symbols/terms from source.
+5. Create Notion page under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
-10. Page title = paper title.
-11. Paste response preserving markdown (headings, bullets, tables, symbols/equations).
-12. Refresh ChatGPT page to reset temporary chat content.
+6. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
+7. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
+8. Add `### 원본 PDF` section and attach original PDF file.
+9. Report page URL + what was extracted (pages/sections used).
 
 ## Hard Rules
 
-- Always start in temporary mode.
-- Do not reuse previous GPT conversation context.
-- Prefer preserving original GPT wording over rewriting.
-- Keep markdown fidelity high.
-- Heading depth is flexible by structure (`#`, `##`, `###` allowed).
-- Prefer low-cost normalization in local conversion script over extra GPT prompting.
-  - Convert indented `-` lines into real nested bulleted lists in Notion.
+- Default to local summary pipeline for cost and stability.
+- Keep markdown fidelity high (`#`/`##`/`###`, bullets, tables, symbols).
+- Use low-cost normalization in conversion script:
+  - Convert indented `-` lines into true nested bullets.
   - Convert `**bold**` inside table cells into Notion bold annotations.
-- When attaching the original PDF into Notion, add a dedicated section heading before the file block (recommended: `### 원본 PDF`).
-- If Notion path lookup fails, stop and report which node failed.
+- Minimize hallucination: only claim values seen in extracted text.
+- If a metric is missing/unclear, mark as "본문 확인 필요".
 
 ## Failure Handling
 
-- Relay not attached → ask user to enable Relay ON on the active tab.
-- Upload path blocked → copy file to a safe path like `/tmp/openclaw/uploads/` and retry.
-- GPT UI truncation → request continuation, then merge text in order.
-- Duplicate Notion title → append ` (2)`, ` (3)`.
+- PDF text extraction fails/scanned PDF only → report OCR requirement and pause.
+- Notion path lookup fails → stop and report which node failed.
+- Duplicate title → append numeric suffix.
 
 ## Helpers
 
-- Prompt template: `references/prompt.txt`
+- Summary schema: `references/prompt.txt`
 - Notion markdown conversion helper: `scripts/markdown_to_notion.py`
 - Workflow checklist (operator): `references/checklist.md`
