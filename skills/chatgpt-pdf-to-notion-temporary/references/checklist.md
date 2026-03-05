@@ -4,8 +4,9 @@
 - [ ] 본문 텍스트 추출 완료 (`pdftotext` 등)
 - [ ] 핵심 섹션(문제/방법/결과) 근거 문장 확보
 - [ ] `references/prompt.txt` 스키마로 마크다운 요약 작성
-- [ ] 정량 지표 3개 이상 확보 시 표에 명시 (없으면 `본문 확인 필요`)
+- [ ] 수치가 확실할 때만 정량표 작성 (불확실 수치 추정 금지)
 - [ ] 방법/결과 문단은 근거 문장 기반으로 작성(추정 금지)
+- [ ] 문체 점검: 짧고 단정한 기술 요약(군더더기 제거)
 - [ ] Notion path resolved: IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문
 - [ ] Page created with paper title (중복 시 suffix)
 - [ ] Notion formatting rule applied (`#`/`##`/`###`, nested bullets, table bold)

@@ -32,10 +32,15 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
   - Convert `**bold**` inside table cells into Notion bold annotations.
 - Minimize hallucination: only claim values seen in extracted text.
 - If a metric is missing/unclear, mark as "본문 확인 필요".
-- Quality gate before upload:
-  - Read broad text range (not first page only): abstract/introduction/method/results/conclusion.
-  - Include at least 3 concrete quantitative anchors when available (e.g., kPa, %, cycles, controller gains).
-  - Prefer direct evidence phrasing (e.g., "본문에서 ... 보고") over speculative wording.
+
+### Quality Baseline (must pass)
+
+- Read broad text range (not first page only): abstract/introduction/method/results/conclusion.
+- Problem/Method/Result each must be grounded in extracted text.
+- Never invent numeric performance claims.
+- If robust numeric tables are unavailable, report verified qualitative outcome + explicit caveat.
+- Prefer direct evidence phrasing over speculative wording.
+- Write concise, publication-style summary (no filler, no generic claims).
 
 ## Failure Handling
 
