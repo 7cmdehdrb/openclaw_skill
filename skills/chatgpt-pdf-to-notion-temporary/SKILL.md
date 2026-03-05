@@ -29,7 +29,8 @@ Follow this exact sequence.
 - Always start in temporary mode.
 - Do not reuse previous GPT conversation context.
 - Prefer preserving original GPT wording over rewriting.
-- Keep markdown fidelity high (especially lists/tables/special symbols).
+- Keep markdown fidelity high.
+- **When attaching PDF results to Notion, use only `###` headings for section separation** (no markdown tables; avoid deep heading nesting).
 - If Notion path lookup fails, stop and report which node failed.
 
 ## Failure Handling
