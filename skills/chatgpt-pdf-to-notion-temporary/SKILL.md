@@ -30,7 +30,8 @@ Follow this exact sequence.
 - Do not reuse previous GPT conversation context.
 - Prefer preserving original GPT wording over rewriting.
 - Keep markdown fidelity high.
-- **When attaching PDF results to Notion, use only `###` headings for section separation** (no markdown tables; avoid deep heading nesting).
+- Heading depth is flexible by structure (`#`, `##`, `###` allowed).
+- When attaching the original PDF into Notion, add a dedicated section heading before the file block (recommended: `### 원본 PDF`).
 - If Notion path lookup fails, stop and report which node failed.
 
 ## Failure Handling
