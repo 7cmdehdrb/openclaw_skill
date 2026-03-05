@@ -44,38 +44,87 @@ def mk_block(kind, text):
     return {"object": "block", "type": kind, kind: {"rich_text": rich(text)}}
 
 
+def list_item_block(text: str):
+    return {
+        "object": "block",
+        "type": "bulleted_list_item",
+        "bulleted_list_item": {"rich_text": rich(text)},
+    }
+
+
 def parse_markdown(md: str):
     lines = md.splitlines()
-    blocks = []
+    root_blocks = []
+    list_stack = []  # stack of list-item blocks by depth
     i = 0
+
+    def flush_list_stack():
+        list_stack.clear()
+
+    def append_block(block):
+        if list_stack:
+            parent = list_stack[-1]
+            parent.setdefault("bulleted_list_item", {}).setdefault("children", []).append(block)
+        else:
+            root_blocks.append(block)
+
     while i < len(lines):
-        line = lines[i]
+        raw = lines[i]
+        line = raw.replace("\t", "    ")
         s = line.strip()
+
         if not s:
+            flush_list_stack()
             i += 1
             continue
         if s == "---":
-            blocks.append({"object": "block", "type": "divider", "divider": {}})
+            flush_list_stack()
+            root_blocks.append({"object": "block", "type": "divider", "divider": {}})
             i += 1
             continue
         if line.startswith("# "):
-            blocks.append(mk_block("heading_1", line[2:].strip()))
+            flush_list_stack()
+            root_blocks.append(mk_block("heading_1", line[2:].strip()))
             i += 1
             continue
         if line.startswith("## "):
-            blocks.append(mk_block("heading_2", line[3:].strip()))
+            flush_list_stack()
+            root_blocks.append(mk_block("heading_2", line[3:].strip()))
             i += 1
             continue
         if line.startswith("### "):
-            blocks.append(mk_block("heading_3", line[4:].strip()))
+            flush_list_stack()
+            root_blocks.append(mk_block("heading_3", line[4:].strip()))
             i += 1
             continue
-        if line.startswith("- "):
-            blocks.append(mk_block("bulleted_list_item", line[2:].strip()))
+
+        # nested bullets by indentation (2 or 4 spaces / tab)
+        m = re.match(r"^(\s*)-\s+(.*)$", line)
+        if m:
+            indent = len(m.group(1))
+            depth = indent // 2
+            text = m.group(2).strip()
+            item = list_item_block(text)
+
+            if depth <= 0:
+                root_blocks.append(item)
+                list_stack[:] = [item]
+            else:
+                while len(list_stack) > depth:
+                    list_stack.pop()
+                if not list_stack:
+                    root_blocks.append(item)
+                    list_stack[:] = [item]
+                else:
+                    parent = list_stack[-1]
+                    parent.setdefault("bulleted_list_item", {}).setdefault("children", []).append(item)
+                    list_stack.append(item)
             i += 1
             continue
+
         # markdown table
         if "|" in line and i + 1 < len(lines) and re.match(r"^\|\s*-+", lines[i + 1].strip()):
+            flush_list_stack()
             header = [c.strip() for c in line.strip().strip("|").split("|")]
             i += 2
             rows = []
@@ -90,7 +139,7 @@ def parse_markdown(md: str):
                     "object": "block",
                     "type": "table_row",
                     "table_row": {
-                        "cells": [[{"type": "text", "text": {"content": c}}] for c in cells]
+                        "cells": [rich(c) for c in cells]
                     },
                 }
 
@@ -104,12 +153,13 @@ def parse_markdown(md: str):
                     "children": [row_block(header)] + [row_block(r) for r in rows],
                 },
             }
-            blocks.append(table)
+            root_blocks.append(table)
             continue
 
-        blocks.append(mk_block("paragraph", s))
+        flush_list_stack()
+        root_blocks.append(mk_block("paragraph", s))
         i += 1
-    return blocks
+    return root_blocks
 
 
 def main():

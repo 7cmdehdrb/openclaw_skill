@@ -31,6 +31,9 @@ Follow this exact sequence.
 - Prefer preserving original GPT wording over rewriting.
 - Keep markdown fidelity high.
 - Heading depth is flexible by structure (`#`, `##`, `###` allowed).
+- Prefer low-cost normalization in local conversion script over extra GPT prompting.
+  - Convert indented `-` lines into real nested bulleted lists in Notion.
+  - Convert `**bold**` inside table cells into Notion bold annotations.
 - When attaching the original PDF into Notion, add a dedicated section heading before the file block (recommended: `### 원본 PDF`).
 - If Notion path lookup fails, stop and report which node failed.
 
