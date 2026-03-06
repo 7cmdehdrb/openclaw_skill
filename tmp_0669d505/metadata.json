@@ -1,0 +1,14 @@
+{
+  "input_title": "Learning Object Grasping for Soft Robot Hands",
+  "matched_title": "Learning Object Grasping for Soft Robot Hands",
+  "match_confidence": 1.0,
+  "year": 2018,
+  "journal": "IEEE Robotics and Automation Letters",
+  "citation_count": 170,
+  "doi": "10.1109/lra.2018.2810544",
+  "citation": {
+    "apa": "Choi, C. ; Schwarting, W. ; DelPreto, J. ; Rus, D. (2018). Learning Object Grasping for Soft Robot Hands. IEEE Robotics and Automation Letters. https://doi.org/10.1109/lra.2018.2810544",
+    "bibtex": "@article{Choi_2018, title={Learning Object Grasping for Soft Robot Hands}, volume={3}, ISSN={2377-3774}, url={http://dx.doi.org/10.1109/lra.2018.2810544}, DOI={10.1109/lra.2018.2810544}, number={3}, journal={IEEE Robotics and Automation Letters}, publisher={Institute of Electrical and Electronics Engineers (IEEE)}, author={Choi, Changhyun and Schwarting, Wilko and DelPreto, Joseph and Rus, Daniela}, year={2018}, month=jul, pages={2370â€“2377} }"
+  },
+  "notes": "If confidence is low (<0.75), verify with Google Scholar manually."
+}
