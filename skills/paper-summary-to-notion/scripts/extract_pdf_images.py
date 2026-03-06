@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import io
 from pathlib import Path
 
@@ -58,36 +59,33 @@ def extract_images_from_pdf(pdf_path_str: str, flatten_alpha: bool = True, min_p
     try:
         doc = fitz.open(pdf_path)
 
+        seen_img_hashes = set()  # 문서 전체 중복 이미지 제거(동일 바이너리)
+
         for page_idx in range(len(doc)):
             page = doc[page_idx]
 
-            # 각 xref 이미지의 실제 배치 rect 수집
-            placements = []
+            # 각 xref의 대표 배치 좌표만 사용(페이지 내 첫 등장 위치)
+            placement_map = {}
             for img in page.get_images(full=True):
                 xref = img[0]
                 try:
                     rects = page.get_image_rects(xref)
                 except Exception:
                     rects = []
+
                 if not rects:
-                    # rect를 찾지 못해도 후보로는 남긴다(페이지 하단으로 밀기)
-                    placements.append((xref, float('inf'), float('inf')))
+                    pos = (float('inf'), float('inf'))
                 else:
-                    for r in rects:
-                        placements.append((xref, float(r.y0), float(r.x0)))
+                    pos = min((float(r.y0), float(r.x0)) for r in rects)
+
+                if xref not in placement_map or pos < placement_map[xref]:
+                    placement_map[xref] = pos
 
             # 페이지 내 표시 순서로 정렬
-            placements.sort(key=lambda t: (t[1], t[2], t[0]))
+            placements = sorted([(xref, yx[0], yx[1]) for xref, yx in placement_map.items()], key=lambda t: (t[1], t[2], t[0]))
 
-            # 동일 xref가 여러 rect로 반복될 수 있으므로, 중복 제거는 (xref,y,x) 단위로 수행
-            seen = set()
             seq = 0
             for xref, y0, x0 in placements:
-                key = (xref, round(y0, 3), round(x0, 3))
-                if key in seen:
-                    continue
-                seen.add(key)
-
                 base_image = doc.extract_image(xref)
                 image_bytes = base_image["image"]
                 image_ext = base_image.get("ext", "png")
@@ -97,6 +95,12 @@ def extract_images_from_pdf(pdf_path_str: str, flatten_alpha: bool = True, min_p
 
                 if not _passes_min_size(image_bytes, min_px):
                     continue
+
+                # 동일 이미지 바이너리 중복 제거(로고/반복 요소 중복 삽입 방지)
+                digest = hashlib.sha1(image_bytes).hexdigest()
+                if digest in seen_img_hashes:
+                    continue
+                seen_img_hashes.add(digest)
 
                 seq += 1
                 # 이름 규칙 개선: 페이지/순번을 0-pad로 저장해 정렬 안정화
