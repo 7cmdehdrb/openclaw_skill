@@ -1,0 +1,2760 @@
+SOFT ROBOTICS
+Volume 5, Number 2, 2018
+ª Mary Ann Liebert, Inc.
+DOI: 10.1089/soro.2017.0007
+
+ORIGINAL ARTICLE
+
+Control Strategies for Soft Robotic Manipulators:
+A Survey
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+Thomas George Thuruthel, Yasmin Ansari, Egidio Falotico, and Cecilia Laschi
+
+Abstract
+
+With the rise of soft robotics technology and applications, there have been increasing interests in the development of controllers appropriate for their particular design. Being fundamentally different from traditional
+rigid robots, there is still not a unified framework for the design, analysis, and control of these high-dimensional
+robots. This review article attempts to provide an insight into various controllers developed for continuum/soft
+robots as a guideline for future applications in the soft robotics field. A comprehensive assessment of various
+control strategies and an insight into the future areas of research in this field are presented.
+Keywords: continuum robots, soft robots, manipulation, dynamic controllers, kinematic controllers, machine
+learning
+
+Introduction
+
+B
+
+iological organisms exploit softness of the body for
+compliance to reduce the complexity in interacting with
+the environment. This characteristic is promising to advance
+robotic systems to operate robustly and adaptively in unstructured environments. Incorporating softness in robotic
+systems, in particular robotic manipulators, the focus of this
+article, is studied under the domain of ‘‘soft robotics.’’ This
+term is associated with two distinct design approaches: (1)
+compliant joints (active or passive) within rigid-link robots1,2
+and (2) continuum robotic manipulators.3 The discussion in
+this article is restricted to the latter one.
+Although the field of continuum robotic manipulators was
+founded in the 1960s, a formal research on the design and
+control can be dated back to the early 1990s. These systems
+are the result of the evolution of manipulator design from
+discrete mechanisms constructed from a series of rigid links
+to mechanisms without rigid links but rather with elastic
+structures capable of continuous bending along their length
+depicted in Figure 1.
+A novel subdomain of continuum manipulators, referred to as
+‘‘soft robotic manipulators,’’4,5 has been rapidly growing in the
+past decade since roboticists found inspiration in boneless biological organisms such as octopus arms, which are able to exploit the ‘‘mechanically intelligent’’ arrangement of just their
+muscles to exhibit dexterous advanced manipulation capabilities
+
+in cluttered environments. This has been translated into new
+range of continuum manipulators made up of soft materials such
+as silicone due to their ability to undergo a large deformation
+under normal operation. The underlying idea is to use principles
+of embodied intelligence6 and morphological computation7 to
+exploit the soft material properties to enable machines with
+properties such as inherent compliance, variable stiffness, and
+highly dexterous motion in an unstructured environment. The
+resulting systems have the ability to simplify a wide range of
+well-known complex tasks. In addition, they offer a low-cost
+alternative to numerous robotic applications.5 Furthermore, the
+deformability of the soft material offers compliance, which facilitates safe human–robot interaction in comparison to the rigid
+counterparts. These desirable characteristics are the fundamental reason behind the rapidly increasing demand in industrial,
+surgical, and assistive applications.
+However, the long-term success for the practical application
+of these systems is dependent on the development of real-time
+kinematic and/or dynamic controllers that facilitate fast, reliable, accurate, and energy-efficient control. This is nontrivial because (1) unlike rigid manipulators, the movement of
+which can be specified by three translations and three rotations, elastic deformation of soft robotic manipulators results in virtually infinite degrees-of-freedom (DoF) motions,
+(bending, extension, contraction, torsion, buckling, etc.); (2)
+the material properties exhibit nonlinear characteristics such as
+compliance and hysteresis that restrict high-frequency control;
+
+Soft Robotics Laboratory, The Biorobotics Institute, Scuola Superiore Sant’Anna, Pisa, Italy.
+
+149
+
+150
+
+GEORGE THURUTHEL ET AL.
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+FIG. 1. Evolution of rigidlink manipulators based on
+discrete mechanisms to bioinspired continuum robotic manipulators based on structures
+capable of continuous bending, studied in detail in Ref.4
+
+(3) the wide range of design and actuation techniques, which
+makes each of these robots have unique properties (refer to
+Ref.8 for a detailed review on design and actuation technologies for soft robots). However, as this is an active field of
+research still in its infancy, the fundamental purpose of this
+survey is to provide an in-depth assessment of various control
+strategies established within the domain of continuum robotic
+manipulators, in the past decade, with the aim to segue into a
+guide for researchers toward possible directions for developing
+controllers for soft robotic manipulators.
+Comprehensive reviews of control strategies for continuum robotic manipulators3,9–12 are primarily focused on design, fabrication, modeling, and sensing. However, there is no
+in-depth analysis of the control approaches that have emerged
+over the years. Furthermore, they lack focus on the recent
+development of controllers via model-free approaches. This
+survey tries to first enumerate all such developments in this
+field in the past decade; second, it aims to provide a unified
+overview of key terminologies, advantages, and drawbacks
+of these controllers; and finally, we aim to summarize these
+concepts in a table that, in addition to a systematic review, also
+provides the readers an overview into the chronological developments that have led to the current landscape and prospects of development in this domain. As the focus of this
+article is restricted to controllers developed within the domain
+of continuum manipulators that can be adopted for soft robotic
+manipulators, the article does not dwell much into modeling
+techniques, theoretical studies, wearable robots, and concentric tube robots. The role of sensing and variable stiffness
+actuation for control is also beyond the scope of this article.
+
+figure is to give the readers an idea of the different levels of
+mapping involved in the control of a continuum/soft manipulator and its differences from traditional rigid robot
+control.
+
+Preliminaries
+
+Model-Based Static Controllers
+
+Although a lot of classic terminologies used for rigid robots can be directly adapted to this field, special care must be
+given to understand the applicability and limitations of these
+terms. Consequently, we first state key terminologies and
+their corresponding definitions that will be used throughout
+the article to describe the controllers in a unified manner.
+Next, we lay out the classification schema used to systemically analyze the controllers summarized in Table 1.
+
+Soft robots present a formidable challenge to modeling
+due to their high dimensionality. Nonetheless, tractable kinematic models can be developed by adopting a steady-state
+assumption; that is, under force equilibrium, the full configuration
+
+Definitions
+
+Figure 2 provides the definitions and terminologies that we
+will be referring to throughout the article. The purpose of the
+
+Classification schema
+
+1. Modeling approach:
+a. Model-based controllers rely on analytical models
+for deriving the controller.
+b. Model-free controllers use machine learning
+techniques or empirical methods.
+c. Hybrid controllers combine model-based and modelfree approaches.
+2. Design:
+a. Actuation: tendon-driven, pneumatic, interleaved,
+simulated platforms.
+b. Actuation details: number of segments/actuators,
+arrangement, shape, material.
+c. Manipulator details: intended applications.
+3. Control:
+a. Operating space:
+i. Low-level: joint and/or actuator space.
+ii. Mid-level: inverse static/kinematic,* dynamic.{
+iii. High-level: path planning.{
+b. Controller details: tested for planar/nonplanar applications, required sensors.
+c. Performance: error measurements, theoretical error
+convergence, stability.
+
+*Static controllers are time invariant controllers where the control variables are zero order.
+{
+Dynamic controllers consider the configuration space and/or
+task space variable velocities in the control algorithm.
+{
+High-level controllers that prescribe the reference path in task
+space are primarily application based. Since the area of soft robotics
+is still in its incipient phase, a review on high-level controllers is
+beyond the scope of this article.
+
+151
+
+C
+C
+S
+
+C
+S
+
+S
+C
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+Octopus
+
+Octopus
+
+N/A
+
+Largilliere
+et al.33
+
+Bajo and
+Simaan27
+Giorelli
+et al.39
+
+Wang
+et al.28
+
+Penning
+et al.24
+
+C
+C
+
+C
+
+—
+S
+
+C
+
+N/A
+
+N/A
+
+N/A
+
+—
+N/A
+
+Bionic
+handling
+assistant
+
+Bajo
+et al.23
+
+Camarillo
+et al.19
+
+Camarillo
+et al.19
+
+Dynamic
+—
+Pneumatic
+Marchese
+Kinematic
+et al.35
+
+Mahl
+et al.29
+
+C
+
+N/A
+
+Goldman
+et al.26
+
+Model based
+Qi et al.
+Tendon
+driven
+Kinematic Till et al.31
+
+51
+
+9
+
+16
+
+4
+
+4
+
+3
+
+3
+
+4
+
+4
+
+2
+
+3
+
+4
+
+6
+
+3
+
+No. of
+Type actuators
+
+Name
+
+Study
+
+Publication
+
+Bellow
+
+Anisotropic
+stiffness
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+120
+
+90
+
+90
+
+90
+
+120
+
+120
+
+90
+90
+
+Uniform
+
+90
+
+180
+
+120
+
+Tendon
+pairs
+at 120
+90
+
+120
+
+3
+
+—
+4
+
+2
+
+2
+
+3
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+Back
+bone
+
+Body
+material
+
+—
+
+—
+
+Spring steel,
+acrylic
+base
+Silicone
+
+—
+
+—
+
+Polyester
+mesh
+Polyester
+mesh
+
+Silicone
+
+Silicone
+
+Tapering
+
+Uniform
+
+—
+
+—
+
+Uniform Nitinol
+
+Uniform Nitinol
+
+3D printed
+
+Silicone
+
+Polyurethane
+
+Polyurethane
+
+Uniform Multiple 3D printed
+
+Uniform Multiple 3D printed
+
+Uniform Teflon
+
+Uniform Teflon
+
+Tapering
+
+Tapering
+
+Uniform Multiple 3D printed
+
+Uniform
+
+Uniform
+
+Uniform Multiple 3D printed
+
+Actuator No. of Segment
+spacing segments shape
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Bow
+
+Uniform
+
+Uniform
+
+Actuator
+shape
+
+Platform details
+
+Tapering
+
+Tapering
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Tapering
+
+Tapering
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+B,E
+
+B
+
+B,C
+
+B,C
+
+B,C
+
+B,C
+
+B,C
+
+B,C
+
+B
+
+B
+
+B,C
+
+B,C
+
+B
+
+B,C
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+Manipulator Functionshape
+alities Payload
+
+Industry
+
+NSS
+
+Medical
+
+Medical
+
+Medical
+
+Medical
+
+Medical
+
+Medical
+
+Marine
+
+Marine
+
+Medical
+
+N/A
+
+Cartesian error
+for task space
+tracking
+(1.82 mm)
+Stiffness map
+
+Cartesian error
+for task space
+tracking
+Mean run-time
+(ms)
+
+Performance
+
+Yes
+
+Yes
+
+No
+
+No
+
+Yes
+
+Yes
+
+Yes
+
+No
+
+No
+
+No
+
+Yes
+
+No
+
+No
+
+No
+
+N/A
+
+Asymptotic
+
+N/A
+
+Asymptotic
+
+N/A
+
+N/A
+
+L-norm
+stable
+
+Stability
+
+No
+
+No
+
+No
+
+Yes
+
+(continued)
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A Asymptotic
+
+N/A Asymptotic
+
+No
+
+Yes
+
+Yes
+
+No
+
+Yes
+
+Yes
+
+No
+
+Yes
+
+Configuration Task
+space space
+
+Theoretical
+error
+convergence
+
+Controller details
+
+Nonplanar In-line
+load cell
+Planar
+In-line
+Cartesian error
+load
+for set-point
+cell/
+control (mean
+vision
+7.35 mm)
+Nonplanar Vision
+Pixel error for
+set-point
+control (0)
+Nonplanar ElectroCartesian error
+magnetic
+for task space
+tracking,
+external
+wrench
+disturbance
+Planar
+In-line
+Phase lag,
+load cell
+orientation,
+external
+wrench
+rejection
+Nonplanar Encoder
+Phase lag
+and
+magnetic
+Nonplanar Vision
+Cartesian error
+for task space
+tracking
+(<1 mm)
+Nonplanar Vision
+Cartesian
+error for
+configuration
+tracking,
+tension, and
+orientation
+—
+Planar
+Vision
+Cartesian
+error for
+configuration
+tracking,
+curvature vs.
+time
+Nonplanar Vision
+Cartesian error
+for open-loop
+task space
+tracking
+
+Nonplanar Vision
+
+N/A
+
+Nonplanar Electromagnetic
+
+Teleopera- Nonplanar
+tion
+
+Medical
+
+Intended
+applicaPlanar/
+tion
+nonplanar Sensors^^
+
+Table 1. Comparison of the State of the Art Control Strategies Presented in This Article
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+152
+
+S
+S
+
+S
+
+N/A
+
+OctArm
+
+Kapadia and OctArm
+Walker58,*
+
+S
+
+Octopus
+
+Giorelli
+et al.40
+—
+
+C
+
+N/A
+
+Thuruthel
+et al.70
+
+—
+
+C
+
+N/A
+
+Model free
+Yip and
+Tendon
+Camarillo43
+driven
+Kinematic
+
+—
+
+C
+
+N/A
+
+Interleaved Conrad and
+Kinematic
+Zinn34,*
+
+Dynamic
+
+S
+
+OctArm
+
+Kapadia
+et al.59,*
+
+Marchese
+et al.35
+Kapadia
+et al.60
+
+Dynamic Falkenhahn
+et al.64
+
+2
+
+6
+
+2
+
+2
+
+9
+
+9
+
+3
+
+16
+
+9
+
+No. of
+Type actuators
+C
+
+Name
+
+Bionic
+handling
+assistant
+
+Study
+
+Publication
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Anisotropic
+stiffness
+Uniform
+
+Bellow
+
+Actuator
+shape
+
+180
+
+120
+
+180
+
+—
+
+120
+
+120
+
+120
+
+90
+
+120
+
+—
+
+1
+
+2
+
+1
+
+4
+
+3
+
+3
+
+3
+
+4
+
+3
+
+Tapering
+
+Uniform
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+Back
+bone
+
+McKibben
+
+McKibben
+
+McKibben
+
+Silicone
+
+3D printed
+
+Body
+material
+
+Silicone
+
+Layer-bylayer
+
+Serial
+concatenation of
+revolute
+and flexible
+joints
+Uniform Multiple 3D printed
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Tapering
+
+Actuator No. of Segment
+spacing segments shape
+
+Platform details
+
+Tapering
+
+Uniform
+
+Uniform
+
+Uniform
+
+Tapering
+
+Tapering
+
+Tapering
+
+Tapering
+
+Tapering
+
+B
+
+B,C
+
+B
+
+B
+
+B,E
+
+B,E
+
+B,E
+
+B
+
+B,E
+
+N/A
+
+N/A
+
+0.9 kg
+
+0.9 kg
+
+0.9 kg
+
+N/A
+
+Manipulator Functionshape
+alities Payload
+
+Table 1. (Continued)
+
+Marine
+
+N/A
+
+Medical
+
+NSS
+
+Military
+
+Military
+
+Military
+
+NSS
+
+Industry
+
+Performance
+
+—
+
+Planar
+
+In-line
+load
+cell/
+vision
+
+Vision,
+in-line
+load
+cell,
+multiaxis
+force
+sensor
+Nonplanar Electromagnetic
+
+Planar
+
+Cartesian error
+for task space
+tracking
+Cartesian error
+for set point
+control
+
+Cartesian error
+for task space
+tracking, tip
+force vs. time
+
+Yes
+
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+—
+
+No
+
+No
+
+Yes
+
+Yes
+
+No
+
+No
+
+No
+
+Yes
+
+Yes
+
+No
+
+No
+
+No
+
+Yes
+
+No
+
+No
+
+Configuration Task
+space space
+
+Theoretical
+error
+convergence
+
+Controller details
+
+Nonplanar Cable
+Cartesian tracking
+potentioerror, external
+meter,
+disturbance repressure
+jection, gravity
+sensor
+compensation
+Planar
+Vision
+Velocity tracking
+error
+Planar
+String
+Cartesian length/
+encoder
+curvature plot
+to meaconfiguration
+sure
+error
+cable
+Cartesian length/
+length
+curvature plot
+configuration
+error
+Cartesian
+tracking
+error
+Planar
+—
+Cartesian error
+for tip position/curvature
+length error
+Section length/
+curvature
+control torque
+error
+Planar
+—
+Cartesian error
+for section
+length/curve,
+control
+torque error
+Nonplanar
+—
+Cartesian error
+for task space
+tracking
+
+Intended
+applicaPlanar/
+tion
+nonplanar Sensors^^
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+(continued)
+
+N/A
+
+N/A
+
+Asymptotic
+
+N/A
+
+Asymptotic
+
+Asymptotic
+
+Asymptotic
+
+Asymptotic
+
+Asymptotic
+
+N/A
+
+N/A
+
+Stability
+
+153
+C
+
+I-Support
+
+—
+
+Lakhal
+et al.52
+
+—
+—
+Reinhart
+et al.54
+
+—
+
+Bellow
+
+—
+—
+Bellow
+
+Tendon:
+uniform
+Pneumatic:
+bellow
+
+—
+
+—
+
+—
+
+Uniform
+
+Uniform
+
+Uniform
+
+Uniform
+
+Bellow
+
+Bellow
+
+Honeycomb
+shaped
+
+Actuator
+shape
+
+*Simulation.
+^^Necessary for controller.
+3D, three-dimensional; C, continuum; N/A, not available; S, soft.
+
+Dynamic
+
+Hybrid
+Tendon
+driven
+Static
+Dynamic
+Pneumatic
+Static
+
+6
+
+1
+
+9
+
+S
+
+Octopus
+
+Engel
+et al.68,*
+
+1
+
+C
+
+S
+
+Octopus
+
+Silver
+et al.69,*
+
+6
+3
+
+—
+—
+9
+
+S
+
+STIFFFLOP
+Octopus
+
+Thuruthel
+et al.70
+
+Hybrid
+Ansari
+Kinematic
+et al.50
+
+Dynamic
+
+9
+NSS
+
+—
+—
+C
+
+S
+
+—
+—
+Bionic
+handling
+assistant
+Compact
+bionic
+handling
+assistant
+—
+
+S
+
+OctArm
+
+Octopus
+
+3
+
+9
+
+C
+
+C
+
+9
+
+C
+
+Compact
+bionic
+handling
+assistant
+Bionic
+handling
+assistant
+
+20
+
+S
+
+Name
+
+Honeycomb
+pneumatic
+network
+
+No. of
+Type actuators
+
+I-Support
+
+Thuruthel
+et al.70
+
+Braganza
+et al.66
+Octopus-arm Malekzadeh
+simulation
+et al.49,*
+Kinematic
+
+Dynamic
+
+Rolf and
+Steil41
+
+Melingui
+et al.45
+
+Pneumatic
+Jiang
+Kinematic
+et al.53
+
+Study
+
+Publication
+
+120
+
+—
+—
+120
+
+60
+
+—
+
+—
+
+—
+
+Seriallinks
+120
+
+120
+
+120
+
+120
+
+120
+
+—
+
+—
+
+3
+
+—
+—
+3
+
+1
+
+10
+
+6
+
+4
+
+2
+
+NSS
+
+3
+
+1
+
+3
+
+3
+
+5
+
+Tapering
+
+—
+—
+Tapering
+
+Uniform
+
+Tapering
+
+Tapering
+
+Tapering
+
+Uniform
+
+Tapering
+
+Uniform
+
+Uniform
+
+Tapering
+
+Tapering
+
+Uniform
+
+Actuator No. of Segment
+spacing segments shape
+
+—
+
+—
+—
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+—
+
+Back
+bone
+
+Platform details
+
+3D printed
+
+—
+—
+3D printed
+
+Layer-bylayer
+
+—
+
+—
+
+—
+
+—
+
+Polyester
+mesh
+—
+
+Layer-bylayer
+
+3D printed
+
+3D printed
+
+3D printed
+
+Body
+material
+
+Tapering
+
+—
+—
+Tapering
+
+Uniform
+
+Tapering
+
+Tapering
+
+Tapering
+
+Uniform
+
+Marine
+
+Tapering
+
+Uniform
+
+Tapering
+
+Tapering
+
+Uniform
+
+B,E
+
+—
+—
+B,E
+
+B,E,C
+
+Reaching
+
+Reaching
+
+Reaching
+
+B
+
+E,B
+
+E,B
+
+B,E
+
+B,E
+
+B,E
+
+N/A
+
+—
+—
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+0.9 kg
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+Manipulator Functionshape
+alities Payload
+
+Table 1. (Continued)
+
+Industry
+
+—
+—
+Industry
+
+Assistive
+
+N/A
+
+N/A
+
+N/A
+
+Medical
+
+Military
+
+Assistive
+
+Industry
+
+Industry
+
+N/A
+
+Vision
+
+Vision
+
+Nonplanar
+
+—
+
+—
+
+—
+
+Nonplanar Vision,
+cablepotentiometer
+—
+
+—
+—
+—
+—
+Nonplanar Vision
+
+Nonplanar Electromagnetic
+
+Planar
+
+Planar
+
+Nonplanar
+
+—
+
+Nonplanar Encoders
+
+Planar
+
+Nonplanar Vision
+
+Nonplanar
+
+Planar
+
+Intended
+applicaPlanar/
+tion
+nonplanar Sensors^^
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+Performance
+
+—
+—
+Cartesian error
+for task space
+tracking
+Cartesian error
+for task space
+tracking
+
+Rotational and
+translational
+error in task
+space tracking
+Reaching time
+and reaching
+error
+Convergence
+time for setpoint control,
+success rate
+Convergence
+time for setpoint control
+Cartesian error
+
+Cartesian error
+for task space
+tracking
+(5 mm)
+Cartesian/
+velocity/
+acceleration
+tracking error
+Joint space error
+
+Cartesian error
+in task space
+tracking
+(<8 mm)
+
+No
+
+—
+—
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+Yes
+
+No
+
+—
+
+No
+
+—
+—
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+No
+
+Yes
+
+No
+
+No
+
+Configuration Task
+space space
+
+Theoretical
+error
+convergence
+
+Controller details
+
+N/A
+
+—
+—
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+Semi global
+asymptotic
+Local
+Optimum
+
+N/A
+
+N/A
+
+N/A
+
+Stability
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+154
+
+GEORGE THURUTHEL ET AL.
+
+FIG. 2.
+
+Operating spaces of a continuum manipulator and their definitions.
+
+of the soft manipulator can be defined by a low-dimensional
+state space representation. In all the articles that are reviewed,
+this assumption is valid and therefore we interchangeably use
+the term ‘‘statics’’ and ‘‘kinematics’’ even though this is not a
+common practice in traditional robotics.
+The simplest and most commonly used kinematic/steadystate model assumes that the configuration space of a threedimensional (3D) continuum/soft module can be parameterized by three variables, more commonly referred to as the
+constant curvature (CC) approximation.13 It reduces an infinite dimensional structure into just 3D, thereby ignoring a
+large portion of the manipulator dynamics. This has been
+found to be a very good approximation if (1) the manipulator
+is uniform in shape and symmetric in actuation design, (2)
+external loading effects are negligible, and (3) torsional effects are minimal. It is important to realize that the CC model
+arises due to a constant strain approximation along the length
+of the manipulator and therefore is a model truly valid only in
+the steady-state condition.14 In Ref.,15 it was demonstrated
+that the variations in the kinematic manipulability ellipsoid
+are very less when going from a low-dimension to a highdimension representation of the manipulator configuration.
+This could explain the relative success of the CC model. For
+multisection continuum/soft manipulators, each CC section
+can be stitched together to provide the piecewise constant
+curvature (PCC) model.16 Concurrently, a more complex
+modeling approach using beam theory was pursued using
+beam theory14 and Cosserat rod theory.17 However, the improvement in accuracy attained by a more complex model was
+
+not significant enough considering their computational and
+sensing cost and therefore have been limited in their usage.
+Once a kinematic model is established, it is necessary to
+invert the kinematics to obtain the desired actuator or configuration space variables. This can be pretty straightforward
+and has been widely studied for rigid manipulators and can
+be done with differential inverse kinematics (IK),16,18 by
+direct inversion,19 or by optimization.20 Furthermore, a lowlevel controller takes care of tracking in the actuator/joint
+space, usually using a simple linear closed loop controller.
+In addition, actuator compensation techniques might have to
+be used because of the presence of friction, hysteresis,21 or
+tendon coupling22 that can cause deviations from the forward
+steady-state model.
+The need to model and compensate for slackening tendon
+load coupling and tendon path coupling for multisection
+manipulators was first addressed in Ref.19 A numerically
+estimated static model used for the forward model and inverse model was obtained by optimization. However, there
+still lacked an expression for friction effects and the approach
+was used only for configuration tracking.
+One of the fundamental modeling difficulties involved
+with cable-driven actuators is the path coupling among sections. For independent actuation methods, only the load coupling needs to be considered. Further on, researchers started
+investigating the importance of sensors for compensating
+modeling uncertainties without the necessity for formulating
+very complex compensation techniques.20,23 As an extension
+of Ref.,19 a closed-loop task space controller was proposed and
+
+CONTROL STRATEGIES FOR SOFT ROBOTIC MANIPULATORS
+
+155
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+FIG. 3. A closed-loop task space controller implementation. An asterisk (*) represents the desired variable value, and a
+subscript ‘‘c’’ represents the commanded variable value. IK, inverse kinematics.
+
+experimentally validated for the first time in Ref.20 with a 5DoF per section kinematic model. For this, the IK problem is
+formulated as a constrained nonlinear optimization problem
+where the desired joint configuration that reduces the current
+tracking error is estimated while satisfying the forward kinematic model and cable tension constraints (to avoid slacking).
+By representing the kinematics in the velocity level, their approach gains leverage in terms of higher accuracy (submillimeter) and robustness to model uncertainties, but would need to
+solve a high-level path planner (Fig. 3). The downside of the
+direct task space controller is instability (can be solved by lower
+control frequency; 5 Hz for Ref.20) and slower convergence.
+In Ref.,23 a configuration space controller is proposed, which
+uses external sensory information about the configuration and
+internal sensory information about the joint variables to achieve
+asymptotic tracking of a stationary configuration target. By
+providing additional tracking information and framing a cascaded controller, they were able to reduce coupling effects and
+decrease the phase lag while tracking a time varying trajectory.
+Being a configuration space feedback controller, the control
+loop was run faster at 150 Hz. Interestingly, significant phase
+lag was observed even for tasks at 2 Hz and this is highly
+undesirable at the low level. Similarly in Ref.,24 two closedloop controllers in the task space (Fig. 4) and joint space (Fig. 5)
+were compared. The advantage of a direct closed-loop task
+space controller is that it can provide asymptotic convergence
+of the error even with model uncertainties. On the contrary, a
+joint space controller can offer independent control of the joint
+variables allowing for individual tuning and hence more stability, especially if the joint/actuator motions are discrete. Note
+that for all the abovementioned controllers, there is also a
+closed-loop actuator space controller, usually a servo controller, which is assumed to provide perfect tracking. All these
+methods rely on the CC approximation for modeling.
+Following the strong coupling between continuum manipulator’s kinematic and static force model, controllers foraying
+into compliance/force control started to emerge.25–27 In Ref.,26
+it was demonstrated that by knowing the current internal actuation forces and the configuration space variables, an estimate of the external generalized forces can be formed. Using
+the estimate of the external force and the compliance matrix
+(maps the change in actuator forces to the tip wrenches), a
+configuration space controller for reducing tip forces for surgical purposes was proposed. As an extension of Ref.,26 a
+hybrid position/force controller in the configuration space was
+
+realized in Ref.27 (Fig. 6). Desired twist and wrench vectors are projected orthogonally (for decoupling the control
+effort into feasible motions) and transformed to configuration
+space references using differential IK and the configuration space compliance matrix (maps the change in configuration space variables to the tip wrenches), respectively.
+Hybrid position/force control was realized in Ref.25 without
+the need of force sensors. This was done by numerically calculating the transformation matrix that maps the transformation from the tip of an unloaded continuum manipulator to the
+tip position when acted on by external forces using Cosserat
+rod theory. With the transformation formulation, the desired
+joint position that attains a particular end effector force and
+orientation was estimated using fixed point iteration. Compensating model deviations due to friction and other nonlinear
+material behavior remains an open research topic.
+Further on, researchers started to focus on more complex
+kinematic formulations by extending the CC model, mostly
+due to the rise of biologically similar tapering continuum robots. The first such method was the use of the variable constant curvature (VCC) approximation, which models a single
+module as n segments of CC, where the curvature of each
+segment depends on the radius of the segment, thus creating a
+high-dimensional configuration space.28–30 The VCC model
+for a three-section, pneumatically actuated continuum robot,
+with the procedure for segmentation of the sections, was first
+elucidated in Refs.29,30 A resolved motion rate algorithm was
+used for the closed-loop control of the robot due to the double
+advantage of redundancy resolution and the robustness it
+provides to model uncertainties (Fig. 7).
+Visual servo control of a two-dimensional (2D) image
+feature point in 3D space using a cable-driven soft conical
+manipulator was proposed using the VCC model in Ref.28 A
+differential kinematic-based controller, similar to the one in
+Ref.,29 with the control objective of reducing the feature
+point tracking error was proposed. An adaptive algorithm
+for depth estimation was also described. Similarly, efficient
+numerical techniques for solving in real time the complex
+Cosserat models were detailed in Ref.,31 however, no control
+experiments were demonstrated.
+Contrary to ongoing developments, the use of simplified
+kinematic models for control was proposed in Ref.32 The idea
+behind this is that the reduced accuracy due to the inaccurate
+kinematics can be compensated or even improved with the
+increased control cycle frequency gained due to the low
+
+FIG. 4. A closed-loop task
+space controller implementation. PID, proportional integral derivative.
+
+156
+
+GEORGE THURUTHEL ET AL.
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+FIG. 5. A task space controller implemented by closedloop control in the joint space.
+A subscript ‘‘c’’ represents
+the variable estimate.
+
+computational cost. However, the method was validated only
+on simulations and would not be directly transferable to a real
+setup at the same frequency without considering the low-level
+dynamics as observed in Ref.23 On the other spectrum, a numerically exact approach for statics modeling using asynchronous finite element analysis (FEM) was described in
+Ref.33 Optimization using quadric programming (QP) algorithm was used to obtain the inverse solution, which is used to
+control the actuators at high frequencies while a low-frequency
+loop FEM simulation feeds the inputs to the QP solver.
+Recent developments in terms of model-based static controllers are factored on the design aspects. A closed-loop task
+space controller was applied on an interleaved continuum-rigid
+manipulator in Ref.34 The main idea of the approach is to use
+the well-behaved rigid links in tandem with the flexible elements to compensate for the errors obtained while tracking a
+desired tip position thereby obtaining much lower bound on the
+tracking error. However, the scalability of such designs for
+high-dimensional systems is still a question mark. Currently,
+the manipulator is designed with the rigid components set up at
+the base, but it will be tricky to add further components in serial.
+On the contrary, kinematic control of a pneumatically actuated soft manipulator entirely made from a low durometer
+elastomer was detailed in Ref.35 The control architecture is
+similar to Ref.23 and tries to achieve tracking of configuration space variables using a cascaded proportional integral–
+proportional integral derivative in the configuration space and
+actuator space (cylinder displacement, in this case), respectively. The task space to configuration space IK obtained a
+nonlinear constrained optimization. Both the abovementioned
+approaches used the CC approximation for the configuration
+space model.
+Summary of model-based static controllers
+
+Model-based static controllers are currently the most
+widely used and studied strategy for control of continuum/
+soft robots. Majority of the model-based controllers rely
+on the CC approximation since more complex models are
+computationally expensive and are design specific. However,
+with validation of the CC model for a completely soft robot35
+
+FIG. 6. Closed-loop task
+space control of position and
+force implementation. A subscript ‘‘v’’ represents the firstorder derivative of the variable.
+
+and its wide application for control of many continuum/soft
+robots, it is still one of the most reliable and easily applicable
+methods for static control of uniform, low-mass manipulators.
+More complex methodologies have not achieved exceptional performance improvements because of their computational cost and numerous parameters that have to be estimated.
+This was also observed in recent comparisons among various
+modeling approaches on the same platform.36 In light of this,
+model-free approaches provide an alternative means to develop more complex yet accurate, design-specific models
+without any prior knowledge about the underlying structure.
+In terms of operating space, a closed-loop configuration
+space controller or joint space controller would provide more
+stable and faster controllers, however, cannot guarantee error
+convergence (unless there is a perfect forward model available). Closed-loop task space controllers can theoretically
+provide the best accuracy. In terms of actuation, tendondriven systems are more difficult to model, whereas pneumatic manipulators would need more sensors.
+Model-Free Static Controllers
+
+Model-free-based approaches for control of continuum/
+soft robots are a relatively new field and offer a wide range of
+possibilities. Although these data-dependent methods have
+been used effectively in the field of rigid manipulators,37 the
+same cannot be said for continuum manipulators even though
+model-free approaches intuitively should fare better in this
+case.
+The first usage of a model-free approach for development
+of a static controller was proposed in Ref.38 The approach
+was a straightforward direct learning of the inverse statics of
+a nonredundant (with respect to the actuator space and task
+space) soft robot using a neural network. Although the method
+was correctly able to predict the reference cable tensions for
+reaching a target in the task space in simulations, the approach
+cannot be scaled for redundant systems and does not consider
+the stochastic nature of real soft robots. An experimental
+validation of the same approach was done in Ref.39 for a 2-DoF
+and a 3-DoF40 cable-driven soft manipulator and compared
+with an IK model derived from a numerically exact model.
+
+CONTROL STRATEGIES FOR SOFT ROBOTIC MANIPULATORS
+
+157
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+FIG. 7. First-order resolved motion rate algorithm for closed-loop task space control. Note the similarity to the first
+implementation in Figure 3. The additional feedforward component allows for faster convergence.
+Interestingly, the simple neural network-based approach
+performed significantly better than the computational complex analytical method. The final controller is similar to the
+diagram shown in Figure 8 without the feedback component.
+An efficient exploration algorithm for generating samples
+for IK learning was proposed in Ref.41 The main idea is to use
+goal babbling to generate samples from the task space to
+actuator space for high-dimensional redundant systems.
+Since the exploration is goal oriented, it can allow for efficient exploration (by avoiding revisiting an explored task
+space/actuator space region) and in selecting a desired redundancy resolution scheme. Finally, self-organizing maps
+are used to learn the IK mapping with generated samples. A
+feedback scheme for reducing tracking error due to the stochasticity of model is implemented by virtually shifting the
+target positions proportional to the error in tracking to generate modified reference positions (Fig. 8).
+A highly robust, accurate, and generic approach for closedloop task space control of continuum robots was proposed in
+Ref.42 (Fig. 9). The article proposes an optimal control strategy
+based on empirical estimation of the kinematic Jacobian matrix
+online by incrementally moving each actuator. Optimization is
+done to minimize the control effort and to keep the cables taut.
+There is no internal model used for control, and therefore, the
+authors have called the approach as a ‘‘model-less’’ technique.
+Although such a strategy solves a lot of difficulties in the
+control of continuum robots, even allowing manipulation in an
+unstructured environment, the very low control frequency is of
+practical concern. The same principle was extended for hybrid
+force/position control in Ref.,43 where the stiffness matrix is
+also computed empirically. Similar to other hybrid force/position controllers, the reference position and forces are projected orthogonally when the manipulator is in contact.
+Recent model-free approaches have mostly focused on
+learning the IK representation of continuum robots. In Ref.,44
+an approach for learning the direct mapping between task
+space and joint space (potentiometer voltage, in this case)
+is proposed. This involves learning the forward kinematic
+model first using a neural network and then inverting this
+learned network using distal supervised learning. However,
+this approach did not consider the stochasticity of the manipulator and did not implement a feedback error correction
+scheme. As an improvement of the previous work, in Ref.,45
+the authors try to address the stochasticity of the mapping
+between the joint space (potentiometer values) and actuator
+
+space (chamber pressures) by developing an adaptive subcontroller. This is because for the case of tendon-driven actuation, the actuator space and joint space are linearly related,
+whereas for pneumatic actuation, an additional nonlinear
+mapping between the actuator space and the joint space must
+also be considered. The subcontroller comprises a modified
+Elman neural network, which emulates the actuator kinematics, and a multilayer perceptron controller that learns to control
+the actuator variables accordingly. However, the kinematic
+mapping between the joint space and task space is considered
+to be nonstochastic, which is not necessarily the case.
+Another technique for learning the IK was proposed in
+Refs.,46,47 where the IK problem is formulated like a differential IK problem using local mappings. This allowed for
+redundancy resolution as well as reducing stochastic effects.
+However, the approach was validated only by simulations on
+a continuum46 and soft arm.47 Another advantage of such an
+approach is that it allows multiple solutions to the IK problem
+globally and can work even if some of the actuators are
+nonfunctional after the learning process. A similar modeling
+method strengthened with a feedback controller was experimentally validated in Ref.48 It was also observed that even
+with a simple feedback controller, intelligent behaviors can
+be obtained in an unstructured environment.
+An attempt toward transfer learning has also been made,
+however, limited to simulation.49 Authors develop an algorithm
+to transfer the reaching skills from a simulated non-CC octopus
+arm to a simulated CC soft robotic manipulator. The idea is to
+design dynamic motion primitives through a weighted combination of Gaussian functions representing the joint distribution
+of the data. This is combined with a statistical regression approach making it robust to external perturbations in the environment. Although this approach seems promising, it requires
+more experimental work to demonstrate its potential.
+In a recent work,50 the authors optimize multiple objectives within a reinforcement learning architecture to learn
+deterministic stationary policies for a soft robot arm module.
+Although it works in high dimensions, it is sensitive to external disturbances. An attempt toward fuzzy logic-based
+controllers was attempted in Ref.51 The idea was to develop
+numerical estimates of the kinematic Jacobian using prior
+knowledge-based local approximations and interpolation
+functions. This allows for faster computation, but the advantage of such a method over data-driven machine learning approaches is not apparent. Finally, a hybrid controller
+
+FIG. 8. A general modelfree closed-loop task space
+controller implementation.
+A subscript ‘‘m’’ represents
+an auxiliary variable.
+
+158
+
+GEORGE THURUTHEL ET AL.
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+FIG. 9. Model-less control
+strategy.
+
+combining both model-based and model-free approaches was
+proposed in Refs.52–54 In Ref.,52 the manipulator is modeled
+as multiple sections with one translational and two rotational
+DoF. Then, multiple neural networks are used to resolve redundancy and to obtain the mapping from the task space to
+the high-dimension configuration space. The configuration
+space to actuator space mapping is done analytically as it was
+found to be more straightforward. A noticeable limitation of
+such a method is the high sensory information required,
+which in the article, the authors have synthesized from certain
+empirical data.
+A polar method was adopted in Ref.,53 with the configuration space to task space mapping being analytically modeled using the PCC approximation. The actuator space to
+configuration space mapping is learned also considering
+possible first-order viscoelastic effects. A feedback strategy
+such as in Ref.41 was also used to provide high tracking accuracy, however, only for a planar manipulator. In Ref.,54 it
+was shown that by learning only the model error incurred by
+an analytical model (a CC model), better forward and IK
+models could be obtained. In this way, it is also possible to
+leverage the advantages of an analytical model (such as null
+space motions) along with the generality of learning methods.
+Summary of model-free static controllers
+
+One of the primary advantages of model-free approaches is
+to circumvent the need to define the parameters of the configuration space and/or joint space and is independent of the
+manipulator shape. Due to this, arbitrarily complex kinematic
+models can be developed depending on the abundance of the
+sample data and sensory noise. This is probably why modelfree approaches have fared better for systems that are highly
+nonlinear, nonuniform,39 influenced by gravity,41,48 or act
+within unstructured environments where modeling is almost
+impossible.42 However, for well-behaved compact manipulators in known environments, model-based controllers are
+still more accurate and reliable. Furthermore, due to their
+black box nature, stability analysis and convergence proofs
+are difficult to establish. Static/kinematic controllers assume
+little or no dynamic coupling between sections.
+As mentioned in the beginning, static/kinematic controllers
+rely on the steady-state assumption, which hinders accurate
+and fast motion of soft manipulators. Hence, controllers that
+consider the dynamic behavior of these manipulators are important for faster, dexterous, efficient, smoother tracking and
+in situations where coupling effects cannot be ignored.
+Model-Based Dynamic Controllers
+
+Probably the most challenging field in the control of continuum/soft robots is the development of nonstatic controllers
+
+that considers the complete dynamics of the whole manipulator. Development of dynamic controllers would require the
+formulation of the kinematic model and an associated dynamic formulation. The fact that kinematic models are difficult to develop themselves, a dynamic formulation based on
+these imprecise models, aggravates the model uncertainties.55
+On the contrary, even if exact kinematic and dynamic models
+are available, an appropriate controller would then require
+high-dimensional sensory feedback.56 Moreover, some dynamic properties/disturbances are inherently uncontrollable
+due to their underactuated nature.14 Development of reliable
+parameter estimation algorithms and accurate sensory information is also crucial.
+One of the first theoretical studies on the dynamic control of continuum robots was done in Ref.57 In Ref.,57 it was
+validated through simulations of a planar single multisection
+continuum robot that a simple feedforward and feedback
+proportional derivative (PD) controller can achieve exponential tracking of a set point. The feedforward component
+inputs the actuator torques, satisfying the static holding torques, and the feedback component ensures the convergence
+of the set point position. A similar experimental study
+showed that a simple proportional controller can regulate the
+orientation of a planar continuum robot and a PD controller
+with coupling compensation can damp out manipulator vibrations.14 Nonetheless, these studies were conducted on
+simplified models that do not capture the true nonlinearities
+of continuum/soft robots.
+The first closed-loop task space dynamic controller for
+continuum robots was demonstrated in Ref.,58 although only
+by simulations. The kinematic for the 2D multisection robot
+was formulated using the CC model and the corresponding
+dynamic model in the configuration was presented in the
+Euler–Lagrangian form using lumped dynamic parameters.
+One main difference of such a model from the dynamic
+model of a rigid robot is the addition of the potential energy
+due to bending and extension (dependent only on the kinematic configuration). In this dynamic equation, the task space
+state variables can be substituted in place of the configuration
+state variables using the kinematic model. Note that by this
+way small errors in the kinematic model will exponentially
+rise when computing the higher order states and thereby affecting the accuracy of dynamic model. The implemented
+controller can be described as a PD-computed torque controller where the auxiliary control signal is represented in
+terms of the task space variables. An additional term for
+controlling the configuration space in the null space is also
+added. Although the robustness of the controller is shown by
+adding Gaussian white noise, the performance of such a
+controller can only be validated experimentally since it hinges on the CC approximation. However, the validity of the
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+CONTROL STRATEGIES FOR SOFT ROBOTIC MANIPULATORS
+
+CC model for the same model was concurrently questioned in
+Ref.55 Furthermore, it must be brought to the attention
+of the reader that the stability proof was derived assuming
+that the kinematic and dynamic model is perfect.
+A different control approach for the same kinematic and
+dynamic model, in simulation, was done using a sliding mode
+controller in Ref.,59 however, only for closed-loop configuration space control. A first-order (assuming that the input/output
+relative degree is two) sliding surface is defined as the filtered
+tracking error for this purpose. The advantage of a sliding
+mode controller over a simple inverse dynamics-based PD
+controller is the higher robustness to model uncertainties; the
+downside being the slower error convergence, chattering, and
+higher gain requirements. An experimental evaluation of this
+method was conducted with a planar three-section continuum
+arm in Ref.,60 along with comparisons to a simple feedback
+linearization-based PD controller in the configuration space. It
+was observed that the sliding mode controller performed better
+in terms of accuracy and speed indicating that model uncertainties were significant. In addition, a task space controller
+for teleoperation was demonstrated using the controller mentioned in Ref.,58 which showed good tracking performance for
+a low-frequency reference.
+Considering the fact that the actuator dynamics of
+pneumatic actuators is slower and more nonlinear than
+tendon-driven actuators, works focusing on optimal dynamic
+controllers for pneumatically actuated manipulators started
+to emerge. One such approach for trajectory optimization was
+demonstrated using simulations in Ref.,61 where the objective was to estimate the optimal trajectory that reduces the
+transition time and actuator jerk. The nonlinear optimization
+problem is formulated with kinematic constraints (CC model), actuator dynamic constraints, and boundary constraints
+with the mass flow as the trajectory variable. Along the same
+lines, a trajectory optimization scheme for a comprehensive
+dynamic model of a soft planar manipulator was described in
+Ref.62 (Fig. 10). Using the CC model for expressing the kinematics of the manipulator, a dynamic model was derived in
+the configuration space. A detailed derivation for calculating
+the generalized torques from the cylinder displacement and
+reference input is described in the article. A direct collocation
+approach is used to simultaneously identify the optimal generalized torques and corresponding manipulator state with the
+systems kinematics, dynamics, boundary conditions, and
+tracking objective as constraints. The objective function is to
+reduce the final end effector velocity. An optimization prob-
+
+159
+
+lem is used for obtaining the optimal reference inputs to the
+actuator to realize the initial trajectory. Another advantage of a
+solving the control problem as an optimization problem is that
+it alleviates the need for a high-level path planner. The openloop policy was successfully able to reach statically unreachable target points with high probability; the first demonstration
+in the field of continuum/soft manipulators. Even then, an iterative learning control scheme to reidentify the system parameters was required in between trials for best performance.
+Another comprehensive model-based controller, seemingly a variation of Ref.,58 based on the dynamics of the joint
+space was proposed in Ref.63 The kinematics is based on the
+CC model and the dynamic model is represented in the joint
+space. A PD-computed torque controller in the joint space is
+proposed. To transform the generalized torques used in the
+dynamic model to the desired actuator pressures, an inversion
+scheme is proposed. Experimental results even without the
+PD term showed decent results, validating the dynamic model.
+An extension of Ref.,63 which also considers the dynamics
+of the pneumatic chambers, was proposed in Ref.64 (Fig. 11).
+With this, an inner loop-decoupled PD-computed torque controller is cascaded to the existing controller. Consideration
+of the pneumatic dynamics is important because its response
+is slower and more nonlinear compared with the dynamics of
+electromagnetic actuators. Since the controller does not consider the actuator and kinematic constraints, the performance is
+currently limited.
+A recent interesting approach in the field of soft robotic
+manipulators in terms of design and control was stated in
+Ref.65 This soft humanoid robot was constructed such that
+the joints are similar to traditional rotational joints. Therefore, the kinematics of the manipulator can be modeled like
+traditional rigid robots allowing for much simpler dynamics
+models, which are identified empirically. The authors have
+ignored gravitational and cross coupling effects, and the relationship between joint torques and pressure is derived. Due
+to the simplified model and design, a model predictive controller (MPC) in the joint space could be implemented at high
+frequency (300 Hz).
+Summary of model-based dynamic controllers
+
+Dynamic controllers are important for industrial applications where time and cost are also important along
+with the accuracy. Model-based dynamic controllers for
+continuum/soft manipulators are still in their nascent stage,
+
+FIG. 10. Trajectory optimization algorithm for openloop dynamic task space
+control.
+
+160
+
+GEORGE THURUTHEL ET AL.
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+FIG. 11.
+
+Joint space dynamic controller by feedback linearization.
+
+and consequently, there are a multitude of gaps that should
+be addressed in design, modeling, and control. Dynamic
+models directly mapping the control inputs (voltage, pressure, or encoder values) to the task space variables should
+provide the ideal performance for any model-based control
+approach. Currently, most of the dynamic control approaches are focused on the joint space control with an exception of few.62 Even in this case, due to the computational
+complexity, the controller had to be designed in open loop
+for a planar uniform manipulator. However, if the feedforward controller is perfect, this would be the most ideal
+choice. MPCs are ideal candidates for control of these continuum/soft manipulators, allowing for low-gain accurate
+control. Their application is currently limited only because of
+the computational complexity of the current dynamic models.
+With the increase in computational power, sensing capabilities, and intelligent controllers, we can expect better developments in model-based dynamic controllers. Alternatively,
+another route to consider are machine learning-based approaches for learning open-loop controllers, for dynamic
+compensation, or for learning black box dynamic models.
+Model-Free Dynamic Controllers
+
+Model-free approaches for dynamic control of continuum/
+soft manipulators are still a relatively unexplored area.
+Nonetheless, the earliest usage of machine learning techniques for control of continuum robots was implemented for
+compensating for dynamic uncertainties in Ref.66 (Fig. 12).
+However, the methodology was described only for closedloop dynamic control of the joint variables. The control architecture is composed of a feedback component, which is
+based on a continuous asymptotic tracking control strategy
+for uncertain nonlinear systems (similar to a second-order
+sliding mode controller),67 and a feedforward component
+made using neural networks. The objective of the neural
+network is to compensate for the dynamic uncertainties and
+thereby reducing the uncertainty bound that improves the
+performance of the feedback controller.
+
+FIG. 12. Model-free dynamic controller in
+the joint space.
+
+In the domain of reinforcement learning, a simulated
+multisegmented dynamical planar model of the octopus arm
+was developed in Ref.68 The authors then addressed the task
+of reaching a point by modeling the problem as a Hidden
+Markov Model that was solved online through a nonparametric Gaussian temporal difference learning algorithm.
+The underlying idea is to learn an action-value function via
+Bayesian inference from which an optimal control policy
+can be derived. In Ref.,69 it was demonstrated that an actor–
+critic-based reinforcement learning approach could solve
+the same problem in the context of continuous action spaces.
+A significant challenge that, however, remains, to adopt
+such methods in practice, is to reduce the real-time costs for
+generating solutions.
+Recently, the first direct actuator space to task space dynamic controller was experimentally demonstrated on a 3D
+soft pneumatic manipulator.70 The approach involved learning
+the forward dynamic model using a class of recurrent neural
+network and using trajectory optimization on the learned
+model.62 Such types of controllers reveal a different region of
+dynamic behavior that a soft manipulator can attain in terms of
+speed, workspace volume, and efficiency. The advantages of a
+model-free approach are clearly evident in terms of the ease of
+modeling accuracy and low sensory requirements. However,
+the controller is purely open loop due to the computational
+complexity and it was experimentally validated only on a
+single-section manipulator.
+Summary of model-free dynamic controllers
+
+To sum up, although model-free approaches offer a relatively simpler path for developing dynamic controllers,
+practical applications are limited either due to training time
+or stability concerns.71 Nonetheless, it is a possibility that
+should be looked upon, especially with the growth of more
+robust algorithms for training recurrent dynamic network.72
+That being said, hybrid controllers that merge model-based
+and model-free approaches could also be a viable approach to
+consider.
+
+CONTROL STRATEGIES FOR SOFT ROBOTIC MANIPULATORS
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+Discussions
+
+From our survey on the current control approaches in soft
+robotics, it is apparent that the design of controllers for
+continuum/soft manipulators is not only application dependent but also influenced by the manipulator design, actuator
+and sensor availability. Therefore, it is difficult to compare
+and contrast all the approaches under the same umbrella.
+However, depending on the design, actuation, and application, there are some trends observed. Classification of a
+manipulator as continuum or soft did not affect the controller
+design; at least, it is not evident. This means that controllers
+developed for continuum manipulators can be easily transferred to their soft subgroup. Medical applications that rely
+on compact manipulators, manufactured with high precision,
+tend to use model-based approaches because of the reliability
+and highly controlled environment. Likewise, manipulators
+with nonuniform geometry and high nonlinearity tend to use
+model-free methods for a lack of better analytic models. For
+manipulation in unstructured environments, currently only
+model-free methods have shown promising results.
+Another interesting observation is the absence of dynamic
+controllers developed for tendon-driven manipulators. This
+could be because of the nonuniform loading for cable actuation contrasting to the high damping and low force actuation
+provided by pneumatic actuators. Nonuniform loading occurs
+due to the physical interactions between the cable guide and
+the cable due to friction and this leads to irregular actuation
+of the manipulator DoFs. High damping coupled with low force
+actuation reduces overall energy supplied to the system therefore reducing the chaotic nature of the manipulator dynamics.
+The controller regime to some extent depends on the
+sensor availability. For instance, closed-loop configuration
+space controllers require vision sensors. Model-based closedloop kinematic controllers for pneumatically actuated manipulators used wire cable potentiometers. This is because of
+joint space estimation for pneumatic actuation in not so
+straightforward-like rigid robots.
+With regard to unexplored fields of research, clear voids are
+evident in hybrid control approaches and model-free approaches for dynamic control. Application of machine learning
+for learning the dynamic mapping from the actuator space to
+task space/configuration space is a viable method to be investigated. Similarly, hybrid learning approaches incorporating both model-based and model-free methods is a highly
+promising line of research. In addition, machine learning algorithms incorporating prior knowledge of the system would
+also provide a way for faster and more stable learning.73 Another overlooked topic is the importance of the low-level
+controllers (actuator dynamics) in the overall stability and
+response of the higher level control architecture.
+Continuum/soft manipulators offer a technological solution to complex tasks in sensitive environments. Leveraged
+by their light weight, compact, and inherently safe structure,
+they can be used in various complex scenarios with elementary control strategies.9,10 Current trends in soft robot are
+individual efforts based on novel actuation, design, sensing,
+and control technologies for particular applications. However, an overlooked aspect is the interdependencies of these
+elements among themselves and with the environment.7 The
+possibility of outsourcing computational burden to the body
+(morphological computation) has been widely deliberated
+
+161
+
+and even experimentally proven74 along with the effect of
+sensory feedback.75 In a control perspective, this corresponds
+to a zero lag adaptive feedback controller. Exploitation of this
+intrinsic controller has been achieved in some cases.5 We
+believe that the future evolution of controllers for soft robotic
+manipulators would also be in this direction, where the
+morphological properties of the complex manipulators would
+also be utilized for more accurate, robust, and dexterous
+manipulation.
+Acknowledgments
+
+The authors would like to acknowledge the support by the
+People Programme (Marie Curie Actions) of the European
+Union’s Seventh Framework Programme FP7/2007-2013/
+under REA grant agreement Smart-e, number 608022 and the
+European Commission through the I-SUPPORT project
+(HORIZON 2020 PHC-19, #643666.
+Author Disclosure Statement
+
+No competing financial interests exist.
+References
+
+1. Robinson G, Davies J. Continuum robots—a state of the
+art. Proceedings of the 1999 IEEE International Conference
+on Robotics and Automation (Cat. No. 99CH36288C),
+Detroit, MI, 1999.
+2. Albu-Schaffer A, Eiberger O, Grebenstein M, Haddadin S,
+Ott C, Wimbock T, et al. Soft robotics. IEEE Robot Autom
+Mag 2008;3:20–30.
+3. Laschi C, Mazzolai B, Cianchetti M. Soft robotics: technologies and systems pushing the boundaries of robot
+abilities. Sci Robot 2016;1:eaah3690.
+4. Trivedi D, Rahn C, Kier W, Walker I. Soft robotics: biological inspiration, state of the art, and future research.
+Appl Bionics Biomech 2008;5:99–117.
+5. Amend J, Brown E, Rodenberg N, Jaeger H, Lipson H. A
+positive pressure universal gripper based on the jamming of
+granular material. IEEE Trans Robot 2012;28:341–350.
+6. Embodied Artificial Intelligence (Lecture Notes in Computer
+Science series, 3139) Iida F, Pfeifer R, Steels L, Kuniyoshi
+Y. (Eds). Berlin, Heidelberg; Springer: 2004.
+7. Pfeifer R, Gómez G. Morphological computation—
+connecting brain, body, and environment. In: Creating BrainLike Intelligence. Lecture Notes in Computer Science, vol
+5436. Sendhoff B, Körner E, Sporns O, Ritter H, Doya K.
+(Eds). Berlin, Heidelberg; Springer: 2009, pp. 66–83.
+8. Manti M, Cacucciolo V, Cianchetti M. Stiffening in soft
+robotics: a review of the state of the art. IEEE Robot Autom
+Mag 2016;23:93–106.
+9. Kim S, Laschi C, Trimmer B. Soft robotics: a bioinspired
+evolution in robotics. Trends Biotechnol 2013;31:287–294.
+10. Rus D, Tolley M. Design, fabrication and control of soft
+robots. Nature 2015;521:467–475.
+11. Walker I. Continuous backbone ‘‘continuum’’ robot manipulators. ISRN Robot 2013;2013:1–19.
+12. Webster R, Jones B. Design and kinematic modeling of
+constant curvature continuum robots: a review. Int J Robot
+Res 2010;29:1661–1683.
+13. Hannan M, Walker I. Kinematics and the implementation
+of an Elephant’s Trunk Manipulator and other continuum
+style robots. J Robotic Syst 2003;20:45–63.
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+162
+
+14. Gravagne I, Rahn C, Walker I. Large deflection dynamics
+and control for planar continuum robots. IEEE/ASME Trans
+Mechatron 2003;8:299–307.
+15. Gravagne I, Walker I. Manipulability, force, and compliance
+analysis for planar continuum manipulators. IEEE Trans
+Robot Autom 2002;18:263–273.
+16. Jones B, Walker I. Kinematics for multisection continuum
+robots. IEEE Trans Robot 2006;22:43–55.
+17. Trivedi D, Lotfi A, Rahn C. Geometrically exact models
+for soft robotic manipulators. IEEE Trans Robot 2008;24:
+773–780.
+18. Bailly Y, Amirat Y. Modeling and control of a hybrid
+continuum active catheter for aortic aneurysm treatment.
+Proceedings of the 2005 IEEE International Conference on
+Robotics and Automation, Barcelona, Spain, 2005.
+19. Camarillo D, Carlson C, Salisbury J. Configuration tracking
+for continuum manipulators with coupled tendon drive.
+IEEE Trans Robot 2009;25:798–808.
+20. Camarillo DB, Carlson CR, Salisbury JK. Task-space control
+of continuum manipulators with coupled tendon drive. In:
+Experimental Robotics. Springer Tracts in Advanced Robotics, vol 54. Khatib O, Kumar V, Pappas GJ (Eds). Berlin,
+Heidelberg; Springer: 2009, pp. 271–280.
+21. Xu K, Simaan N. Actuation compensation for flexible
+surgical snake-like robots with redundant remote actuation.
+Proceedings of the 2006 IEEE International Conference on
+Robotics and Automation (ICRA 2006), Orlando, FL, 2006.
+22. Jones B, Walker I. Practical kinematics for real-time implementation of continuum robots. IEEE Trans Robot 2006;
+22:1087–1099.
+23. Bajo A, Goldman R, Simaan N. Configuration and joint
+feedback for enhanced performance of multi-segment continuum robots. 2011 IEEE International Conference on
+Robotics and Automation (ICRA), Shanghai, China, 2011.
+24. Penning R, Jung J, Ferrier N, Zinn M. An evaluation of closedloop control options for continuum manipulators. 2012 IEEE
+International Conference on Robotics and Automation
+(ICRA), Saint Paul, MN, 2012.
+25. Mahvash M, Dupont P. Stiffness control of surgical continuum manipulators. IEEE Trans Robot 2011;27:334–345.
+26. Goldman R, Bajo A, Simaan N. Compliant motion control
+for continuum robots with intrinsic actuation sensing. 2011
+IEEE International Conference on Robotics and Automation (ICRA), Shanghai, China, 2011.
+27. Bajo A, Simaan N. Hybrid motion/force control of multibackbone continuum robots. Int J Robot Res 2015;35:
+422–434.
+28. Wang H, Chen W, Yu X, Deng T, Wang X, Pfeifer R.
+Visual servo control of cable-driven soft robotic manipulator. 2013 IEEE/RSJ International Conference on Intelligent
+Robots and Systems (IROS), Tokyo, Japan, 2013.
+29. Mahl T, Hildebrandt A, Sawodny O. A variable curvature
+continuum kinematics for kinematic control of the bionic
+handling assistant. IEEE Trans Robot 2014;30:935–949.
+30. Mahl T, Mayer A, Hildebrandt A, Sawodny O. A variable
+curvature modeling approach for kinematic control of continuum manipulators. 2013 American Control Conference,
+Washington, DC, 2013.
+31. Till J, Bryson CE, Chung S, Orekhov A, Rucker DC.
+Efficient computation of multiple coupled Cosserat rod
+models for real-time simulation and control of parallel
+continuum manipulators. 2015 IEEE International Conference on Robotics and Automation (ICRA), Seattle,
+WA, 2015, pp. 5067–5074.
+
+GEORGE THURUTHEL ET AL.
+
+32. Boushaki M, Liu C, Poignet P. Task-space position control
+of concentric-tube robot with inaccurate kinematics using
+approximate Jacobian. 2014 IEEE International Conference
+on Robotics and Automation (ICRA), Hong Kong, China,
+2014.
+33. Largilliere F, Verona V, Coevoet E, Sanz-Lopez M,
+Dequidt J, Duriez C. Real-time control of soft-robots using asynchronous finite element modeling. 2015 IEEE
+International Conference on Robotics and Automation
+(ICRA), Seattle, WA, 2015.
+34. Conrad B, Zinn M. Closed loop task space control of
+an interleaved continuum-rigid manipulator. 2015 IEEE
+International Conference on Robotics and Automation
+(ICRA), Seattle, WA, 2015.
+35. Marchese A, Rus D. Design, kinematics, and control of a
+soft spatial fluidic elastomer manipulator. Int J Robot Res
+2015;35:840–869.
+36. Sadati SMH, Naghibi SE, Shiva A, Walker ID, Althoefer
+K, Nanayakkara T. Mechanics of continuum manipulators,
+a comparative study of five methods with experiments. In:
+Towards Autonomous Robotic Systems. TAROS 2017. Lecture Notes in Computer Science, vol 10454. Gao Y, Fallah S,
+Jin Y, Lekakou C (Eds). Cham, Switzerland; Springer: 2017,
+pp. 689–702.
+37. Nguyen-Tuong D, Peters J. Model learning for robot
+control: a survey. Cogn Process 2011;12:319–340.
+38. Giorelli M, Renda F, Ferri G, Laschi C. A feed-forward
+neural network learning the inverse kinetics of a soft cabledriven manipulator moving in three-dimensional space.
+2013 IEEE/RSJ International Conference on Intelligent
+Robots and Systems (IROS), Tokyo, Japan, 2013.
+39. Giorelli M, Renda F, Calisti M, Arienti A, Ferri G, Laschi
+C. Neural network and Jacobian method for solving the
+inverse statics of a cable-driven soft arm with nonconstant
+curvature. IEEE Trans Robot 2015;31:823–834.
+40. Giorelli M, Renda F, Calisti M, Arienti A, Ferri G, Laschi
+C. Learning the inverse kinetics of an octopus-like manipulator in three-dimensional space. Bioinspir Biomim 2015;
+10:035006.
+41. Rolf M, Steil JJ. Efficient exploratory learning of inverse
+kinematics on a bionic elephant trunk. IEEE Trans Neural
+Netw Learn Syst 2014;25:1147–1160.
+42. Yip M, Camarillo D. Model-less feedback control of continuum manipulators in constrained environments. IEEE Trans
+Robot 2014;30:880–889.
+43. Yip M, Camarillo D. Model-less hybrid position/force
+control: a minimalist approach for continuum manipulators
+in unknown, constrained environments. IEEE Robot Autom
+Lett 2016;1:844–851.
+44. Melingui A, Merzouki R, Mbede J, Escande C, Daachi B,
+Benoudjit N. Qualitative approach for inverse kinematic
+modeling of a Compact Bionic Handling Assistant trunk.
+2014 International Joint Conference on Neural Networks
+(IJCNN), Beijing, China, 2014.
+45. Melingui A, Lakhal O, Daachi B, Mbede J, Merzouki R.
+Adaptive neural network control of a compact bionic handling
+arm. IEEE/ASME Trans Mechatron 2015;20:2862–2875.
+46. Thuruthel T, Falotico E, Cianchetti M, Laschi C. Learning
+global inverse kinematics solutions for a continuum robot. In:
+Parenti-Castelli V, Schiehlen W. (Eds). ROMANSY 21—
+Robot Design, Dynamics and Control. Cham, Switzerland:
+Springer, 2016, pp. 47–54.
+47. Thuruthel T, Falotico E, Cianchetti M, Renda F, Laschi C.
+Learning global inverse statics solution for a redundant soft
+
+Downloaded by SCUOLA SUPERIRE SANT' ANNA from www.liebertpub.com at 09/11/19. For personal use only.
+
+CONTROL STRATEGIES FOR SOFT ROBOTIC MANIPULATORS
+
+robot. Proceedings of the 13th International Conference on
+Informatics in Control, Automation and Robotics, Lisbon,
+Portugal, 2016.
+48. George Thuruthel T, Falotico E, Manti M, Pratesi A,
+Cianchetti M, Laschi C. Learning closed loop kinematic
+controllers for continuum manipulators in unstructured
+environments. Soft Robot 2017;4:285–296.
+49. Malekzadeh M, Calinon S, Bruno D, Caldwell D. Learning
+by imitation with the STIFF-FLOP surgical robot: a biomimetic approach inspired by octopus movements. Robot
+Biomim 2014;1:13.
+50. Ansari Y, Manti M, Falotico E, Cianchetti M, Laschi C.
+Multiobjective optimization for stiffness and position control in a soft robot arm module. IEEE Robot Autom Lett
+2017;3:108–115.
+51. Qi P, Liu C, Ataka A, Lam H, Althoefer K. Kinematic control
+of continuum manipulators using a fuzzy-model-based approach. IEEE Trans Industr Electron 2016;63:5022–5035.
+52. Lakhal O, Melingui A, Merzouki R. Hybrid approach for
+modeling and solving of kinematics of a compact bionic
+handling assistant manipulator. IEEE/ASME Trans Mechatron 2016;21:1326–1335.
+53. Jiang H, Wang Z, Liu X, Chen X, Jin Y, You X, et al. A
+two-level approach for solving the inverse kinematics of an
+extensible soft arm considering viscoelastic behavior. 2017
+IEEE International Conference on Robotics and Automation (ICRA), Singapore, Singapore, 2017, pp. 6127–6133.
+54. Reinhart R, Shareef Z, Steil J. Hybrid analytical and datadriven modeling for feed-forward robot control. Sensors
+(Basel) 2017;17:E311.
+55. Trivedi D, Lotfi A, Rahn C. Geometrically exact dynamic
+models for soft robotic manipulators. 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems
+(IROS), San Diego, CA, 2007.
+56. Renda F, Giorelli M, Calisti M, Cianchetti M, Laschi C.
+Dynamic model of a multibending soft robot arm driven by
+cables. IEEE Trans Robot 2014;30:1109–1122.
+57. Gravagne I, Walker I. Uniform regulation of a multisection continuum manipulator. Proceedings of the 2002
+IEEE International Conference on Robotics and Automation (Cat. No. 02CH37292), Washington, DC, 2002.
+58. Kapadia A, Walker I. Task-space control of extensible
+continuum manipulators. 2011 IEEE/RSJ International
+Conference on Intelligent Robots and Systems (IROS), San
+Francisco, CA, 2011.
+59. Kapadia A, Walker I, Dawson D, Tatlicioglu E. A modelbased sliding mode controller for extensible continuum
+robots. Proceedings of the 9th WSEAS International Conference on Signal Processing, Robotics and Automation
+(ISPRA’10), Cambridge, UK, 2010, pp. 113–120.
+60. Kapadia A, Fry K, Walker I. Empirical investigation of
+closed-loop control of extensible continuum manipulators.
+2014 IEEE/RSJ International Conference on Intelligent
+Robots and Systems, Chicago, IL, 2014.
+61. Falkenhahn V, Hildebrandt A, Sawodny O. Trajectory optimization of pneumatically actuated, redundant continuum
+manipulators. 2014 American Control Conference (ACC),
+Portland, OR, 2014.
+62. Marchese A, Tedrake R, Rus D. Dynamics and trajectory
+optimization for a soft spatial fluidic elastomer manipulator. Int J Robot Res 2015;35:1000–1019.
+
+163
+
+63. Falkenhahn V, Hildebrandt A, Neumann R, Sawodny O.
+Model-based feedforward position control of constant curvature continuum robots using feedback linearization. 2015
+IEEE International Conference on Robotics and Automation
+(ICRA), Seattle, WA, 2015.
+64. Falkenhahn V, Hildebrandt A, Neumann R, Sawodny O.
+Dynamic control of the bionic handling assistant. IEEE/
+ASME Trans Mechatron 2016;22:6–17.
+65. Best C, Gillespie M, Hyatt P, Rupert L, Sherrod V, Killpack
+M. A new soft robot control method: using model predictive
+control for a pneumatically actuated humanoid. IEEE Robot
+Autom Mag 2016;23:75–84.
+66. Braganza D, Dawson D, Walker I, Nath N. A neural network
+controller for continuum robots. IEEE Trans Robot 2007;23:
+1270–1277.
+67. Xian B, Dawson D, DeQueiroz M, Chen J. A continuous asymptotic tracking control strategy for uncertain
+nonlinear systems. IEEE Trans Autom Control 2004;49:
+1206–1206.
+68. Engel Y, Szabo P, Volkinshtein D. Learning to control an
+octopus arm with Gaussian process temporal difference
+methods. Advances in Neural Information Processing Systems (NIPS), Vancouver, Canada, 2005.
+69. Silver D, Lever G, Heess, N, Degris T, Wierstra D, Riedmiller
+M. Deterministic policy gradient algorithms. Proceedings of
+the 31st International Conference on Machine Learning,
+Beijing, China, 2014.
+70. Thuruthel TG, Falotico E, Renda F, Laschi C. Learning
+dynamic models for open loop predictive control of
+soft robotic manipulators. Bioinspir Biomim 2017;12:
+066003.
+71. Venkatraman A, Herbert M, Bagnell J. Improving multi-step
+prediction of learned time series models. Twenty-Ninth AAAI
+Conference on Artificial Intelligence (AAAI), Austin, Texas,
+2015.
+72. Bengio S, Vinyals O, Jaitly N, Shazeer N. Scheduled
+sampling for sequence prediction with recurrent neural
+networks. NIPS, Montreal, Canada, 2015.
+73. Nguyen-Tuong D, Peters J. Model learning for robot control: a survey. Cogn Process 2011;12:319–340.
+74. Nakajima K, Hauser H, Kang R, Guglielmino E, Caldwell
+D, Pfeifer R. A soft body as a reservoir: case studies in a
+dynamic model of octopus-inspired soft robotic arm. Front
+Comput Neurosci 2013;7:91.
+75. Hauser H, Ijspeert A, Füchslin R, Pfeifer R, Maass W. The
+role of feedback in morphological computation with compliant bodies. Biol Cybern 2012;106:595–613.
+
+Address correspondence to:
+Thomas George Thuruthel
+The Biorobotics Institute
+Scuola Superiore Sant’Anna
+Polo Sant’Anna Valdera
+Viale Rinaldo Piaggio, 34
+Pisa 56025
+Italy
+E-mail: t.thuruthel@sssup.it
+
+

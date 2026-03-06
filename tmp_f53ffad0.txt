@@ -1,0 +1,1279 @@
+2019 American Control Conference (ACC)
+Philadelphia, PA, USA, July 10-12, 2019
+
+H-infinity based Extended Kalman Filter for State Estimation in Highly
+Non-linear Soft Robotic System
+Junn Yong Loo1 , Chee Pin Tan1 and Surya Girinatha Nurzaman1
+Abstract— Sensor data play a significant role in the control of
+robotic systems. While soft robotics is promising for operation
+in unstructured environments, it is difficult to integrate sensors
+into soft robots because their inherent softness can be disturbed
+by the use of sensors. One way to overcome this challenge
+is to use an observer/filter to estimate the variables (states)
+that would have been measured by those sensors. Nevertheless,
+applying an observer/filter scheme to a soft robot introduces
+challenges due to the high non-linearity in its system model.
+In this paper, a novel H∞ based Extended Kalman Filter
+(EKF) is proposed to estimate the states of a soft continuum
+manipulator and its performances are investigated. The H∞ EKF are tested with model simulations of an experimentally
+validated soft continuum manipulator system with highly nonlinear kinematics and dynamics. The results show that H∞ -EKF
+achieves accurate estimations in pneumatic muscle actuator
+(pMA)’s elongation and manipulator’s task space coordinates
+while estimation result for elongation rate is less satisfactory
+due to large model uncertainties.
+
+I. INTRODUCTION
+Soft robots are promising for adaptive operation in unstructured environments because of their inherent compliance
+that is typically found in biological organisms [1]. A subclass
+of soft robots, soft continuum manipulators have gained
+much attention in the past decade due to their soft properties and hyper-redundancy, allowing dexterous motion not
+feasible with the conventional rigid robots. Generally, there
+are two types of soft continuum manipulators, tendon-driven
+and pneumatic [2]. Examples of tendon-driven manipulators
+are for instance the elephant trunk manipulator designed by
+Hannan and Walker that grabs object by bending its structure
+[3]. Renda et. al. designed an octopus-like continuum arm
+prototype that is driven by 12 Cosserat rod embedded inside
+its silicon body [4]. A snake-like, wire-actuated medical
+robot device with multiple NiTi backbones was designed
+in [5] for minimally invasive surgery. As for pneumatic
+manipulators, Bartow et. al. designed a novel continuum
+trunk actuated by braided pneumatic artificial muscles in [6].
+A multi-section continuum robots with continuous backbone
+called OctArm was created in [7]. Marchese and Rus detailed
+a fabrication process for its soft fluidic manipulator that
+composed entirely of low durometer elastomer in [8].
+In robotics, sensory data play a significant role in system
+controllability and robustness [2]. Several examples of task
+*This work was supported by the Ministry of Higher Education
+Malaysia under the Fundamental Grant Scheme (FRGS) grant no.
+FRGS/1/2017/STG06/MUSM/02/1.
+1 The authors are with the School of Engineering and Advanced
+Engineering Platform, Monash University Malaysia, Petaling Jaya 46150,
+Malaysia (E-mail: junn.loo@monash.edu; tan.chee.pin@monash.edu;
+surya.nurzaman@monash.edu)
+
+978-1-5386-7926-5/$31.00 ©2019 AACC
+
+space tracking require intermediate states such as continuum
+section length, joint space velocity and section curvature,
+in configuration space as control feedback states. However,
+inherent softness in soft robots challenges the conventional
+ways of integrating sensors in them for spatial configuration detection. There are several types of sensor used in
+soft robotic systems. For examples, cable potentiometers
+[9] and string encoders [10] for actuator/joint space vector
+(actuator length), encoders and magnetic sensors [11] for
+configuration states (segment curvature and bending angle),
+vision [8], [12]–[17] and electromagnetic sensors [18] for
+task space position. Other examples include in-line load
+cell [19], [20] for force estimation and pressure sensor
+[9] for pressure regulation. However, equipping soft robots
+with sensors could have negative effects. For example, a
+cable potentiometer induces tension and friction that could
+stiffen the soft robot, constricting its reachability and causes
+deviation to the established models. Sensors like encoders
+and load cells that are rigid introduce extra weights which
+need to be considered. These sensors could be subjected to
+noise as well. Vision captured data on the other hand, do not
+usually contain noise but involve computationally expensive
+algorithm when calculating complex robot geometry with
+visual markers. With the intention of reducing the number of
+sensors involved, an alternative is to substitute sensors with
+a dynamical observer/filter scheme for state estimation.
+To utilize an observer/filter or state estimator, a system
+model is required. However, the kinematics and dynamics
+of soft robotic systems are very different from the conventional rigid robots. Unlike rigid articulated manipulators, continuum manipulators have flexible structures and
+hyper-redundant actuated DOFs which present a formidable
+challenge for modelling their true non-linearity [2]. The
+success of practical soft robot control heavily hinges on
+the development of these kinematic and dynamic models.
+While model-free approaches exist, it is difficult to perform
+stability analysis and convergence proofs on them due to
+black box nature of the model-free approaches, making their
+efficacy difficult to analyze [2]. For well-structured and
+compact manipulators in known environment, model-based
+methods generally still provide more accurate results [2].
+For the intention of developing a model-based observer/filter,
+existing kinematic and dynamic modelling techniques of soft
+continuum manipulators are reviewed.
+The majority of the kinematics are derived from the
+elementary Constant Curvature (CC) model or Variable Constant Curvature (VCC) approximation, while most of the
+dynamics used either the Euler-Lagrangian or Lagrangian
+
+5154
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+formulation which accounts for potential and kinetic energy
+[21]. However, model-based dynamics for soft robots are still
+in its nascent stage. Due to the fact that kinematic models are
+difficult to develop, a dynamic formulation based on the less
+accurate kinematic model aggravates the effects of model
+uncertainties [2]. Renda et. al. [22] developed a dynamic
+model for the octopus inspired continuum soft robot arm
+described in [4]. The model was validated with experiment
+data from a working prototype and proved to be usable
+as a dynamic simulation platform for control strategy of
+continuum robot arm. Godage et al. [16] presented a novel
+spatial kinematic model based on mode shape functions,
+for a multi-section continuum arms robot that resembles
+the OctArm. The method employed forward and inverse
+kinematics to model spatial bending and elongation of the
+continuum robot. A novel spatial dynamics of the complex
+curve parametric arm model was introduced in [17] based
+on the structurally accurate modal kinematics derived, where
+a computational scheme designed to compute the equations
+of motion (EoM) was also presented. Marchese and Rus
+developed a multi-segment kinematic model [8] by incorporating the stresses and strains in the elastomer into the piecewise curvature approximation, which was then extended to
+a dynamic model [15] with its control algorithm presented
+for trajectory optimization. Falkenhaln et. al. developed a
+practicable lumped mass dynamic model associated with its
+kinematic model for fast simulation of the Bionic Handling
+Assistant [23], which became the basis for a model-based
+controller later in [9].
+To reduce the need of integrating various type and number
+of sensors, an alternative is to use an observer/filter scheme
+for state estimation. In [24], the performance of adaptive
+EKF on a tendon-driven soft continuum manipulator system
+was compared to the experiment data of the optical fiber
+curvature sensor and accelerometers, however, the EKF was
+based upon a simplified quasi-static model. In [25], the
+conventional Luenberger observer was used to estimate the
+position and velocity vectors in the reduced order steadystate model. The large scale model before order reduction
+was obtained through finite element method (FEM) and linearized at the desired soft robot configuration as equilibrium
+point. Nevertheless, there are not many studies on state
+estimation for soft robots, and hence this area is still very
+much in its infancy with much potential for development.
+In this paper, the pneumatic soft continuum manipulator in
+[16], [17] (with highly non-linearity whose its models have
+been experimentally verified) is used. With the soft manipulator’s system model available, we proposed a discrete H∞
+based EKF (hereafter known as H∞ -EKF) to estimate the
+states of the manipulator, and analyze on its capabilities to
+cope with the soft robot’s high degree of non-linearity. The
+proposed discrete-time H∞ -EKF minimizes the worst-case
+estimation error and offers a higher robustness against the
+system noises [26], where its continuous-time version was
+shown in [27].
+This paper is organized as follows. The state space model
+for the soft continuum manipulator system is formulated in
+
+Fig. 1. Schematic illustration of any kinematically independent it h section
+of the soft continuum manipulator in [16], [17], showing curve parameters,
+actuator variables and base frame.
+
+Section II. The estimation H∞ -EKF are described in Section
+III. System model simulation and state estimation results are
+presented and discussed in Section IV. A conclusion is drawn
+in Section V.
+II. STATE SPACE MODEL FORMULATION
+In this section, the soft continuum manipulator model
+developed in [16], [17] is reformulated into the state space
+representation for the purpose of using H∞ -EKF.
+A. Kinematic Model
+In [16], the kinematic model of each independent section
+arm was derived based on the elementary CC approximation.
+As shown in Fig. 1, each of the three pMAs in a single
+continuum section has an initial length of Li0 and Li j =
+Li0 + li j (t), where li j denotes the elongation for the j th pMA
+in the i th continuum section of the soft manipulator. The
+equally spaced pMAs actuate at a distance of ri , parallel
+to the neutral axis. Each section was assumed to be made
+up of infinite numbers of infinitesimally thin slices denoted
+as ξi . Each section’s base coordinate frame was denoted
+as {Oi }, aligned with the neutral axis at the section base.
+Bending of each continuum section was considered with
+the curve parameters, λi , φi , θ i , which each of them is a
+function of qi as defined in [16], [17]. From there, the curve
+parametric homogeneous transformation matrix (HTM) for
+any i th continuum section with respect to {Oi } was derived.
+For efficient computation in simulation and to solve the
+numerical instability in straight arm pose [28], the modal
+homogeneous transformation matrix (MHTM) was derived
+by taking the multivariate Maclaurin series expansion of the
+HTM elements at qi = 0 up to 11th order, which is given by
+
+
+R (ξ , q ) pi (ξi, qi )
+Ti = i i i
+(1)
+0
+1
+where Ri ∈ R3×3 is the rotation matrix and pi ∈ R3×1 =
+[ X, Y, Z ]T is the task space positon vector. qi ∈ R3×1 =
+[ li1, li2, li3 ]T . ξi ∈ [ 0, 1 ] defines the points along the neutral
+axis (ξi = 0 at the base and ξi = 1 at the tip).
+
+5155
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+B. Dynamic Model
+In [17], Lagrange formulation was used for the dynamic
+model due to its complexity. With the modelling assumptions made in the paper, the EoM was derived from the
+Lagrangian, L = K − P in compact matrix form as
+Û q) qÛ + D qÛ + Kq + G(q) = τe
+M(q) qÜ + C( q,
+
+where the matrix-valued functions, M, C, GL , PL are substituted with xk at each time step, which means their values are
+zero-order held through each time step’s duration. GL ∈ R3×3
+and PL ∈ R3×3 are the first-order partial derivative Jacobian
+matrices from the multivariate Taylor series of the functions
+G and p respectively.
+
+(2)
+III. E XTENDED K ALMAN F ILTERS
+
+where M is the generalized inertia matrix, C is the centrifugal or Coriolis force matrix, D and K are the muscle’s
+damping and elastic stiffness coefficient matrices and G is
+the conservative force vector. τe is the tensile or compressive
+force from the pressure supply, given by pressure multiplied
+with area of the pMA, τe = P × A. Each pMA is assumed to
+have a constant area of 1.8×10−4 m2 . Using the computational
+method derived in [17], Mi ∈ R3×3 , Ci ∈ R3×3 and Gi ∈ R3×3
+are computed for any i th continuum section in Mathematica,
+then imported to Matlab and Simulink for simulation. The
+empirically determined damping and stiffness coefficient in
+diagonal matrices Di ∈ R3×3 and Ki ∈ R3×3 used here are
+given in [17]. In this paper, only a single continuum section
+is considered, i.e. i = 1, and therefore all the subscript i are
+omitted in the remaining sections for readability purposes.
+C. State Space Representation
+By letting x1 ∈ R3×1 = q and x2 ∈ R3×1 = qÛ which
+represent the elongations and elongation rates of the pMAs,
+the dynamic and kinematic model derived in (1) and (2)
+can be discretized using the Forward-Euler scheme and
+represented as a non-linear state space model as follows
+  
+
+
+x1k
+I TI x1k−1
+=
++
+x2k
+0 I x2k−1
+ 
+0
+M−1 (x1k−1 )(C(x2k−1 , x1k−1 ) + D)T x2k−1 +
+−I
+ 
+0
+(3)
+M−1 (x1k−1 )(G(x1k−1 ) + Kx1k−1 )T+
+−I
+ 
+0
+M−1 (x1k−1 )T uk
+I
+yk =p(x1k )
+where uk ∈ R3×1 is the discretized pressure force input, 0 ∈
+R3×3 is a zero matrix and I ∈ R3×3 is the identity matrix,
+T is the sampling time step and p refers to the position
+vector-valued function in (1). Note that ξi = 1 for p since
+measurement here refers to the tip position coordinates of
+the continuum manipulator.
+Then, the system (3) can be linearized at xk ∈ R6×1 for
+each time step to be
+  
+
+
+I
+TI
+x1k
+x1k−1
+=
++
+x2k
+−M−1 (GL + K)T I − M−1 (C + D)T x2k−1
+
+
+0
+u
+M−1T k−1
+ 
+
+ x1k
+yk = PL 0
+x2k
+(4)
+
+Consider the following discrete non-linear process and
+measurement models with additive noises
+xk = fk−1 (xk−1, uk−1 ) + wk−1
+yk = hk (xk ) + vk
+
+(5)
+
+and denote its linearized model as
+xk = Fk−1 xk−1 + wk−1
+y k = Hk x k + v k
+
+(6)
+
+where wk and vk are process noise and measurement noise,
+which are assumed to have zero means and covariances of
+Qk and Rk respectively, with the statistical distributions of
+wk ∼ (0, Qk )
+vk ∼ (0, Rk )
+
+(7)
+
+Notice that by excluding the process and measurement
+noises (wk and vk ), the systems (3) and (4) fit in the
+framework of (5) and (6) respectively, where the dynamic
+model is represented by the process model and the kinematic
+model is represented by the measurement model. In this
+case, wk and vk represent system uncertainties or mismatches
+between the soft manipulator model and the model used in
+the filters.
+To ease computational burden and minimize algorithm
+execution time, the model in Section II (which is used to
+design the filters) is derived from a MHTM with series
+expansion up to only 7th order (instead of the original
+11th order model). The full 11th order MHTM is used in
+simulating the soft manipulator. The difference in MHTM
+order will result in a mismatch in the kinematic model. A
+dynamic formulation based on this less accurate kinematic
+model aggravates the effects of the model uncertainties in
+process noise (mismatch in dynamic model), wk .
+Furthermore, the simulation of the soft robot is performed
+at a (near-continuous) sampling time of 0.0001s, whereas the
+estimation filter, H∞ -EKF are run at a larger sampling time
+of 0.001s in order to reduce computational load. A bigger
+sampling time step leads to high model discretization error
+when values of the matrix functions in (3) and (4) are zeroorder held for a longer time at each time step. While a small
+sampling time step is necessary to capture the high model
+non-linearity and keep the system stable, it comes with a
+higher computational load.
+Hence, these approximations of MHTM order and sampling time step causes mismatches between the original
+simulation model and the model by which the filter are
+designed on, where the mismatches or uncertainties are
+represented by wk and vk .
+
+5156
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+reference input, uk and reference output, yk at a
+sampling time step of 0.001s for the filter.
+2) Initialize the filter as follows:
+
+For estimation filter, fk is linearized at posteriori state
+estimates, xk+ while hk is linearized at priori state estimates,
+xk− to be
+Fk−1 =
+
+∂ fk−1
+∂ x x̂ +
+
+x̂0− = E(x0 )
+
+k−1
+
+Hk =
+
+= [0, 0, 0, 0, 0, 0]T
+
+(8)
+
+∂hk
+∂ x x̂ −
+
+P−0 = E[(x0 − x̂0+ )(x0 − x̂0+ )T ]
+= [10, 10, 10, 100, 100, 100]T [10, 10, 10, 100, 100, 100]
+
+k
+
+A. H -infinity Extended Kalman Filter (H∞ -EKF)
+
+Qk = E(ww T )
+
+In this paper, a discrete H∞ based EKF is proposed.
+Conventionally, EKF uses the Kalman Filter (KF) algorithm,
+which consists of a ‘predict’ phase and a ‘correct’ phase [26],
+on the linearized model for states estimation. In H∞ -EKF,
+the conventional EKF’s ‘correct’ phase is modified with the
+discrete H∞ filter equations proposed in [29] that bounds
+the infinity norm from system noises, w and v to the state
+estimation error, e. Both the phases in H∞ -EKF are given
+as follows:
+Predict phase:
+P−k = Fk−1 P+k−1 FTk−1 + Qk−1
+
+= [1, 1, 1, 10, 10, 10]T [1, 1, 1, 10, 10, 10]
+Rk = E(vv T )
+= [1, 1, 1]T [1, 1, 1]
+(13)
+The initial state estimation error covariance, P−0 is
+set to be conservatively large so that Pk converges
+to its steady-state solution faster if estimation errors
+are large. The noise covariances are assumed to be
+constant at all times. Notice that Qk ’s matrix element
+correspond to x2 is set larger relative to x1 due to large
+model uncertainties in elongation rates calculation in
+(3) and (4). In addition, Qk is set significantly larger
+relative to Rk so that the state estimation is always
+biased towards the measurements. The physical reference measurement, yk (from vision) fed into the filter
+is assumed to be perfect without noise.
+3) Set extra H∞ design parameters as follows:
+
+(9)
+
++
+x̂k− = fk−1 ( x̂k−1
+, uk−1 )
+
+Correct phase:
+S̄k = LTk Sk Lk
+−
+Mk = I − ηS̄k P−k + HTk R−1
+k Hk Pk
+
+Kk = P−k Mk HTk R−1
+k
+
+(10)
+
+x̂k+ = x̂k− + Kk [yk − hk ( x̂k− )]
+P+k = P−k Mk
+
+Sk = I6
+η = 1 × 10−9
+
+where Pk ∈ R6×6 is the state estimation error covariance.
+The reciprocal of η is the bound for cost function, J1 which
+is given by
+Í N −1
+2
+1
+k=0 || z k − ẑ k ||S k
+(11)
+<
+J1 =
+Í N −1
+η
+|| x0 − x̂0 ||P−1 + k=0 (||wk ||Q−1 + ||vk ||R−1 )
+0
+
+k
+
+where η is kept small to satisfied the condition in (12).
+Sk is set to be an identity matrix here because all the
+states are equally important in term of estimation error.
+Theoretically, the H∞ filter given in [29] provides
+higher robustness to the model uncertainties by minimizing the worst-case estimation error due to the
+pessimism in its derivation. It does not assume the
+statistical nature of noises unlike Kalman filter, who
+is optimal if the noises are Gaussian with zero mean.
+However, H∞ filter’s performance is more sensitive to
+the design parameters, thus more difficult to optimize
+its parameters.
+4) Run the H∞ -EKF algorithms at a sampling time step
+of 0.001s.
+
+k
+
+where ek = z k − ẑ k is the estimation error with z k =
+Lk xk and Lk = I6 because here, all the states are to be
+estimated. Sk ∈ R6×6 is the state weightage matrix, where
+the magnitudes of its elements relatively determines the
+emphasis of J1 on the states by minimizing their estimation
+errors. Both η and Sk are user-specified.
+The following condition:
+T −1
+P−1
+k − η S̄k + Hk Rk Hk > 0
+
+(12)
+
+must hold for a solution to the H∞ equations to exist. Hence,
+η is specified with respect to the magnitudes of process and
+measurement noises.
+IV. RESULTS AND DISCUSSIONS
+The results of system model simulation and state estimation of the single soft continuum manipulator section are
+generated by the following steps.
+1) Simulate the soft continuum manipulator system model
+offline at a sampling time step of 0.0001s. Export
+
+(14)
+
+A. System Model Simulation
+The system model simulation of the soft manipulator’s
+continuum section are presented in both three-dimensional
+(3D) plot and wireframe plot as shown in Fig. 2. and Fig.
+3. The pressure force inputs, τe into the system model
+are given in Fig. 4, where they alternate between zero and
+three different pressure force values correspond to the three
+respective pMAs, with a reasonable settling time of 0.5s.
+
+5157
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+3D Plot
+Input vs Time
+100
+
+0.2
+50
+
+0.15
+0
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+100
+
+0.05
+
+50
+
+0
+0.1
+
+0
+0
+
+0.05
+
+0.05
+
+100
+
+0
+0
+
+-0.05
+-0.05
+
+50
+
+-0.1
+0
+0
+
+Fig. 2.
+
+3D plot of the simulated soft continuum manipulator section.
+Fig. 4.
+
+Pressure force inputs into the sectional pMAs.
+
+Wireframe Plot
+Neutral Axis
+
+0.2
+
+Elongation vs Time
+0.04
+
+0.15
+0.02
+
+0.1
+
+0
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.05
+0.04
+
+0
+0.1
+
+0.02
+0
+0
+
+0.05
+
+0.05
+0
+0
+
+-0.05
+0.04
+
+-0.05
+
+-0.1
+0.02
+
+Fig. 3. Wireframe plot of the simulated soft continuum manipulator section.
+
+0
+0
+
+Fig. 5.
+Comparison between H∞ -EKF estimated and system model
+simulated pMA elongations.
+
+B. State Estimation
+Model uncertainties are introduced in term of discretization error from the substantial decrease in sampling frequency, further aggravated by the reduced MHTM order in
+kinetic model. In estimation filter, simulation’s tip position
+coordinates, pk act as the filter’s reference measurement
+input, yk and simulation’s pressure force, τe , as the filter’s
+system input, uk . For the three respective sectional pMAs,
+their states (i.e. elongations, x1k and elongation rates, x2k )
+are estimated and validated with the simulation results (i.e.
+qk and qÛ k ) as ground truths. The elongation estimation
+error, ek = qk − x1k and elongation rate estimation error,
+eÛk = qÛ k − x2k are also plotted.
+1) pMA Elongation: The estimation results of pMA elongations in Fig. 5 and its errors in Fig. 6 show that the estimation filter achieve near perfect tracking of the simulated
+elongations with negligible errors of less than 2 × 10−4 m.
+2) Task Space Coordinate: With the accurate pMA elongations available, the manipulator’s task space coordinates at
+points along the entire continuum section can be calculated
+from the position vector function, p(ξ, q) given in (1) by
+
+20
+
+10-5
+
+Elongation Error vs Time
+
+10
+
+0
+0
+20
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+10-5
+
+10
+
+0
+0
+20
+
+10-5
+
+10
+
+0
+0
+
+Fig. 6.
+
+pMA elongation estimation errors of H∞ -EKF.
+
+5158
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+Task Space Coordinates vs Time
+
+Elongation Rate Error vs Time
+
+0
+0.02
+0
+
+-0.02
+
+-0.02
+-0.04
+
+-0.04
+
+-0.06
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.06
+0.02
+0.04
+
+0
+-0.02
+
+0.02
+
+-0.04
+0
+0
+
+-0.06
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0
+
+0.13
+0.02
+0
+
+0.125
+
+-0.02
+-0.04
+0.12
+
+-0.06
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0
+
+Fig. 7. Comparison between task space coordinates (X,Y,Z) calculated
+from H∞ -EKF estimated and system model simulated pMA elongations.
+
+substituting the corresponding ξ value within 0 to 1. Fig.
+7 shows the task space coordinates at ξ = 0.8 calculated
+from H∞ -EKF estimated elongations are compared to the
+simulated coordinates, where accurate tracking is achieved
+for all X, Y, Z coordinates. As a result, by only requiring
+the tip position coordinates of the soft manipulator as the
+estimation filter’s reference input, task space configurations
+of the soft manipulator can be detected.
+3) pMA Elongation Rate: The estimation results of pMA
+elongation rates in Fig. 8 and its errors in Fig. 9 show
+that the estimation filter achieves near perfect tracking of
+the simulated elongation rates with negligible errors when
+alternating inputs return to zero at t = 2, 6, 10 s. However
+when inputs increase to steady values at t = 0, 4, 8 s, the
+estimation errors converge to about 0.02 rather than 0 in
+the steady state region. Error spikes are present when inputs
+alternate values, with the largest at system onset, t = 0 s.
+This is due to overshoot of the nonlinear propagated states
+at high acceleration when a large time step is used.
+
+Elongation Rate vs Time
+0.2
+0
+-0.2
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+0.2
+0
+-0.2
+0
+
+0.2
+0
+-0.2
+0
+
+Fig. 8.
+Comparison between H∞ -EKF estimated and system model
+simulated pMA elongation rates.
+
+Fig. 9.
+
+pMA elongation rate estimation errors of H∞ -EKF.
+
+Despite the fact that H∞ -EKF can estimate elongations
+and task space coordinates accurately, the estimation results
+of elongation rates with significant errors are barely satisfactory. This is due to the large model discretization error
+at a large sampling time step of 0.001s, coupled with the
+reduced MHTM order in kinematic model. Furthermore, this
+is aggravated by the fact that dynamic model is derived from
+the kinematic model. Simulating the system model at a time
+step of 0.001s drives the states to infinity since high nonlinearity in this soft manipulator model requires the sampling
+time step to be small for the system to be stable, especially
+when elongation rate spikes during system input alternation.
+Due to large system model uncertainties, η is forced to
+kept small to satisfy condition (12) because of the state
+estimate covariance, Pk that propagates and converges at a
+large value. This restricts the optimality of H∞ -EKF since
+the estimation errors are bounded at a larger performance
+bound in (11).
+V. CONCLUSIONS
+With the state space model formulated in Section II, the
+discrete state estimation filter, H∞ -EKF are developed and
+implemented on the non-linear soft continuum manipulator
+system. Due to high non-linearity of the soft robot system,
+reduction in MHTM order and sampling frequency leads
+to large model uncertainties. Hence, H∞ -EKF is proposed
+with the assumption that it is more robust against the model
+uncertainties compared to the conventional EKF.
+The states (elongations and elongation rates of the sectional pMAs) are estimated and validated via comparing
+them with the system model simulation as ground truths. The
+results of pMA elongation estimation are satisfactory where
+the errors are minimal in H∞ -EKF. From there, accurate
+manipulator’s task space configurations can be detected,
+leading to proprioception if manipulator tip’s coordinates
+are available (as the reference measurement input for filter).
+Using the proposed state estimation observer/filter scheme,
+the amount of sensors required to measure elongations, elongation rates and task space coordinates can then be reduced
+
+5159
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+to only one that provides the tip coordinates, thus minimizing
+the effects of sensors on the soft robot’s versatility.
+However, the elongation rate estimation results are less
+satisfactory with the presence of significant errors due to the
+large model uncertainties, introduced primarily by the ten
+fold decrease in sampling frequency, also by the reduced
+MHTM order in kinematic model. Hence, a more robust
+non-linear estimation filter/observer such as Robust H∞
+Kalman filter [30] or Sliding Mode observer [31], [32] can
+be implemented in the future to deal explicitly with the
+high model uncertainties, coupled with the high system nonlinearity. Since the work in this paper are carried out solely
+on simulation platform, and the fact that filter’s reference
+measurement i.e. the task space coordinates from vision capture system might be time-delayed in real-life, the presented
+estimation scheme is planned to be experimentally validated
+with a working soft manipulator prototype.
+R EFERENCES
+[1] S. G. Nurzaman, F. Iida, C. Laschi, A. Ishiguro, and R. Wood,
+“Soft robotics [tc spotlight],” Robotics & Automation Magazine, IEEE,
+vol. 20, no. 3, pp. 24–95, 2013.
+[2] T. George Thuruthel, Y. Ansari, E. Falotico, and C. Laschi, “Control
+strategies for soft robotic manipulators: A survey,” Soft robotics, vol. 5,
+no. 2, pp. 149–163, 2018.
+[3] M. W. Hannan and I. D. Walker, “Kinematics and the implementation
+of an elephant’s trunk manipulator and other continuum style robots,”
+Journal of robotic systems, vol. 20, no. 2, p. 45, 2003.
+[4] F. Renda, M. Cianchetti, M. Giorelli, A. Arienti, and C. Laschi, “A
+3D steady-state model of a tendon-driven continuum soft manipulator
+inspired by the octopus arm,” Bioinspiration & Biomimetics, vol. 7,
+no. 2, p. 025006, 2012.
+[5] K. Xu and N. Simaan, “Actuation compensation for flexible surgical
+snake-like robots with redundant remote actuation,” in Proceedings
+2006 IEEE International Conference on Robotics and Automation,
+2006. ICRA 2006., May 2006, pp. 4148–4154.
+[6] A. Bartow, A. Kapadia, and I. D. Walker, “A novel continuum
+trunk robot based on contractor muscles,” in Proceedings of the 12th
+WSEAS International Conference on Signal Processing, Robotics, and
+Automation, 2013, pp. 181–186.
+[7] W. McMahan, V. Chitrakaran, M. Csencsits, D. Dawson, I. D. Walker,
+B. A. Jones, M. Pritts, D. Dienno, M. Grissom, and C. D. Rahn,
+“Field trials and testing of the OctArm continuum manipulator,” in
+Proceedings 2006 IEEE International Conference on Robotics and
+Automation, 2006. ICRA 2006., May 2006, pp. 2336–2341.
+[8] A. D. Marchese and D. Rus, “Design, kinematics, and control of a
+soft spatial fluidic elastomer manipulator,” The International Journal
+of Robotics Research, vol. 35, no. 7, pp. 840–869, 2016.
+[9] V. Falkenhahn, A. Hildebrandt, R. Neumann, and O. Sawodny, “Dynamic control of the bionic handling assistant,” IEEE/ASME Transactions on Mechatronics, vol. 22, no. 1, pp. 6–17, 2017.
+[10] A. D. Kapadia, K. E. Fry, and I. D. Walker, “Empirical investigation
+of closed-loop control of extensible continuum manipulators,” in 2014
+IEEE/RSJ International Conference on Intelligent Robots and Systems,
+Sept 2014, pp. 329–335.
+[11] A. Bajo, R. E. Goldman, and N. Simaan, “Configuration and joint feedback for enhanced performance of multi-segment continuum robots,”
+in 2011 IEEE International Conference on Robotics and Automation,
+May 2011, pp. 2905–2912.
+[12] D. B. Camarillo, C. R. Carlson, and J. K. Salisbury, “Task-space
+control of continuum manipulators with coupled tendon drive,” in
+Experimental Robotics. Springer, 2009, pp. 271–280.
+[13] H. Wang, W. Chen, X. Yu, T. Deng, X. Wang, and R. Pfeifer,
+“Visual servo control of cable-driven soft robotic manipulator,” in 2013
+IEEE/RSJ International Conference on Intelligent Robots and Systems,
+Nov 2013, pp. 57–62.
+[14] T. Mahl, A. Hildebrandt, and O. Sawodny, “A variable curvature
+continuum kinematics for kinematic control of the Bionic Handling
+Assistant,” IEEE transactions on robotics, vol. 30, no. 4, pp. 935–
+949, 2014.
+
+[15] A. D. Marchese, R. Tedrake, and D. Rus, “Dynamics and trajectory
+optimization for a soft spatial fluidic elastomer manipulator,” The
+International Journal of Robotics Research, vol. 35, no. 8, pp. 1000–
+1019, 2016.
+[16] I. S. Godage, G. A. Medrano-Cerda, D. T. Branson, E. Guglielmino,
+and D. G. Caldwell, “Modal kinematics for multisection continuum
+arms,” Bioinspiration & biomimetics, vol. 10, no. 3, p. 035002, 2015.
+[17] ——, “Dynamics for variable length multisection continuum arms,”
+The International Journal of Robotics Research, vol. 35, no. 6, pp.
+695–722, 2016.
+[18] R. S. Penning, J. Jung, N. J. Ferrier, and M. R. Zinn, “An evaluation
+of closed-loop control options for continuum manipulators,” in 2012
+IEEE International Conference on Robotics and Automation, May
+2012, pp. 5392–5397.
+[19] R. E. Goldman, A. Bajo, and N. Simaan, “Compliant motion control
+for continuum robots with intrinsic actuation sensing,” in 2011 IEEE
+International Conference on Robotics and Automation, May 2011, pp.
+1126–1132.
+[20] A. Bajo and N. Simaan, “Hybrid motion/force control of multibackbone continuum robots,” The International journal of robotics
+research, vol. 35, no. 4, pp. 422–434, 2016.
+[21] J. J. Craig, Introduction to robotics : mechanics and control, ser.
+Pearson custom library. Pearson Education Ltd., 2014.
+[22] F. Renda, M. Giorelli, M. Calisti, M. Cianchetti, and C. Laschi,
+“Dynamic model of a multibending soft robot arm driven by cables,”
+Robotics, IEEE Transactions on, vol. 30, no. 5, pp. 1109–1122, 2014.
+[23] V. Falkenhahn, T. Mahl, A. Hildebrandt, R. Neumann, and
+O. Sawodny, “Dynamic modeling of bellows-actuated continuum
+robots using the eulerlagrange formalism,” IEEE Transactions on
+Robotics, vol. 31, no. 6, pp. 1483–1496, Dec 2015.
+[24] D. Lunni, G. Giordano, E. Sinibaldi, M. Cianchetti, and B. Mazzolai,
+“Shape estimation based on kalman filtering: Towards fully soft proprioception,” in 2018 IEEE International Conference on Soft Robotics
+(RoboSoft), April 2018, pp. 541–546.
+[25] M. Thieffry, A. Kruszewski, C. Duriez, and T. Guerra, “Control design
+for soft robots based on reduced-order model,” IEEE Robotics and
+Automation Letters, vol. 4, no. 1, pp. 25–32, Jan 2019.
+[26] D. Simon, Optimal State Estimation : Kalman, H∞ , and Nonlinear
+Approaches. Hoboken: John Wiley & Sons, Inc., 2006.
+[27] F. Benazzi, M. Katebi, and N. Rajabaly, “EKF versus extended Hinfinity filter - application to activated sludge processes,” in International Control Conference UKACC, September 2006.
+[28] B. A. Jones and I. D. Walker, “Limiting-case analysis of continuum
+trunk kinematics,” in Proceedings 2007 IEEE International Conference on Robotics and Automation, April 2007, pp. 1363–1368.
+[29] X. Shen and L. Deng, “Game theory approach to discrete H∞ filter
+design,” IEEE Transactions on Signal Processing, vol. 45, no. 4, pp.
+1092–1095, April 1997.
+[30] Y. Hung and F. Yang, “Robust H∞ filtering with error variance
+constraints for discrete time-varying systems with uncertainty,” Automatica, vol. 39, no. 7, pp. 1185–1194, 2003.
+[31] J. C. L. Chan, C. P. Tan, H. Trinh, and M. A. S. Kamal,
+“State and fault estimation for a class of non-infinitely observable
+descriptor systems using two sliding mode observers in cascade,”
+Journal of the Franklin Institute, 2019. [Online]. Available:
+http://www.sciencedirect.com/science/article/pii/S0016003219301000
+[32] J. Y. Ng, C. P. Tan, H. Trinh, and K. Y. Ng, “A
+common functional observer scheme for three systems with
+unknown inputs,” Journal of the Franklin Institute, vol.
+353, no. 10, pp. 2237 – 2257, 2016. [Online]. Available:
+http://www.sciencedirect.com/science/article/pii/S0016003216301041
+
+5160
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:57:26 UTC from IEEE Xplore. Restrictions apply.
+
+

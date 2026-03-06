@@ -1,0 +1,645 @@
+IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 6, NO. 2, APRIL 2021
+
+951
+
+Predictive Uncertainty Estimation Using Deep
+Learning for Soft Robot Multimodal Sensing
+Ze Yang Ding , Junn Yong Loo, Graduate Student Member, IEEE, Vishnu Monn Baskaran ,
+Surya Girinatha Nurzaman , Member, IEEE, and Chee Pin Tan , Senior Member, IEEE
+
+Abstract—The mechanical compliance of soft robots comes at a
+cost of higher uncertainty in their sensing and perception, which
+deteriorates the accuracy of predictive models. Predictive uncertainty, which expresses the confidence behind model predictions,
+is necessary to compensate for the loss of accuracy in soft robot
+perceptive models. Nevertheless, developing a general framework
+to capture uncertainties is further challenged by the complex dynamics of soft robots and the difficulties in sensorizing them. In this
+work, we present a predictive uncertainty estimation framework
+based on deep learning for soft robot multimodal sensing. We show
+that the framework can learn to quantify uncertainty and thus is
+able to express the confidence associated with the predictions during inference. Being data-driven, it is scalable to different types of
+soft robots and sensor modalities. We demonstrate the framework
+on a complex multimodal sensing task where a single flex sensor
+is used to predict the full-body configuration of a soft actuator, as
+well as the magnitude and location of external contact force. We
+also discuss how predictive uncertainties are critical to achieve safe
+learning and model interpretability in soft robotics.
+Index Terms—Modeling, control, learning for soft robots, deep
+learning methods.
+
+I. INTRODUCTION
+OFT robots [1] offer incredible mechanical compliance
+and flexibility, making them highly adaptable for operations such as minimally invasive surgery [2] or search and rescue [3]. However, the compliant nature comes at a cost of higher
+uncertainty in their behavior as they can continuously alter
+their configurations through planned or unplanned deformation
+modes [4]. Consequently, these uncertain and uncharacteristic
+behaviors pose a fundamental challenge in achieving accurate
+sensing and perception in soft robots [5].
+
+S
+
+Manuscript received September 2, 2020; accepted January 11, 2021. Date
+of publication February 1, 2021; date of current version February 15, 2021.
+This letter was recommended for publication by Associate Editor S. Coros
+and Editor C. Laschi upon evaluation of the reviewers’ comments. This work
+was supported by the Ministry of Higher Education Malaysia under Grant
+FRGS/1/2017/ICT02/MUSM/03/3. (Corresponding authors: Surya Girinatha
+Nurzaman; Chee Pin Tan.)
+Ze Yang Ding, Junn Yong Loo, Surya Girinatha Nurzaman, and Chee Pin
+Tan are with the School of Engineering and Advanced Engineering Platform, Monash University Malaysia, Selangor 47500, Malaysia (e-mail:
+ze.ding@monash.edu; junn.loo@monash.edu; surya.nurzaman@monash.edu;
+tan.chee.pin@monash.edu).
+Vishnu Monn Baskaran is with the School of Information Technology, Monash University Malaysia, Selangor 47500, Malaysia (e-mail:
+vishnu.monn@monash.edu).
+This article has supplementary downloadable material available at https://doi.
+org/10.1109/LRA.2021.3056066, provided by the authors.
+Digital Object Identifier 10.1109/LRA.2021.3056066
+
+In general, uncertainties can be aleatoric or epistemic [6].
+Aleatoric uncertainty is inherent in the physical phenomenon
+itself and cannot be reduced, such as the intrinsic noise and
+hysteresis of soft sensors. On the other hand, epistemic uncertainty arises due to practical limitations such as simplifying
+constant-curvature assumption or unmodeled manipulator dynamics. Therefore, modeling of soft robots must be accompanied
+by a systematic analysis of uncertainty to compensate for the potential loss in accuracy. Currently, uncertainty modeling is still in
+its nascence in soft robotics. In [7], a robust controller is designed
+to compensate for the mismatched uncertainty terms between an
+exact and a nominal model. For soft robotic state estimation [8],
+uncertainties from process and measurement noise are accounted
+for using Kalman filters. In [9], grasping algorithms are devised
+for a soft manipulator to handle the positioning and object pose
+uncertainty to achieve repeatable grasps. Though these works
+aim to produce the best predictions/actions in the presence of
+uncertainties, they do not consider uncertainties associated with
+the predictions (i.e. predictive uncertainties).
+As predictive models can never be completely accurate, estimating the predictive uncertainty [10]–[12] is crucial to express
+the confidence behind the prediction. For example, predicting
+the shape of a soft medical robot near sensitive tissues during
+operation should be accompanied with a measure of uncertainty,
+so that surgeons can take over when uncertainty is high [13].
+Thus, predictive uncertainty provides a safe and interpretable
+means for users to trust and manage the system. To the best of
+our knowledge, only [14] considers predictive uncertainty in soft
+robots, where interval arithmetic is used to represent the input
+and parameter uncertainty as interval variables, which propagate
+through the model to form a bounded interval for the output pose
+estimation. However, the method relies on manual conservative
+selection of input and parameter intervals to guarantee that all
+uncertainties are enclosed, which may result in overestimation
+of the predictive intervals. In addition, this analytical approach
+may not be easily scalable, especially when more complex robot
+designs are considered or when multimodal sensing is required.
+To formulate a predictive uncertainty estimation framework,
+other fundamental challenges in soft robot perception must not
+be overlooked. For one, it is known that the design of soft robots
+is very diverse, depending on their applications. Therefore, an
+ideal framework must be scalable to various designs as well
+as the modalities and resolution of different soft sensors. A
+compelling solution is to adopt data-driven approaches such as
+deep learning which are scalable with sufficient data. Recently,
+
+2377-3766 © 2021 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+952
+
+IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 6, NO. 2, APRIL 2021
+
+neural networks (NNs) have proven to be very effective in
+soft robot perception, demonstrating high fidelity in predicting
+various parameters such as position [15], external pressure [16]
+and force [17]. Nevertheless, these works do not consider incorporating predictive uncertainty in their empirical frameworks.
+Without any measure of predictive uncertainties, the predictions
+can only be assumed to be accurate and taken blindly, which is
+risky for safety-critical applications. Therefore, as a fundamental
+step toward safe learning with deep NNs, predictive uncertainty
+estimation is essential for learning-based methods to be safely
+integrated into soft robotic systems [18].
+Apart from this, another fundamental issue that must not be
+neglected in soft robot perception is to develop an efficient
+multimodal sensing framework, which can ideally sense many
+physical parameters using a minimal number of sensors. This is
+motivated by the inherent difficulties in sensorizing soft robots,
+because carelessly integrating multiple sensors may compromise their inherent softness [19]. Recent works address this issue
+via intrinsic sensing [20], [21], which infers external stimuli
+such as contact forces based on configuration-level information
+transmitted along the soft bodies. For instance, proprioceptive
+flex sensors are used to predict the position or bending angle
+of a soft actuator as well as its external contact force [22],
+[23], thus achieving multimodality with minimal sensors. Nevertheless, these works confine sensing only at the tip of the
+soft actuator, which is insufficient to capture the dynamics of
+the whole robot. More importantly, they also do not consider
+predictive uncertainty estimation, which is imperative to express
+the uncertainty introduced by inferring high-dimensional state
+space from minimal sensory feedback.
+In this work, we address these interwoven challenges by
+presenting a predictive uncertainty estimation framework based
+on deep learning for soft robot multimodal sensing. Our contributions are outlined as follows:
+1) We formulate a probabilistic framework that learns to
+capture the aleatoric and epistemic uncertainty from data.
+We show that our framework can express the confidence
+associated with the predictions during real-time inference
+and that it outperforms previous approaches that do not
+consider predictive uncertainty.
+2) We design our framework via deep learning such that it is
+readily scalable to multimodal sensing tasks represented
+by multidimensional sensory timeseries. We demonstrate
+the framework on a soft pneumatic actuator by predicting
+its configuration from base to tip, as well as the magnitude
+and location of external contact force, thus achieving multimodality using only a single embedded sensor (Fig. 1).
+3) We show that the predictive uncertainties are wellcalibrated [24] and not deceived by out-of-distribution
+data [25], and we discuss how these properties can facilitate safe learning and model interpretability which are
+currently unexplored in soft robotics.
+II. METHODOLOGY
+A. Problem Formulation
+As the data represents a continuous stream of sensory information, we can treat the problem as a time sequence prediction
+
+Fig. 1. Our soft robot is embedded with a single flex sensor to predict its
+position (markers) as well as the magnitude and location of external contact
+force. Predictions may be inaccurate due to model error or sensor noise, and
+thus a measure of predictive uncertainty achieved in this work can convey
+the confidence of the prediction at every instance. The achieved full-body
+multimodal sensing is also beneficial because (i) several markers can capture
+the dynamics of robot more accurately and (ii) external contact force can be
+anywhere along the body instead of just at the tip.
+
+task and utilize recurrent neural network (RNN) [22]. Therefore,
+the high level summary of the problem we are addressing is
+supervised multivariate regression with RNN. Given a timeseries
+dataset D = {xt , y t }Tt=1 , where T is the length of the series,
+x ∈ Ru is the input and y ∈ Rr is the output, we wish to learn
+a mapping y = f (x, h). The vector h represents the feature
+vector extracted from past inputs, which is also known as the cell
+memory in RNNs. Learning f with a RNN is straightforward:
+choose a suitable recurrent architecture with input size u and
+output size r, then train the weights using mean squared error
+(MSE) loss. However, our main goal is to incorporate predictive
+uncertainty into the model, thus modifications have to be made
+to the architecture and the loss function.
+B. Aleatoric (Statistical) Uncertainty
+Due to the inherent noise present in the data (sensor measurements), we do not treat the prediction as a point estimate, but as a
+range of probable values. Thus, instead of learning f (x, h), we
+look at it as a probability distribution p(y|x, h), from which the
+predictive uncertainty can be quantified. To learn p, we modify
+the output layer of the RNN to produce the parameters of the
+distribution, then update the weights via maximum likelihood.
+A common choice in previous works [11], [12] is the heteroscedastic Gaussian distribution, p(y|x) = N (μ(x), σ 2 (x)),
+due to its simple (negative log) likelihood loss: LNLL (θ) =
+(y−μθ (x))2
+1
+2
++ const. Deep learning is adopted by
+2 log σθ (x) +
+2σθ2 (x)
+parameterizing both the mean and variance with deep NNs.
+In this work, we propose an extension to this loss in order to
+better accommodate typical robotic sensory dataset in the form
+of multidimensional timeseries. Let j be the component index
+for the output vector y of arbitrary dimension (r ≥ 1), we scale
+the RNN by choosing an output size of 2r, such that every output
+pair corresponds to the Gaussian mean and variance of the j th
+component of y. Therefore, each component is essentially a
+separate Gaussian distribution sharing the same parameters θ.
+The final loss is obtained by summing up the contributions across
+individual components and timesteps. The overall training loss
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+DING et al.: PREDICTIVE UNCERTAINTY ESTIMATION USING DEEP LEARNING FOR SOFT ROBOT MULTIMODAL SENSING
+
+function (NLL+) is
+T
+
+LNLL+ (θ) =
+
+r
+
+1 
+(ytj − μtj )2
+stj +
+2 t=1 j=1
+estj
+
+(1)
+
+where μt =: μθ (xt , ht ) and st =: log σθ2 (xt , ht ) are the outputs of the RNN (log σ 2 instead of σ 2 to enforce positive
+variance), representing the vectors of mean prediction and log
+predictive variance of the distribution respectively. This proposed approach has several advantages: i) The formulation
+is easy to implement as it assumes that covariances between
+different output components are zero, thus matrix inversion is
+not required. (ii) For any arbitrary r, only a single RNN (with
+enough capacity) is needed instead of r separate RNNs. (iii) As
+the variance is a function of the input and is also specific to every
+output component, it provides more generality as the model can
+learn to represent uncertainty under different input conditions
+and for different physical output parameters. In practice, if the
+timeseries data is very long (large T ) then it should be broken
+down into batches of smaller timesteps to speed up convergence.
+C. Epistemic (Model) Uncertainty
+Due to stochastic gradient descent, two NNs trained using
+the same data, architecture and loss function can have different
+predictions for the same input, as they may achieve different
+(local) minima. Therefore, there is uncertainty in the weights
+of the network which contributes to predictive uncertainty.
+To capture this, previous works in computer vision propose
+Bayesian approximation through Monte Carlo dropout [10],
+[11]. However, this method typically requires tens to hundreds
+of NN forward passes, which is computationally expensive
+for real-time applications. An alternative is to adopt ensemble
+learning [12] which combines multiple models to obtain better
+predictive performance. In our experiments, we train M RNNs
+independently using Eq. (1) with the same dataset. As a result, we
+have M predicted Gaussians for each output component at every
+timestep, which we combine using a mixture model framework.
+Let φm denote the mixture weights of the distributions where
+m = 1, 2, . . . , M , we can calculate the mean and variance of the
+ensemble at every timestep as
+μ t∗ =
+σ 2t∗ =
+
+M
+
+m=1
+M
+
+m=1
+
+φ m μ tm
+
+(2)
+
+φm (σ 2tm + μ2tm ) − μ2t∗ .
+
+(3)
+
+By taking the weighted average of the models as such, the
+predictive variance incorporates the uncertainty in the model
+weights. Furthermore, the predictive mean becomes more robust
+compared to non-ensemble approaches. In our experiments, we
+2
+for all timesteps are not suffind that the individual μm and σm
+ficiently different across m to induce a multimodal distribution,
+and thus we make the assumption that the mixture distribution is
+also Gaussian with mean μ∗ and variance σ∗2 , in order to easily
+compute the confidence interval of the predictions.
+
+953
+
+It is crucial that the individual models are diverse enough such
+that the ensemble is not trivial (i.e. all models are the same in
+the ensemble). Therefore, we further propose a simple strategy
+(Ensemble+) to enhance model diversity in the ensemble in
+addition to stochastic gradient descent. In our experiments, we
+simply alter certain hyperparameters, such as number of neurons
+or batch size, around the optimal values across different models.
+Only a small variation is implemented as NNs are sensitive to
+hyperparameters settings. This strategy de-correlates individual models in the ensemble while maintaining their accuracy.
+Substantial architectural change is not recommended as certain
+architectures may not be appropriate which could reduce the
+overall predictive accuracy.
+III. EXPERIMENTAL PROCEDURES
+A. Robot Setup & Data Collection
+We experimentally validate our approach on a soft pneumatic
+actuator (SPA) [8], [23] with a single resistive flex sensor embedded along its body. To investigate the full-body dynamics
+of the SPA, we attach eight reflective markers (plus one at
+the very top as reference) along its constraint layer which are
+continuously tracked by our motion capture system. We intend to
+predict (i) the relative x- and y-coordinates of all eight markers
+and (ii) the magnitude and location of external contact force,
+using only limited sensory feedback. We measure the contact
+force magnitude with a compression load cell placed in front
+of the SPA. Using a robotic arm, we move the SPA randomly
+along the y-axis, while keeping the position of the load cell
+(ycell ) fixed, and thus the force location can be easily obtained as
+ycell − yref . Fig. 2 shows the experimental setup of the robot
+for data collection. In addition to flex sensor feedback, we
+also measure the pressure supplied to the SPA and use this
+information as additional input to our model. The pressure sensor
+used for measurement is external to the SPA and does not affect
+its dynamics.
+We actuate the SPA with a series of randomly determined
+pressure levels within a predetermined pressure range. Between
+every change in the pressure level, we introduce a random delay
+of 1 to 5 seconds to capture both the transient and steady state
+response of the SPA. For contact force, we instruct the robotic
+arm to move the SPA to an arbitrary location along the y-axis,
+such that the contact can be anywhere from the base to the tip.
+We change the contact location every 10 to 30 seconds, which is
+also determined randomly. All measurements are sampled using
+MATLAB at 10 Hz (frequency is limited by our data acquisition
+method). A total of 180 minutes of data is collected and split
+according to a 80–20 ratio for training (144 mins) and testing
+(36 mins) data. No shuffling is done as we intend to model the
+data as a timeseries.
+B. RNN Architecture and Training
+We first search for suitable hyperparameters using a validation
+set (20% of training set), then train the final model using the best
+hyperparameters on the whole training set. In our experiments,
+we use long short-term memory (LSTM) networks that are
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+954
+
+IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 6, NO. 2, APRIL 2021
+
+TABLE I
+MODEL COMPARISON USING RMSE AND NLL SCORES
+
+Fig. 2. (a) Overview of experimental setup. The robotic arm holds the SPA
+and moves it randomly along an axis (red arrows) to introduce external contact at
+different location along the body. (b) Snapshots of the SPA during data collection.
+A high number of reflective markers are used to accurately describe the configuration, because the full-body shape under contact can be very complex, which
+cannot be sufficiently captured by either using only a tip marker or assuming
+uniform bending.
+
+3-layer deep with a hidden size of 128 each and a dropout
+probability of 0.5. For the output layer, we connect a dense
+layer to the last layer of the recurrent network to map the
+temporal features to the outputs. The training data are rescaled
+to the range of [−1,1] and reorganized into batches of 32 with
+a sequence length (or timestep) of 100. Shuffling is only done
+at the batch-level (not the sequence-level) to retain the temporal
+information. We train all networks for a total of 100 epochs
+using the Adam optimizer, with an initial learning rate of 0.007
+subjected to cosine decay every epoch down to a minimum of
+10−6 . To enhance the model diversity for ensemble learning,
+we vary the “nominal” value of batch size (32) and hidden
+size (128) to be within [25,35] and [120140] respectively. Since
+the networks are trained independently, the mixture weights are
+chosen to be uniform, i.e. φm = 1/M . We use M = 10 in our
+experiment which is acceptable in terms of performance and
+computational time. Fig. 3 provides an illustration of the overall
+framework.
+IV. RESULTS & DISCUSSION
+A. Predictive Performance & Comparison
+This section compares the multimodal sensing predictive
+results of our model against other approaches. We choose the
+baseline as a LSTM trained with MSE loss, which is the prevalent
+approach in previous data-driven methods that do not consider
+predictive uncertainty. We also compare against the state-ofthe-art in predictive uncertainty estimation, which is based on
+
+Monte-Carlo (MC) dropout sampling [10], [11]. Because there
+are no ground truths for variances, the NLL loss is used to evaluate the quality of the uncertainties [12]. Table I summarizes the
+results of the comparison. We observe that our model achieves
+the lowest NLL score compared to other models, indicating that
+our predictive uncertainties are much more meaningful when
+interpreted as a Gaussian distribution. In addition, our model
+also achieves the lowest RMSE, which is counter-intuitive as we
+would expect the baseline or [10] to perform better, since they
+are explicitly trained to minimize the MSE. We reason that this
+is because the output ground truths are noisy, thus minimizing
+MSE alone has inadvertently overfit to part of the noise. With
+the NLL loss function, higher loss induced by noisy labels can
+be compensated when the model learns to predict larger σ 2 .
+Hence, by allowing the networks to predict uncertainty, they
+become more robust to noisy sensory labels.
+MC dropout methods require a high number of samples for
+accurate approximation of the uncertainty [10], which could be
+computationally prohibitive for real-time inferences. With the
+ensemble method, we show in Fig. 4 that M does not need to
+be very large in order to be accurate. Although there is a M×
+increase of computation in terms of training the models, this is
+done offline and does not burden the real-time deployment.
+B. Validation and Visualization
+For validation, we plot the ground truth against the prediction
+and predictive uncertainty using our model, as shown in Fig. 5.
+The model is able to track the position of the markers very well,
+as shown in the first two line plots. Thus, the pressure and flex
+information are very effective in describing the proprioceptive
+properties of the soft robot. The prediction of force magnitude
+and location are noticeably less accurate compared to the markers’ coordinates. This is not surprising as the force information
+has no intuitive connection to the inputs, and therefore the mapping could be more intricate. Nevertheless, the loss in accuracy is
+accompanied by larger predictive uncertainties, which indicates
+that the model is able to acknowledge its weaker aspect instead
+of being overconfident.
+To visualize the outcomes of full-body multimodal sensing
+of the SPA, Fig. 6 illustrates the prediction of the relative
+coordinates of all eight markers together with the magnitude and
+location of external contact force, augmented with the prediction
+uncertainty. Despite the high number of possible configuration
+states from 8 markers, and that only one embedded sensor is
+used, the result shows that our model is able to predict the
+proprioceptive information very well under most conditions.
+For external force information, we observe that in general the
+predictions are less accurate when actuation pressure is lower,
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+DING et al.: PREDICTIVE UNCERTAINTY ESTIMATION USING DEEP LEARNING FOR SOFT ROBOT MULTIMODAL SENSING
+
+955
+
+Fig. 3. Overview of the multimodal sensing framework with predictive uncertainty. At every timestep t, the RNN receives a 2-dimensional input vector (pressure
+and flex) and predicts the mean and log variance of 18 quantities (force magnitude, force location, x- and y-coordinates of 8 markers), which is a 36-dimensional
+output vector. An ensemble of M networks are used to obtain the best predictions and their uncertainties during inference.
+
+Fig. 4. Model performance improves as M increases, but diminishes for larger
+M . We choose M = 10 in our experiments which is reasonable in terms of
+performance and computational training time.
+
+and vice versa. During low pressurization, the robot does not
+deform significantly which implies that the flex sensor feedback
+is similar, regardless of the location of the fixed contact. As a
+result, the observability in these situations is diminished and thus
+it is difficult for the model to identify the exact location of the
+contact. However, the predictive variances of the magnitude and
+location of the force are able to reflect the higher uncertainty
+as shown by the larger predictive gap. As the actuation pressure
+increases, the robot’s deformation, and hence the flex sensor
+feedback, are accentuated thus the predictions are more accurate
+with lower uncertainties.
+C. Reliability of Uncertainty Estimates
+A larger predictive bound is required to ensure a comprehensive enclosure of all possible predictions [14]. However,
+larger boundaries would make the uncertainty quantification less
+meaningful. Instead, our model expresses predictive uncertainty
+in a probabilistic manner, and thus the widths of the output
+intervals depend on the level of confidence. Nonetheless, the
+
+Fig. 5. Plots of ground truth vs predictions over 200 seconds, for the x- and
+y-coordinates of the tip (8th) marker, the force magnitude and the force location.
+Force magnitude is shown in grams because values in Newton are very small.
+Plots for remaining markers are similar to the tip marker and are not shown for
+brevity (can be generated with the accompanying code).
+
+confidence interval must be correctly calibrated in order to be
+interpretable, i.e. a γ% confidence interval must enclose the
+observations γ% of the time. To demonstrate this in a regression setting, we construct a γ% confidence interval based on
+a Gaussian distribution given the predicted mean μ and the
+variance σ 2 , record whether the ground truth falls within this
+interval, and repeat the process for all of the test data. If the
+observed percentage is close to γ, the model is considered to
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+956
+
+IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 6, NO. 2, APRIL 2021
+
+Fig. 6. 2D visualization of the predictions and their uncertainties, based on the soft actuator setup, to observe the response of the predictions and the predictive
+uncertainties under different conditions. A video showing the real-time performance is shown in the supplementary material.
+
+predictive uncertainty for the same sequence of input between
+our proposed and the benchmark models. [10] frequently fails
+to capture the ground truth because its confidence interval is
+too narrow, whereas [11]’s interval is overly wide. In essence,
+our framework is able to facilitate the calculation of meaningful
+confidence intervals and thus provide higher interpretability for
+users to manage the robotic system.
+D. Detection of Out-of-Distribution Data
+
+Fig. 7. (a) Reliability diagram showing that the proposed model is wellcalibrated compared to the the others which are overconfident. The dotted line
+indicates perfect calibration. (b) Plots of the ground truth versus the prediction
+of marker’s position ±2σ to illustrate that [10] is overconfident whereas [11] is
+under-confident.
+
+be well-calibrated. We do this for γ = 0 to 100 and plot the
+resulting curve (reliability diagram) in Fig. 7(a).
+Our model is well-calibrated as it is very close to the identity
+line. On the other hand, the other two models either over or
+under-estimate the predictive variance. For example, only 20%
+of test data are observed within a 60% confidence interval
+for [10], which indicates that it is severely overconfident with
+its predictions. To illustrate this issue, Fig. 7(b) compares the
+
+Test data which are sufficiently different from training data
+are described as out-of-distribution (OOD). Ideally, we want
+a model to express larger uncertainty when OOD data are
+encountered, because it should not be confident with data that
+do not come from the same distribution. In our experiments,
+we simulate OOD data as input values that are outside of the
+normalized range of training data, i.e. [−1, 1]. To achieve this,
+a negative and positive drift signal are added to the pressure and
+flex measurements respectively for 30 seconds, clipped at −1.5
+and 1.5. We investigate the resulting predictive uncertainty by
+averaging the predictive variance across the output variables and
+plot it against time, as shown in Fig. 8.
+When the drift happens, the variance of our model increases
+(largest compared to others), indicating that it is highly uncertain
+about its point predictions. Since it is difficult to extrapolate to
+completely unseen region, our model can at least compensate
+this by expressing a larger predictive uncertainty to identify the
+unknowns, after which precautionary steps can be taken to avoid
+undesirable consequences. This is an instance of safe learning
+from data which facilitates model trustworthiness with users.
+However, the detection is insignificant from t = 30 to t = 40,
+although the drift has already occurred. We find that the inputs
+within this time frame are still within the training range and
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+DING et al.: PREDICTIVE UNCERTAINTY ESTIMATION USING DEEP LEARNING FOR SOFT ROBOT MULTIMODAL SENSING
+
+957
+
+REFERENCES
+
+Fig. 8. Out-of-distribution detection. To simulate sensor drift, drift signals are
+added to the inputs for over 30 seconds, indicated by the shaded region. Our
+model expresses high uncertainty when the data becomes sufficiently different
+from the training data.
+
+thus the model does not view them as sufficiently different.
+Therefore, there is still room for improvement in this aspect
+because distributional shift of data can happen without drifting
+outside of the training range.
+V. CONCLUSION
+In this letter, we propose a general predictive uncertainty
+estimation framework based on deep learning for multimodal
+sensing in soft robots. Our model provides accurate predictions
+and representations of predictive uncertainties in real-time, and
+outperforms those that do not estimate predictive uncertainty,
+such as MSE-trained networks. Although the number of output
+variables far exceeds that of available input measurements,
+our approach achieves efficient multimodality which could be
+analytically demanding for non-empirical approaches.
+Predictive uncertainty can establish trustworthiness in humanrobot interactions as calibrated uncertainty estimates are able to
+facilitate model interpretability. Moreover, the model is able to
+identify what it knows and does not know through the response
+of the predictive intervals, which is crucial in safety-critical
+operations. Therefore, predictive uncertainty estimation is a fundamental step towards model interpretability and safe learning
+in artificial intelligence for users to effectively trust and manage
+soft robotic systems.
+Currently, our robotic platform is a planar bending actuator
+that experiences a single contact force, and therefore the trained
+model is specific to this particular setup. For other types of soft
+robots with more complex deformation modes and/or multiple
+contact points, the proposed method is generalizable but the
+experimental setup may need to be scaled up by introducing
+additional training scenarios or embedding more sensors. A
+current limitation of this work is that the model would lose
+accuracy if the soft robotic system experiences physical changes,
+such as material stiffening or wear and tear. Thus, a potential
+future endeavor is to investigate how predictive uncertainty can
+detect slow distributional shift and facilitate online learning.
+
+[1] S. G. Nurzaman, F. Iida, L. Margheri, and C. Laschi, “Soft robotics on the
+move: Scientific networks, activities, and future challenges,” Soft Robot.,
+vol. 1, no. 2, pp. 154–158, 2014.
+[2] M. Cianchetti et al., “Soft robotics technologies to address shortcomings in
+today’s minimally invasive surgery: The stiff-flop approach,” Soft Robot.,
+vol. 1, no. 2, pp. 122–131, 2014.
+[3] M. T. Tolley et al., “A resilient, untethered soft robot,” Soft Robot., vol. 1,
+no. 3, pp. 213–223, 2014.
+[4] B. Shih et al., “Electronic skins and machine learning for intelligent soft
+robots,” Sci. Robot., vol. 5, no. 41, p. eaaz 9239, 2020.
+[5] H. Wang, M. Totaro, and L. Beccai, “Toward perceptive soft robots:
+Progress and challenges,” Adv. Sci., vol. 5, no. 9, p. 1800541, 2018.
+[6] A. Der Kiureghian and O. Ditlevsen, “Aleatory or epistemic? does it
+matter?,” Structural Safety, vol. 31, no. 2, pp. 105–112, 2009.
+[7] G. Zheng, “Control of a silicone soft tripod robot via uncertainty compensation,” IEEE Robot. Autom. Lett., vol. 5, no. 2, pp. 2801–2807, Apr. 2020.
+[8] J. Y. Loo, K. C. Kong, C. P. Tan, and S. G. Nurzaman, “Non-Linear system
+identification and state estimation in a pneumatic based soft continuum
+robot,” in Proc. Conf. Control Technol. Appl. IEEE, 2019, pp. 39–46.
+[9] B. S. Homberg, R. K. Katzschmann, M. R. Dogar, and D. Rus, “Robust
+proprioceptive grasping with a soft robot hand,” Auton. Robot., vol. 43,
+no. 3, pp. 681–696, 2019.
+[10] Y. Gal and Z. Ghahramani, “Dropout as a bayesian approximation: Representing model uncertainty in deep learning,” in Proc. Int. Conf. Mach.
+Learn., 2016, pp. 1050–1059.
+[11] A. Kendall and Y. Gal, “What uncertainties do we need in bayesian deep
+learning for computer vision?,” in Proc. Conf. Neural Infor. Process. Syst.,
+2017, pp. 5574–5584.
+[12] B. Lakshminarayanan, A. Pritzel, and C. Blundell, “Simple and scalable
+predictive uncertainty estimation using deep ensembles,” in Proc. Conf.
+Neural Infor. Process. Syst., 2017, pp. 6402–6413.
+[13] P. L. Anderson, A. W. Mahoney, and R. J. Webster, “Continuum reconfigurable parallel robots for surgery: Shape sensing and state estimation
+with uncertainty,” IEEE Robot. Autom. Lett., vol. 2, no. 3, pp. 1617–1624,
+Jul. 2017.
+[14] N. Tan, X. Gu, and H. Ren, “Pose characterization and analysis of soft continuum robots with modeling uncertainties based on interval arithmetic,”
+IEEE Trans. Automat. Sci. Eng., vol. 16, no. 2, pp. 570–584, Apr. 2019.
+[15] R. L. Truby, C. Della Santina, and D. Rus, “Distributed proprioception
+of 3 d configuration in soft, sensorized robots via deep learning,” IEEE
+Robot. Autom. Lett., vol. 5, no. 2, pp. 3299–3306, 2020.
+[16] S. Han, T. Kim, D. Kim, Y.-L. Park, and S. Jo, “Use of deep learning for
+characterization of microfluidic soft sensors,” IEEE Robot. Autom. Lett.,
+vol. 3, no. 2, pp. 873–880, Apr. 2018.
+[17] T. Hellebrekers, N. Chang, K. Chin, M. J. Ford, O. Kroemer, and
+C. Majidi, “Soft magnetic tactile skin for continuous force and location
+estimation using neural networks,” IEEE Robot. Autom. Lett., vol. 5, no. 3,
+pp. 3892–3898, Jul. 2020.
+[18] N. Sünderhauf et al., “The limits and potentials of deep learning for
+robotics,” The Int. J. Robot. Res., vol. 37, no. 4/5, pp. 405–420, 2018.
+[19] U. Culha, S. G. Nurzaman, F. Clemens, and F. Iida, “Svas3: Strain vector
+aided sensorization of soft structures,” Sensors, vol. 14, no. 7, pp. 12748–
+12770, 2014.
+[20] F. Khan, R. J. Roesthuis, and S. Misra, “Force sensing in continuum
+manipulators using fiber bragg grating sensors,” in IEEE/RSJ IROS., 2017,
+pp. 2531–2536.
+[21] S. E. Navarro et al., “A model-based sensor fusion approach for force and
+shape estimation in soft robotics,” IEEE Robot. Autom. Lett., vol. 5, no. 4,
+pp. 5621–5628, Oct. 2020.
+[22] T. G. Thuruthel, B. Shih, C. Laschi, and M. T. Tolley, “Soft robot perception
+using embedded soft sensors and recurrent neural networks,” Sci. Robot.,
+vol. 4, no. 26, p. eaav 1488, 2019.
+[23] J. Y. Loo, Z. Y. Ding, E. Davies, S. G. Nurzaman, and C. P. Tan, “Curvature
+and force estimation for a soft finger using an EKF with unknown input
+optimization,” in IFAC-V 2020 World Congress. IFAC, 2020.
+[24] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On calibration of modern
+neural networks,” in Proc. Int. Conf. Mach. Learn. 2017, pp. 1321–1330.
+[25] K. Lee, K. Lee, H. Lee, and J. Shin, “A simple unified framework for
+detecting out-of-distribution samples and adversarial attacks,” in Proc.
+Conf. Neural Infor. Process. Syst., 2018, pp. 7167–7177.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:59:48 UTC from IEEE Xplore. Restrictions apply.
+
+
