@@ -1,0 +1,1325 @@
+actuators
+Article
+
+Mathematical Modeling of a Multi-Chamber Pneumatic
+Soft Actuator
+Eduardo Miguel Sierra
+
+and Jose Luis Ordoñez-Avila *
+Faculty of Engineering, Universidad Tecnológica Centroamericana (UNITEC), San Pedro Sula 21112, Honduras
+* Correspondence: jlordonez@unitec.edu
+
+Abstract: Owing to their compliance with most shapes, soft actuators are regarded as cost-effective
+solutions for grasping irregular objects. The material properties of nonlinear elastic polymers are
+considered necessary for the correct implementation of these actuators. The analysis tends to be
+complex even for simple movements defined by theoretically infinite degrees of freedom. This study
+offers a mathematical model that outlines a relationship between the energy provided by a pressure
+source and the expected behavior of multi-chamber pneumatic soft actuators through hyper-elastic
+material deformation interpretation, geometric approximations, and the vectorial representations of
+their segments. Digitally analyzed empirical results measured through lateral pictures of an actuator
+were taken at different pressure references. Direct comparisons between the average value of the
+tested angles and those calculated through the tuned mathematical model provide a maximum error
+of 0.647° for small deformations and an improved accuracy at higher pressure inputs. This study
+offers a valid tool applicable to the design of soft actuators and their further analysis without the
+need for overly complex methods.
+Keywords: soft actuator; pneumatics; mathematical model; soft robotic system; hyper-elastic material
+
+
+Citation: Sierra, E.M.; Ordoñez-Avila,
+J.L. Mathematical Modeling of a
+Multi-Chamber Pneumatic Soft
+Actuator. Actuators 2022, 11, 221.
+https://doi.org/10.3390/
+act11080221
+Academic Editor: Giorgio Olmi
+Received: 6 July 2022
+Accepted: 26 July 2022
+Published: 5 August 2022
+Publisher’s Note: MDPI stays neutral
+with regard to jurisdictional claims in
+published maps and institutional affiliations.
+
+Copyright: © 2022 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license (https://
+creativecommons.org/licenses/by/
+4.0/).
+
+1. Introduction
+As an innovative outlook on the nature of the material properties of robotic components, the field of soft robotics offers beneficial attributes through its compliance for
+irregular surfaces and delicate yet effective grip of fragile objects. Throughout the course
+of its development, diverse control and actuation methods have been devised, ranging
+from the use of thermally manipulated materials to engineered geometric designs for the
+deformation of soft bodies [1]. Having established a system determined by an objective task,
+the study of soft actuators coursed into defining mechanisms for movements such as radial
+expansion, longitudinal elongation, rotation and flexion [2,3]. When faced specifically
+with a pneumatically controlled system, the parameters of importance stand primarily
+in the geometry of both internal and external elements. Thus, a systematic response can
+be expected using a set shape, material, width, and air pressure source for a soft robotic
+device [4,5]. Stating a flexion-type actuator, the principle of its movement is primarily given
+by one or more internal chambers shifted from the center of inertia given by the transverse
+area of the body [6,7].
+The differentiation between actuation types presents different applications for mechanical projects. The use of soft robotics can range from a simple one-degree-of-freedom
+mechanism to multiple-degrees-of-freedom robots. Complex soft robots tend to be inspired
+by biological mechanisms and their objectives can be applied toward engineering design [8].
+Further complexity allows their functionality in various mediums.
+For the control of a pneumatic soft actuator, the core components will be a pressure source,
+an enabling mechanism, a pressure-regulating piece and distribution channels [9–11]. Most of
+the components tend to be discreet in nature but the air flow rate, given by the energy source,
+determines the dynamic responses of the body and correlates directly to variables such as the
+
+Actuators 2022, 11, 221. https://doi.org/10.3390/act11080221
+
+https://www.mdpi.com/journal/actuators
+
+Actuators 2022, 11, 221
+
+2 of 21
+
+manometric pressure [12]. Although closed-loop systems are generally superior in most cases,
+they are considerably demanding for implementation in soft actuators owing to their fast change
+of state and low measurable differences in common variables [13]. Closed-control systems are
+usually implemented as tools of analysis whereas the determination of specific inputs and their
+relation to the output through testing or modelling is the predetermined method of practical
+execution [9].
+A general consensus for the manufacturing of pneumatic soft robotics is the use of
+hyper-elastic materials, owing to their high range of deformation and tendency to return
+to their original state after a force has acted upon them; thus, it is necessary to implement
+a soft gripper and ensure its longevity [14]. Although their properties are useful, the
+analysis of hyper-elastic materials is troublesome, because they do not obey Hooke’s law
+for linear elasticity [15,16]. Various models with different degrees of approximation were
+formulated to create a relationship between the induced external energy and a nonlinear
+elastic material, most notoriously the Neo-Hookean and Mooney–Rivlin models [17]. These
+nonlinear elastic models prove to be a useful tool for soft robotics even with different
+methods of actuation. Methods such as the inclusion of ECF (electro-conjugate fluid) or
+other fluidic inputs create a new method for energy inputting, but the deformation of
+overall elastic mechanics is constantly defined [18,19].
+The study of composite systems tends to yield complex equations regarding a continuous form of analysis through the entire body that is rendered inefficient for a discrete
+approximation and can be used [1]. Defining the elements of a soft body through mathematical means proves challenging in any design, and its implementation in a high-degree
+model of actuation increases the difficulty [20]. Resorting to the use of several, simpler
+models for the individual parts of a structure is prioritized in control systems and nonfocused research efforts whereby accuracy is sacrificed for the sake of practicality. By
+contrast, in-depth research can highlight material properties, even when applying statistical
+methods to convey the behavior of an isolated unique body [21].
+The representation of entire, three-dimensional bodies through concrete mathematical
+equations that are not dependent on numerical tools are not easily obtained. The use of
+a “Backbone Curve” defining the longest dimension of a soft body is advised [22]. The
+method for defining this trajectory can be devised in various ways as its consistency lies in
+the fact that any vector tangential to the curve will always be orthogonal to the transverse
+area of the body [23]. In the case of defined, geometrically restricted actuators, the practical
+representation is given by the use of linear vectors describing regions separated by critical
+points of interest that may be due to a particular interaction between a force and the
+material or because of geometric limitations [24,25].
+Given the initial parameters of the body of a soft actuator, we can determine the
+movement and positioning of its vectorial components, thus providing a tool to determine
+the utility of certain designs [26]. To tie all individual segments together, recursive equations
+can serve as a means of creating a graphically represented finalized model [27]. This is a
+simple way of analyzing a system that will be as accurate as many inflexion points and
+critical areas there are [28].
+The lack of a simple deterministic model with easily analyzed variables prevents ease
+of study in the field of soft robotics for researchers focusing on design and manufacturing.
+Design parameter choices are only set as estimations or require the use of numeric methods
+through complex software to determine the correct behavior intended. This article presents
+a simple model to define how the geometric design of multi-chamber soft actuators affects
+their positioning in relation to air flow input.
+The rest of the article is ordered as follows: Section 2 describes the materials and
+methodology used throughout the process of obtaining results, Section 3 outlines the
+process behind the formulation of the complete mathematical model as well as numerical
+results, Section 4 offers a discussion comparing previous studies and their application and
+Section 5 renders the conclusions and interpretation of results.
+
+Actuators 2022, 11, 221
+
+3 of 21
+
+2. Materials and Methods
+This study is divided into subdomains for individual analysis. As a research frame
+of reference, the methodology used was hierarchical, where each section is interpreted
+separately and general relations between each governing group are established to finalize
+its congruence as a whole. Its main objective aims to satisfy the functionality requirements
+stated by the initially stated design parameters [29].
+The mathematical model depicting a soft actuator’s trajectory and position was broken
+into three main categories: analysis of pressure and deformation, calculation of displacement caused by geometrical changes and angular representation using linear vectors as
+illustrated in Figure 1. Additionally, the auxiliary sections such as reference design, parameters, manufacturing and calculated test data comparison are used in the validation and
+practical use of the model. While each section was studied independently, their inputs and
+outputs are strongly related.
+
+Figure 1. Research and Analysis Domain Divisions.
+
+Taking the study of pressure as the main source of energy, a method to predict its effect
+on the body must be presented. A traditional physics approach is used towards calculating
+the energy produced by the system’s pressure, but its outcome is defined by means of the
+Neo-Hookean model for nonlinear elastic materials.
+Once the energy of the system is stated, its effect presents geometrical alterations to
+specific parts of the body which creates movement. Although considered as an estimation,
+the use of geometry based on ellipses is the representation employed for deformation in the
+inner pneumatic chambers within the actuator. Furthermore, the use of a previous study
+introduced by J. Wang provided a clear relationship between the lateral measurement of
+deformation and the effect of a single chamber upon the flexion of the body of the actuator.
+Using the information from previous calculations, the representation of a backbone
+curve depicting the actuator’s movement was fabricated using linear vectors. The half
+angles are relative only to their specific segments; thus, a series of recursive equations are
+used to define the global angle that dictates the direction of each component. A similar
+method was utilized to obtain the coordinates of their respective origins. Using the design
+parameters as their magnitudes, a complete representation is achieved.
+
+Actuators 2022, 11, 221
+
+4 of 21
+
+Defining a discrete model where only geometric parameters and tangential behavior
+of adjacent ellipses are considered, derived from energetic and material studies, some
+assumptions must be stated. Upper, front and rear chamber walls will not be significantly
+deformed due to their width. Longitudinal deformation will not occur due to a lack in
+effective contact and the restriction layer usually introduced at its base. An actuator’s body
+is completely homogeneous on its elastomer distribution. Air flow input is controllable
+and constant. The actuator’s body is symmetric. The base is not wide enough to restrict
+movement. Most assumptions are addressed on the manufacturing and design process for
+conventional multi-chamber pneumatic soft actuators.
+3. Results
+3.1. Reference Design, Parameters and Manufacturing
+To define a mathematical model, the physical phenomenon must be clearly defined as
+a grounding reference. The specific type of soft actuator analyzed in this study was a multichamber pneumatic soft actuator, meaning that its source of motion is entirely powered
+by air pressure. Its body is divided into multiple segments that are almost independent
+from one another. Even though they are powered by the same energy source, the effects
+of each chamber are determined only by the geometrical design with which they were
+manufactured. This leads to an individual study of each chamber, later to be interpreted as
+their effects on the system.
+By minimizing the spacing between each chamber and resorting to a design containing
+seven active segments, pronounced flexion is ensured even at small relative pressures and
+perceivable chamber deformations. This proves beneficial from an informative point of
+view since results will be defined in a way that is easily distinguishable, providing ease in
+the formulation of eventual conclusions.
+The design that was tested and validated throughout this study is presented in Figure 2,
+portraying its external and internal composition.
+
+Figure 2. Diagram of multi-chamber pneumatic soft actuator’s inner and outer geometry.
+
+All the design parameters relevant to the mathematical model are described in Figure 3.
+These specific values were used to create a comparison between a real actuator and a
+prediction based on the mathematical model. Both the external part and the broken out
+section cut are presented.
+
+Actuators 2022, 11, 221
+
+5 of 21
+
+Figure 3. Measurements of a soft actuator’s individual component.
+
+The methodology offers a model that can be utilized with conventional actuators; with
+each measurement taken as an average from most common designs used industrially and
+for research purposes.
+To manufacture the actuator’s component, an elastomer with hyper-elastic properties
+was selected. Given several factors, such as its elevated deformation coefficient, its cost and
+availability as well as its notorious resistance towards external piercing forces, ABRO GREY
+999 RTV Silicone Gasket Maker was selected as the actuators body. Due to the models used
+to calculate elastic deformations, a shear modulus of only 18 GPa is required.
+The entire process defines a multi-step traditional molding. Figure 4 presents both
+molds used to manufacture the body, only accounting for the chamber cavities and
+external separations.
+
+Figure 4. Two-Piece Mold for Soft Actuator Component Manufacturing.
+
+After assembling both pieces, the material is poured, taking caution to avoid air
+bubbles because they affect the composition as a whole or can create air leaks which render
+the actuator nonfunctional. Due to the material’s properties, it is cured at room temperature
+across a period of 4 days to ensure its proper finishing. Figure 5 illustrates a fully cured
+actuator body ready to be released from its mold.
+
+Actuators 2022, 11, 221
+
+6 of 21
+
+Figure 5. 3D-Printed Mold with Curated Hyper-elastic Material.
+
+Once the body is removed from the mold, additional material is poured on a flat
+surface where the body will be laid on. The first layer of the base must be thin as to
+avoid clogging the main distribution channel. Curing time is 30 min for this step. A
+coupling method or direct source of distribution for air pressure should be introduced
+simultaneously making use of the materials own properties to create a seal. Addition at a
+later time could ultimately result in air leaks.
+A layer of flexible but inelastic material should be applied at the latest layer of base
+material as an elongation limitation. More material poured over the inelastic layer creates
+an outer homogeneous composition and ensures the layers coupling towards the rest of the
+body. Multiple components can be manufactured and attached to a rigid assembly to finalize a proper functional actuator presented in Figure 6 in a three component configuration
+over an industrial robot for a pick and place task.
+3.2. Analysis of Pressure and Deformation
+Defined by the specific requirements for utilizing hyper-elastic materials, methods
+available to dictate its behavior apply a systems energy as a basis. Taking energy as a major
+variable and considering only states of equilibrium, the theorem of virtual work serves
+as an anchor point for the mathematical model where Ua defines the input work and Va
+establishes the effected work.
+The following equation verifies how the energy input from an external source determines every aspect of the end condition.
+δUa + δVa = 0
+
+(1)
+
+Establishing a general input dependent on the pressure, the use of a characteristic
+equation between Energy W, pressure P and volumetric dilatation dV is given.
+Its clear how the systems relation between its volume and pressure is imperative for
+the calculation of energy. Initial and current states in the volume serve as limits defining
+
+Actuators 2022, 11, 221
+
+7 of 21
+
+compression or expansion. Given the expansion in any conventional use of a multi-chamber
+soft pneumatic actuator, the expected results always yield positive results.
+W=
+
+Z Vo
+Vf
+
+PdV
+
+(2)
+
+Considering air’s behavior as an ideal spring in the presence of a change in pressure,
+a perfect ratio is assumed between the theoretical volumes given a constant air flow. This
+characteristic provides a simple relationship between the pressure and added air volume,
+granting a dependent function able to replace the general pressure term.
+
+Figure 6. Soft Actuator Coupled to an Industrial Robot.
+
+Solving the integral for the dependent pressure, the following equation is obtained.
+W=
+
+Po
+(V 2 − Vo2 )
+2Vo f
+
+(3)
+
+AS a constant volumetric air flow is assumed in this study, the formula is adapted
+where the final volume of the system is equivalent to an initial volume and the volumetric
+flow rate Q multiplied by the time interval.
+Because the experimental results were obtained using an air compressor as a source,
+volumetric flow is considered constant and can be controlled through mechanical means.
+Given the interaction through diverse pneumatic components through a control system the
+value to be utilized is that present directly within the actuator.
+W=
+
+Po
+((Vo + Qt)2 − Vo2 )
+2Vo
+
+(4)
+
+Given the linear dependency towards volumetric change, the integral presents a
+quadratic equation expressing the relation to the system’s energy. Analyzing the equation
+across a temporal interval, Figure 7 is plotted. It describes a simple parabola limited to its
+positive representation for the work effected, which is considered as a deformation caused
+by expansion.
+
+Actuators 2022, 11, 221
+
+8 of 21
+
+Figure 7. Energy input from pressure source defined by the constant change in volume.
+
+Having a complete method to determine the energy input depending on a pneumatic
+source, its effects over the elastic body need to be interpreted. As hyper-elastic materials
+do not obey the traditional law of Hooke for linear elasticity, a different method must
+be employed. Several models exist with differing approximation percentages, but in this
+specific analysis the Neo-Hookean model was applied.
+Approaching its representation through means of linear algebra, defining forces applied in three dimensions to the three basic planes of reference, a concrete approximation is
+given. The Neo-Hookean model considers material properties based on its proportion to the
+shear modulus µ and leaves deformation relations in the form of a scalar representation Ic .
+The secondary term of the Neo-Hookean model applies only to compressible materials.
+The use of a strictly hyper-elastic material leads to a generalization of a universal incompressible characteristic. In any case, the Jacobian J belonging to the gradient of deformation
+will always equal to 1, reducing the term to 0.
+The leading equation is presented.
+µ
+λ
+( IC − 3) + ( J − 1)2
+(5)
+2
+2
+The term Ic dictates the deformation as a scalar, considering several directions and
+magnitudes of forces over a specific body. To determine Ic the trace operation must be
+performed over the left Cauchy-Green deformation tensor. The square matrix denoting the
+Deformation Gradient, where everything is derived, is presented in a general form.
+
+
+u x uy uz
+Fij =  v x vy vz 
+(6)
+0
+0 λz
+ΨD =
+
+The general deformation gradient matrix defines three vectors describing the Euclidean planes. Each vector is associated with the directional forces. This expression is
+capable of describing multiple stresses indistinctly from their respective directions. Given
+
+Actuators 2022, 11, 221
+
+9 of 21
+
+the predictable behaviour of a soft actuator’s pneumatic chamber, a generalization can be
+made.
+Several forces can be analyzed, but establishing a uni-axial deformation for the lateral
+walls of the actuator can simplify this matrix into a single diagonal dependent only on a
+single variable defining a relation of deformation λ from an original length.
+
+
+λ 0
+0
+1
+
+0 
+(7)
+F = FT =  0 √
+
+λ
+
+0
+
+0
+
+√1
+λ
+
+The left Cauchy-Green deformation tensor was easily obtained by applying a matrix
+multiplication operation to the deformation gradient. Because the simplified matrix is
+only defined as a diagonal matrix, the result is the square of each individual component.
+Applying the trace operation; Ic is the sum of the diagonal’s values.
+The resolution for Ic using the uni-axial deformation consideration is given in the
+following expression.
+2
+(8)
+λ
+Substituting the new definition for Ic , an expression for energy through a dependent
+variable denoting deformation, is given. The equation can be rewritten as a cubic formula
+where the most prominent variable is the relation of deformation λ. The variable for energy
+was substituted by a conventional W to portray its relation to the initially calculated input
+energy.
+
+
+2W
+3
+λ −
++3 λ+2 = 0
+(9)
+µ
+Ic = tr ( FF T ) = λ2 +
+
+The solution for this equation is obtained by applying Cardano’s method for cubic
+equations. The main condition before using Cardano’s method is the existence of a depressed cubic equation which is already present. For problems denoting only one or two
+real answers, the main formula can be applied directly; however, when confronted with an
+equation with three interception points, the discriminants of the square roots within the
+method are negative. To solve this problem, the imaginary part of each segment must be
+expressed directly, and each term is represented as a vector containing both imaginary and
+real parts. To simplify further expressions, two transition variables are introduced.
+The transitory term T portrays the section of Cardano’s method within a square
+root but is multiplied by −1 as the imaginary term i is extracted from the root. This
+serves as a basis to calculate the magnitudes and angles for imaginary vectors. The angle
+portraying the imaginary vector φ is determined through the previously stated term T and
+a constant −1 found through the parameters of the initial cubic equation and those found
+in Cardano’s method. Because the arcsin function does not discern between which value
+is negative, a shift of 180 degrees is necessary to calculate the true angle, which is always
+expected to be in the second quadrant.
+v
+u
+ 
+3
+u
+− 2W
+t
+µ +3
+T = −1 −
+(10)
+27
+
+
+T
+−1
+(11)
+φ = 180 + tan
+−1
+Each vector is separated into its components through trigonometric functions multiplied by its calculated magnitude. In view of the fact that a cubic root is still applied,
+the magnitude is affected directly through a radical function and the argument of the
+trigonometric functions is simply divided by three.
+
+Actuators 2022, 11, 221
+
+10 of 21
+
+Owing to the composition of the initial formula, after applying a cubic root to both
+vectors, their sum is in the form of conjugates; thus, all the imaginary parts are eliminated.
+The remaining terms are equivalent in view of the fact that square exponents are used in the
+calculation of magnitude simplifying the expression further. The resolution is presented.
+rq
+  
+φ
+3
+2
+2
+λ=2
+(−1) + T cos
+(12)
+3
+3.3. Calculation of Displacement Caused by Geometrical Changes
+Referring to multi-chamber pneumatic soft actuators, the main principle of motion is
+a physical push between the inflated chambers. Deformation of material and restriction
+at base sections, creates the need for flexion between segments. Considering previous
+calculations for material behavior, and the geometric composition of the actuator the
+displacement of its parts is easily associated.
+Having a solution for the relation of deformation from the initial measurement of
+chamber height, an approximation of deformation was used. As the material elongates
+owing to the inner pressure, the lateral walls form an ellipsoidal shape centered on a critical
+point defined as the thinnest section of the wall. If the wall states a uniformly shaped figure,
+the critical points form at its midpoint.
+The characteristic shape of the inflated walls is that of an ellipse; thus, Euler’s base
+approximation for an ellipse’s perimeter P is used.
+s
+R21 + R22
+(13)
+P = 2π
+2
+Taking into account the fact that the height of the chambers L should remain constant
+thanks to the limitations of frontal and rear walls, one of the radii is taken as half the
+initial height. The other radius is called a lateral deformation h, relating directly to the
+variable circumference dependent on twice the initial length multiplied by the relation
+of deformation λ previously calculated. The inverse equation is shown with an error
+difference from the initial value taken into account for its an approximation.
+s
+s
+
+2  2
+ 2  2
+Lo
+Lo
+2λLo
+Lo
+−
+− 2
+−
+(14)
+h= 2
+2π
+2
+π
+2
+Following the studies of J. Wang [30] in a model for the behavior of a soft actuator,
+the formula of flexion for each segment is given. This equation depends on several design parameters such as the segment distancing c and critical deformation point b. The
+equation takes the lateral deformations as a dependent variable and the flexion angle as its
+independent variable.
+!
+r
+b
+c
+2c
+c2
+(15)
+h=
+sinθ + +
+sinθ + 2
+2cosθ
+b
+b
+b
+Figure 8 provides a graphic representation of the physical placements and definitions
+of each parameters used in the calculation of lateral deformations for individual chambers.
+Each chamber’s inner height is labeled as L, and h represents the lateral deformation
+or distance between the inner wall’s initial and situational position. The method used
+considers each wall’s effect separately to account for designs with variable geometries, and
+the complete flexion of a segment is given by the sum of its calculated angles.
+
+Actuators 2022, 11, 221
+
+11 of 21
+
+Figure 8. Physical definitions of variables in the calculation of flexion.
+
+Unfortunately, this takes the opposite approach to the objective of this study; therefore,
+an inverse function is necessary. By means of trigonometric identities and simple algebra,
+the result is that of a quartic equation dependent on sin θ. Each coefficient is presented
+individually in the purpose of order.
+Ay4 + By3 + Cy2 + Dy + E = 0
+
+(16)
+
+y = sinθ
+
+(17)
+
+A = (b2 − 4h2 )2 + 16b2 h2
+
+(18)
+
+B = 32cbh2
+
+(19)
+
+C = 16(ch)2 − 16b2 h2 + 8h2 (b2 − 4h2 )
+
+(20)
+
+D = −32cbh2
+
+(21)
+
+E = 16h4 − 16(ch)2
+
+(22)
+
+To solve the equation, Ferrari’s method is applied, but its condition for use on depressed quartic equations is not fulfilled; therefore, variable substitution takes place in an
+effort to eliminate the coefficient corresponding to y3 .
+B
+(23)
+4A
+After simplifying, the new equation is presented divided into its individual coefficients,
+once again as a way to preserve order.
+y = x−
+
+x4 + px2 + qx + r = 0
+
+(24)
+
+Actuators 2022, 11, 221
+
+12 of 21
+
+p=
+
+C
+B2
+B2
++
+−
+A 2A2
+8A2
+
+(25)
+
+q=
+
+B3
+CB
+D
+−
++
+A
+8A3
+2A2
+
+(26)
+
+DB
+E
+B4
+CB2
+B4
+−
++
+−
++
+(27)
+A
+16A3
+4A2
+256A4
+64A4
+Once the equation is ready, Ferrari’s method presents several transitional parameters
+to obtain the final result. The first parameter α is determined using the previously determined cubic formula. Congruence with this function ensures the applicability of further
+expressions.
+r=
+
+p2
+q − 8α α + pα +
+−r
+4
+
+
+2
+
+2
+
+
+
+=0
+
+(28)
+
+Cardano’s method is once again the tool of preference for a cubic equation resolution, but the necessity of a depressed cubic equation brings the need for another variable
+substitution.
+p
+(29)
+3
+The final depressed cubic equation, which is now dependent on the variable β is
+presented.
+α = β−
+
+
+3
+
+β +β
+
+2
+
+2
+
+2
+
+16p
+2
+− 8p9 − 16p
+9 + 3 − 2p + 8r
+
+−8
+
+
+
++
+
+2p3
+8pr
+8p3
+8p3
+2
+3 − 3 + q − 9 + 27
+
+−8
+
+=0
+
+(30)
+
+Similar transition variables for Cardano’s method were employed to proceed in an
+orderly manner. Specifically, a term is used as a component in a vector for imaginary–real
+representation Q2 , and the angle between these components φ2 . The newly introduced
+terms p2 and q2 refer to the linear and independent coefficients of the previous equation,
+respectively.
+Contrary to the obligatory use of these terms in previous implementations, they will
+only be used situationally when required.
+s
+q2
+p3
+(31)
+Q2 = − 2 − 2
+4
+27
+!
+Q
+2
+
+φ2 = tan−1
+(32)
+− q22
+Faced with uncertainty about the sign of the discriminant derived by the variation of
+possible combinations of variables, the necessity for a piece-wise equation is clear. Both
+the classic solution and the answer, achieved through a detour into complex mathematics,
+are stated dependent on the sign of the discriminant. The solution for β and thus a direct
+relation to α is achieved, where αo will be a real answer to the initial equation. Even while
+all limits within the function exist, it fails in its continuity because there exists a point where
+it lacks a derivative where the boundary between domains lies.
+r
+r
+q
+q
+
+3
+3
+3
+2
+2
+2
+2
+
+ 3 − q2 + q2 + p2 + 3 − q2 − q2 + p2 ; q2 + p2 >= 0
+4
+4
+27
+2
+4
+27
+4
+27
+rq
+β=
+(33)
+
+ 2
+
+p32
+q2
+
+q2 2 2
+φ2
+2 3
+− 2 T2 cos 3 ; 4 + 27 < 0
+
+Actuators 2022, 11, 221
+
+13 of 21
+
+After obtaining the variable αo , the secondary transition parameter to be resolved is xo
+which correlates directly.
+q2
+xo =
+(34)
+4αo
+The value of αo must be chosen carefully so that the resulting secondary parameter
+permits a real answer, because of the use of square roots for the final solution of the initial
+quartic equation.
+q
+√
+√
+± 2αo ± 2αo − 4(− xo 2αo + p22 + αo )
+xn =
+(35)
+2
+Using the previously stated substitution and the arcsin trigonometric function, a
+method is acquired to obtain the flexion of each segment of a soft actuator depending on its
+input pressure.
+The graph presented in Figure 9 shows a behavior granted by two radical equations
+with a clear inflection point. This is caused by the use of a piece-wise function to finalize
+the resolution of the quartic equation. Idealizing the system, the graph presents a steep
+continuous radical form, making this a close approximation with a small zone of poor
+effectiveness. The eventual curvature of the graph proves how the tension accumulated
+within the body of the actuator gradually prevents further displacement.
+
+Figure 9. Change in angle per chamber through constant air input.
+
+3.4. Angular Representation Using Linear Vectors
+The representation of the actuator’s backbone curve is approached through a series
+of linear vectors Zn established in succession, depicting the magnitude and direction of
+each segment in concordance with the initial reference state. Each vector is composed of
+magnitude corresponding to segment length Ln and its global angle Θn dependent on both
+half angles θn caused by adjacent pneumatic chambers.
+Zn = ( Ln , Θn )
+
+(36)
+
+Actuators 2022, 11, 221
+
+14 of 21
+
+The use of linear vectors is justified by the lack of change in particular segments
+accomplished by using conventional designs. The axis of rotation defined for each chamber
+was located at a midpoint of their length in separation. The design was further adjusted
+to this assumption, for it is the thinnest part of the body in a radial direction to the center
+point of its flexion. Because a requirement for the backbone curve is that its tangential
+vectors are always orthogonal to the transverse area and given that the base of the actuator
+will not suffer from longitudinal deformations, it was selected as the reference as shown
+in Figure 10. Areas such as the top or center of inertia show troublesome results, because
+their magnitude is variable in view of the fact that they contain actively deforming parts or
+separating pieces.
+
+Figure 10. Vectorial representation of a backbone curve for a soft actuator.
+
+Owing to the dependence of a previous segment to determine the position of the next
+one, the use of recursive equations is evident. The angles expressed beforehand are relative
+only to the study of individual chambers and thus must be introduced to a representation of
+the system as a whole. To calculate a global angle Θ from the initial reference, the previous
+iteration of global angle is to be summed to the effects of both half angles.
+Θ n = Θ n −1 + θ n + θ n −1
+
+(37)
+
+Once the direction and magnitude are obtained through design parameters such
+as segment length Ln , the remaining matter is the resolution of the origin points On for
+each vector. It comes naturally through another recursive equation dependent on the
+components of the previous origin point summed with the components of the last vector
+calculated using simple trigonometric functions.
+On ( x, y) = On−1 ( x, y) + ( Ln−1 cos (Θn−1 ), Ln−1 sin (Θn−1 ))
+
+(38)
+
+The connection of origin coordinates represent the backbone curve of the soft actuator
+located at its base in any given state dictated by the input pressure from the air flow
+source. The complete mathematical model can be summarized in Figure 11 where the
+principal equations on their base form are presented and classified into their corresponding
+domain of analysis. The colors cyan, purple and blue correspond to the analysis of pressure,
+deformation and the calculation of displacement caused by geometrical changes and
+angular representation using linear vectors sections, respectively. The model starts from
+the energy source and finalizes on a vectorial representation, granting graphic results.
+
+Actuators 2022, 11, 221
+
+15 of 21
+
+Figure 11. Mathematical Model’s Equation Flow.
+
+3.5. Calculated and Test Data Comparison
+As time passes, the internal volume increases and the segment angles become more
+pronounced. Figure 12 presents different positions separated by 0.1 s in time. Even though
+each result is given at a uniformly spaced interval, it is clear that the initial plots are
+more physically separated. Later graphs are almost presented superimposed over each
+other. Although the energy source adapts to satisfy a constant volumetric flow, the flexion
+of the actuator depends on the ellipsoidal interaction between the chambers. At higher
+lateral deformations, less of the actual segments will be in contact, thus slowing its angular
+velocity.
+
+Figure 12. Instances of positions spaced as more energy is introduced to the system.
+
+Actuators 2022, 11, 221
+
+16 of 21
+
+To validate results, various empirical samples were taken about the body of the
+actuator under different conditions. Body flexion of was controlled and measured using a
+pressure regulator with an integrated manometer. Photographs were obtained from a lateral
+view at pressures of 0.5, 1.0, 1.5, and 2.0 kg/cm2 . Figure 13 presents the results at 1.5 and
+2.0 kg/cm2 and its angle measurements taken per chamber relative to the corresponding
+previous segment.
+
+Figure 13. Test measurements of soft actuator flexion at different pressures. (a) Tested Displacement
+at 1.5 kg/cm2 . (b) Tested Displacement at 2 kg/cm2 .
+
+The major limitation encountered in this study was the supply of compressed air. This
+did not allow validation with angles greater than those shown in the results. As future
+work, the model should be tested with other materials that have greater deformation to
+validate larger angles.
+Relying on the relationship between pressure and volumetric deformation, the exact
+time expressed by the model can be calculated by applying calculations at a specific pressure.
+Such methods were used to create comparisons with real calculations. Figure 14 present
+graphic representation of the backbone curve of a soft actuator set at 1.5 and 2.0 kg/cm2
+using the geometrical parameters designed for the real test prototype.
+
+Figure 14. Modeled Displacement of soft actuator flexion at different pressures. (a) Calculated
+Displacement at 1.5 kg/cm2 . (b) Calculated Displacement at 2 kg/cm2 .
+
+The reference taken was the initial position of the first segment which was considered
+to be constant. The backbone curve was drawn by tracing the inflection points between
+segments.The slight difference in measurement is due to the composition of the material as
+well as human errors in prototype manufacturing. The first angle is notoriously smaller
+because the flexion at that particular point is dependent only on one active segment as the
+
+Actuators 2022, 11, 221
+
+17 of 21
+
+initial constant segment lacks a pneumatic chamber to contribute towards the flexion of the
+actuator.
+A comparison between test photographs and the modeled backbone curve is presented
+in Figure 15 with a superposition between images. The angle of the graphed model shifts
+to correlate with the reference line which is the initial segment.
+
+Figure 15. Comparison between Modeled Displacement and Test Measurements of soft actuator
+flexion at different pressures. (left) Comparison at 1.5 kg/cm2 . (right) Comparison at 2 kg/cm2 .
+
+The contents listed in Table 1 provide the individual results for the angular displacement for each segment at the four pressure conditions mentioned. To compare test results
+with the calculated predictions, an average value was obtained from the angles θ2 − θ7 . This
+approach was permitted due to the fact that all chambers were designed with equivalent
+geometries. Angle θ1 is omitted because its movement depends only on a single active
+chamber, this being a different instance from that of the rest of the segments.
+Table 1. Comparison between measured angles and mathematical model’s results (Radians).
+kg/cm2
+
+kPa
+
+θ1 1
+
+θ2
+
+θ3
+
+θ4
+
+θ5
+
+θ6
+
+θ7
+
+θ Avg
+
+Model
+
+Error
+
+0.5
+1
+1.5
+2
+
+49.03
+98.07
+147.1
+196.1
+
+0.0339
+0.0520
+0.094
+0.117
+
+0.0597
+0.085
+0.138
+0.165
+
+0.0561
+0.083
+0.137
+0.174
+
+0.0524
+0.085
+0.142
+0.187
+
+0.0514
+0.087
+0.153
+0.191
+
+0.0541
+0.074
+0.133
+0.192
+
+0.0617
+0.072
+0.132
+0.184
+
+0.0555
+0.080
+0.139
+0.182
+
+0.0462
+0.0921
+0.137
+0.182
+
+0.0096
+−0.011
+0.0016
+−0.0001
+
+1 θ
+
+1 is not taken into consideration when calculating the average.
+
+The results are provided in degrees in Table 2 to facilitate the understanding of the
+magnitudes presented.
+Table 2. Comparison between measured angles and mathematical model’s results (Degrees).
+kg/cm2
+
+kPa
+
+θ1 1
+
+θ2
+
+θ3
+
+θ4
+
+θ5
+
+θ6
+
+θ7
+
+θ Avg
+
+Model
+
+Error
+
+0.5
+1
+1.5
+2
+
+49.03
+98.07
+147.1
+196.1
+
+1.949
+2.983
+5.432
+6.711
+
+3.425
+4.875
+7.936
+9.457
+
+3.215
+4.762
+7.869
+9.986
+
+3.005
+4.870
+8.123
+10.743
+
+2.945
+4.967
+8.759
+10.968
+
+3.104
+4.231
+7.612
+10.982
+
+3.538
+4.123
+7.582
+10.542
+
+3.205
+4.638
+7.980
+10.446
+
+2.654
+5.285
+7.888
+10.456
+
+0.551
+−0.647
+0.091
+−0.009
+
+1 θ
+
+1 is not taken into consideration when calculating the average.
+
+Comparing the average with the theoretical results, the maximum error was that of
+0.647° at a pressure of 1 kg/cm2 . The model grants precision at elevated deformations. This
+is attributed to the fact that the ellipsoidal geometrical approximation is advised only for
+ellipses with radii that do not differ significantly in magnitude. This holds true, as tests
+with low deformation are less precise.
+
+Actuators 2022, 11, 221
+
+18 of 21
+
+4. Discussion
+The results validate that at high deformations, which reflect concrete and applicable
+states for industrial and experimental use, a simple deterministic model is accurate at
+predicting the position and trajectory of multi-chamber pneumatic soft actuators. A notable
+increase in error can be encountered at the initial positions but the modeled values are
+sufficient, especially taking into account the fact that these transitory positions are rarely
+used as a practical end point. Even though the error was significantly reduced, the quantity
+of pneumatic chambers considered affects the error to the total sum of angles referring to
+the final angular displacement of the actuator´s tip from the reference point.
+The finalized model is mainly intended for use with a constant air flow provided by a
+controllable source such as an air compressor or an air pressure pipeline coupled with an
+appropriate pneumatic pressure regulation system. This provides a clear way to create a
+time-dependent system for further analysis of its variables. Since pressure, volume and
+time are closely related to the first steps into energy calculation, a direct relationship can be
+formulated to determine the pressure of the system at any given time, which is how the
+specific model values where acquired.
+The relative angles θ are not easily represented physically given that they do not
+present complete movement of any given part of the actuator but the effects of a single wall
+belonging to one of the two possible active pneumatic chambers. The complete angle of a
+segment relative to the position of the previous one can be recognized as the sum between
+the two walls creating flexion θn−1 + θn . An easily interpreted result is that of the global
+angle Θ, which represents the segment angle relative to the initial position reference.
+Trajectory analysis at multiple instances in time reveal a deceleration on its angular
+velocity, for its displacement diminishes as the angle becomes more pronounced. Individual
+angles also displayed their dependency on both adjacent segments for the initial rotation
+axis, which always presents a smaller angle because segment Zo lacks a pneumatic chamber.
+This results are also seen on test measurements of a real actuator.
+Several models use complex relations to provide a detailed response like that presented
+by J. Wang [30]. His work was used as the basis for the angular displacement analysis
+presented in this study, but redefined using the opposite approach. This type of analysis
+is usually limited to accounting for phenomena belonging directly to the actuator’s body,
+generalizing any type of external influence. The addition of an energy source interpretation
+creates a direct relation to the full purpose of the actuator in its entirety.
+Other models for multi-chamber soft actuators were created by adopting dynamic
+approaches to movement [4,20]. This provides a precise analysis of their movement at the
+cost of simplicity, for equations become increasingly complex and difficult to adapt. The
+model presented in this research permits the study of various general variables given its
+ease of manipulating parameters, while accomplishing its main purpose. For the study of
+specific parts of the system, a different model is beneficial.
+This study finalizes with the graphical representation of a backbone curve similar to
+other studies. This is a varied topic, for a range of methods, such as trigonometric functions,
+can be used to describe its behavior [15,21]. The approach used in this research, as well
+as that preferred for geometrically limited design models, is that of multiple recursively
+dependent linear vectors.
+Defining the concept of instabilities as an issue with elastic structure continuously
+exposed to high pressures and consequential deformations, instabilities present a displacement in state without an input change occurring [31]. Considering that this model is
+inclined towards the industrial use of soft actuators for production chain robots, high
+pressures and thus deformations are not to be expected. This is true only for a design with
+relatively wide walls. The model’s purpose is to serve as a tool to design and innovate
+with future research throughout the field and thus it is encouraged to experiment with new
+ideas. Such an approach can be taken where instabilities are embraced as a tool to reduce
+energy inputs and yet achieve high deformations to achieve a certain task [32]. Although
+
+Actuators 2022, 11, 221
+
+19 of 21
+
+this particular model does not take instabilities into consideration, it is valuable research
+portraying new forms of actuation in a rapidly expanding field.
+Even though it is taken as a system failure in most cases, instabilities can be used
+as a quantifiable tool able to be deduced through mathematical means. Such work is
+demonstrated by [33] through their work towards harnessing snap-through instabilities
+as a method of optimizing energy efficiency through a reduction in their necessary input
+while still achieving high deformations. They present the mathematical means to deduce
+the deformation the material will endure and thus presents a possible addition even for a
+deterministic model such as the one presented in this study. This would be an addition
+towards the complexity of the Neo-Hookean model for nonlinear elastic deformations,
+providing reliable results even in presence of instabilities.
+5. Conclusions
+In this study, a geometric approach was adopted towards the mathematical description
+of a multi-chamber pneumatic soft actuator dependent on the energy provided from air
+flow source. The Neo-Hookean model is used as a basis to link the traditional energy
+equilibrium physics to the behavior of nonlinear hyper-elastic materials comprising the
+body of the actuator. Taking approximations through the study of ellipses and using
+previous works as a basis for the geometrical compliance of multi-chamber configurations,
+angular displacement referent to individual segments is achieved.
+The use of recursive equations presents a means of representing the actuator’s position
+in different states through the backbone curve. This was established in concordance with
+the actuator’s base providing an easily understandable graphic with constant magnitudes
+and an initial segment used as reference.
+A specific design was created with the intent of validating the results portrayed by
+the mathematical model. Using a seven-chamber configuration with constant geometries
+within every segment containing a single passive segment the model was tested. Test
+results present expected outcomes where each relative angle is almost equivalent for every
+rotation axis with two adjacent active chambers. The first angle was always smaller because
+only one chamber is effecting a deformation.
+A maximum error of 0.647° is observed after taking the average from the empirical
+results and comparing them to the model’s results. The precision of the mathematical
+model is sufficient for the study’s reach. At high deformations, objectively more important
+states, the error is mitigated considerably.
+Author Contributions: Conceptualization, J.L.O.-A.; formal analysis, E.M.S.; investigation, E.M.S.;
+methodology, J.L.O.-A.; writing—original draft, E.M.S.; writing—review editing, J.L.O.-A. All authors
+have read and agreed to the published version of the manuscript.
+Funding: This research received no external funding.
+Institutional Review Board Statement: Not applicable.
+Informed Consent Statement: Not applicable.
+Data Availability Statement: Not applicable.
+Acknowledgments: This work was supported by the Research Fund of Universidad Tecnológica
+Centroamericana (UNITEC, Honduras).
+Conflicts of Interest: The authors declare no conflict of interest.
+
+References
+1.
+2.
+
+Peng, Y.; Liu, Y.; Yang, Y.; Liu, N.; Sun, Y.; Liu, Y.; Pu, H.; Xie, S.; Luo, J. Development of continuum manipulator actuated by thin
+McKibben pneumatic artificial muscle. Mechatronics 2019, 60, 56–65. [CrossRef]
+Sparrman, B.; du Pasquier, C.; Thomsen, C.; Darbari, S.; Rustom, R.; Laucks, J.; Shea, K.; Tibbits, S. Printed silicone pneumatic
+actuators for soft robotics. Addit. Manuf. 2021, 40, 101860. [CrossRef]
+
+Actuators 2022, 11, 221
+
+3.
+
+4.
+5.
+6.
+
+7.
+8.
+
+9.
+
+10.
+
+11.
+12.
+13.
+14.
+15.
+16.
+17.
+18.
+19.
+
+20.
+21.
+22.
+23.
+24.
+25.
+
+26.
+27.
+28.
+
+20 of 21
+
+Xu, Z.; Yao, P.; Cai, S.; Wang, Z.; Bao, G. Modeling and experimental research on bending and wrinkling of long-arm bio-soft
+robot. In Proceedings of the 2017 IEEE International Conference on Robotics and Biomimetics (ROBIO), Macau, China, 5–8
+December 2017; pp. 842–847. [CrossRef]
+Li, Y.; Zhou, W.; Wu, J.; Hu, G. A Dynamic Modeling Method for the Bi-Directional Pneumatic Actuator Using Dynamic
+Equilibrium Equation. Actuators 2021, 11, 7. [CrossRef]
+Chen, L.; Yang, C.; Wang, H.; Branson, D.T.; Dai, J.S.; Kang, R. Design and modeling of a soft robotic surface with hyperelastic
+material. Mech. Mach. Theory 2018, 130, 109–122. [CrossRef]
+Salem, M.E.M.; Wang, Q.; Wen, R.; Xiang, M. Design and Characterization of Soft Pneumatic Actuator for Universal Robot
+Gripper. In Proceedings of the 2018 International Conference on Control and Robots (ICCR), Hong Kong, China, 15–17 September
+2018; pp. 6–10. [CrossRef]
+Luo, J.; Jiang, P.; Li, X.; Bai, L.; Liu, F.; Chen, R. A Soft Self-Stable Actuator and Its Energy-Efficient Grasping. Actuators 2022,
+11, 107. [CrossRef]
+Suzumori, K.; Endo, S.; Kanda, T.; Kato, N.; Suzuki, H. A Bending Pneumatic Rubber Actuator Realizing Soft-bodied Manta
+Swimming Robot. In Proceedings of the 2007 IEEE International Conference on Robotics and Automation, Rome, Italy, 10–14
+April 2007; pp. 4975–4980. [CrossRef]
+Yu, Z.; Gao, Z.; Li, Y.; Pan, J. Closed-loop Control of a Pneumatic Soft Gripper for Fast and Accurate Response. In Proceedings of
+the 2020 8th International Conference on Power Electronics Systems and Applications (PESA), Hong Kong, China, 7–10 December
+2020; pp. 1–5. [CrossRef]
+Bortnikova, V.; Yevsieiev, V.; Beskorovainyi, V.; Nevliudov, I.; Botsman, I.; Maksymova, S. Structural Parameters Influence on a
+Soft Robotic Manipulator Finger Bend Angle Simulation. In Proceedings of the 2019 IEEE 15th International Conference on the
+Experience of Designing and Application of CAD Systems (CADSM), Polyana, Ukraine, 26 February–2 March 2019; pp. 35–38.
+[CrossRef]
+Olander, D.R. Compression of an Ideal Gas as Classroom Example of Reversible and Irreversible Processes. Int. J. Eng. Educ.
+2000, 16, 524–528.
+Ibrahim, S.; Krause, J.C.; Raatz, A. Linear and Nonlinear Low Level Control of a Soft Pneumatic Actuator. In Proceedings of the
+2019 2nd IEEE International Conference on Soft Robotics (RoboSoft), Seoul, Korea, 14–18 April 2019; pp. 434–440. [CrossRef]
+Thuruthel, T.G.; Falotico, E.; Manti, M.; Laschi, C. Stable Open Loop Control of Soft Robotic Manipulators. IEEE Robot. Autom.
+Lett. 2018, 3, 1292–1298. [CrossRef]
+Horgan, C.O. A note on a class of generalized neo-Hookean models for isotropic incompressible hyperelastic materials. Int. J.
+Non-Linear Mech. 2021, 129, 103665. [CrossRef]
+Caasenbrood, B.J.; Pogromsky, A.Y.; Nijmeijer, H. Dynamic modeling of hyper-elastic soft robots using spatial curves. IFACPapersOnLine 2020, 53, 9238–9243. [CrossRef]
+Smith, B.; De Goes, F.; Kim, T. Stable Neo-Hookean Flesh Simulation. ACM Trans. Graph. 2018, 37, 15. [CrossRef]
+Zhao, W.; Zhang, J.; Zhang, W.; Yuan, X. Internal resonance characteristics of hyperelastic thin-walled cylindrical shells composed
+of Mooney–Rivlin materials. Thin-Walled Struct. 2021, 163, 107754. [CrossRef]
+Mao, Z.; Nagaoka, T.; Yokota, S.; Kim, J.W. Soft fiber-reinforced bending finger with three chambers actuated by ECF (electroconjugate fluid) pumps. Sens. Actuators A Phys. 2020, 310, 112034. [CrossRef]
+Zhang, J.; Zhou, J.; Yuan, S.; Jing, C. Design, Fabrication and Experiments of a 3D-motion Soft Elastomer Actuator. In Proceedings
+of the 2019 IEEE International Conference on Mechatronics and Automation (ICMA), Tianjin, China, 4–7 August 2019; pp. 497–501.
+[CrossRef]
+Gharavi, L.; Zareinejad, M.; Ohadi, A. Dynamic Finite-Element analysis of a soft bending actuator. Mechatronics 2022. [CrossRef]
+Venkiteswaran, V.K.; Sikorski, J.; Misra, S. Shape and contact force estimation of continuum manipulators using pseudo rigid
+body models. Mech. Mach. Theory 2019, 139, 34–45. [CrossRef]
+Mochiyama, H. The Elastic Rod Approach toward System Theory for Soft Robotics. IFAC-PapersOnLine 2020, 53, 9175–9180.
+[CrossRef]
+Enojas, M.J.B.; Ramos, M.C. Development of a Finger Soft Pneumatic Bending Actuator. In Proceedings of the 2019 4th
+Asia-Pacific Conference on Intelligent Robot Systems (ACIRS), Nagoya, Japan, 13–15 July 2019; pp. 1–5. [CrossRef]
+Rad, C.; Hancu, O.; Lapusan, C. Data-Driven Kinematic Model of PneuNets Bending Actuators for Soft Grasping Tasks. Actuators
+2022, 11, 58. [CrossRef]
+Kokubu, S.; Yu, W. Developing a hybrid soft mechanism for assisting individualized flexion and extension of finger joints. In
+Proceedings of the 2020 42nd Annual International Conference of the IEEE Engineering in Medicine & Biology Society (EMBC),
+Montreal, QC, Canada, 20–24 July 2020; pp. 4873–4877. [CrossRef]
+Fras, J.; Macias, M.; Noh, Y.; Althoefer, K. Fluidical bending actuator designed for soft octopus robot tentacle. In Proceedings of
+the 2018 IEEE International Conference on Soft Robotics (RoboSoft), Livorno, Italy, 24–28 April 2018; pp. 253–257. [CrossRef]
+Olson, G.; Hatton, R.L.; Adams, J.A.; Mengüç, Y. An Euler–Bernoulli beam model for soft robot arms bent through self-stress and
+external loads. Int. J. Solids Struct. 2020, 207, 113–131. [CrossRef]
+Wang, T.; Lin, B.; Chong, B.; Whitman, J.; Travers, M.; Goldman, D.I.; Blekherman, G.; Choset, H. Reconstruction of Backbone
+Curves for Snake Robots. IEEE Robot. Autom. Lett. 2021, 6, 3264–3270. [CrossRef]
+
+Actuators 2022, 11, 221
+
+29.
+30.
+31.
+32.
+33.
+
+21 of 21
+
+Hehenberger, P.; Poltschak, F.; Zeman, K.; Amrhein, W. Hierarchical design models in the mechatronic product development
+process of synchronous machines. Mechatronics 2010, 20, 864–875. [CrossRef]
+Wang, J.; Fei, Y.; Pang, W. Design, Modeling, and Testing of a Soft Pneumatic Glove With Segmented PneuNets Bending Actuators.
+IEEE/ASME Trans. Mechatron. 2019, 24, 990–1001. [CrossRef]
+Hrinda, G. Snap-through Instability Patterns in Truss Structures; American Institute of Aeronautics and Astronautics, NASA
+Langley Research Center: Hampton, VA, USA, 2010.
+Pal, A.; Restrepo, V.; Goswami, D.; Martinez, R.V. Exploiting Mechanical Instabilities in Soft Robotics: Control, Sensing, and
+Actuation. Adv. Mater. 2021, 33, 2006939. [CrossRef]
+Overvelde, J.T.B.; Kloek, T.; D’haen, J.J.A.; Bertoldi, K. Amplifying the response of soft actuators by harnessing snap-through
+instabilities. Proc. Natl. Acad. Sci. USA 2015, 112, 10863–10868. [CrossRef]
+
+
