@@ -91,7 +91,11 @@ def parse_markdown(md: str):
             continue
         if line.startswith("# "):
             flush_list_stack()
-            root_blocks.append(mk_block("heading_1", line[2:].strip()))
+            htxt = line[2:].strip()
+            root_blocks.append(mk_block("heading_1", htxt))
+            # Formatting guard: keep a visible one-line gap after sections 1)~3)
+            if re.match(r"^[1-3]\)\s+", htxt):
+                root_blocks.append(mk_block("paragraph", ""))
             i += 1
             continue
         if line.startswith("## "):

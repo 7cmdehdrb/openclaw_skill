@@ -37,6 +37,7 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
    - 문제 상황
    - Proposed method
    - 정량/정성 결과
+   - Formatting guard: `# 1)`, `# 2)`, `# 3)` heading lines must be followed by exactly one blank line before body bullets/paragraphs.
 5. Preserve useful technical symbols/terms from source.
 6. Resolve Notion target under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
