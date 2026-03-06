@@ -11,4 +11,5 @@
 - [ ] Page created with paper title (중복 시 suffix)
 - [ ] Notion formatting rule applied (`#`/`##`/`###`, nested bullets, table bold)
 - [ ] `### 원본 PDF` 섹션 + 원본 PDF 첨부
+- [ ] (선택) 핵심 이미지 추출/선정 후 `### 핵심 이미지` 섹션에 첨부
 - [ ] 최종 URL/핵심 추출 근거 보고

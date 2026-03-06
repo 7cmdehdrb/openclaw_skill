@@ -19,9 +19,11 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 5. Create Notion page under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
 6. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
-7. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
-8. Add `### 원본 PDF` section and attach original PDF file.
-9. Report page URL + what was extracted (pages/sections used).
+7. (Optional) Extract PDF images with `scripts/extract_pdf_images.py` and select key figures (framework/architecture/main result plots).
+8. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
+9. Add `### 원본 PDF` section and attach original PDF file.
+10. If key figures are selected, add `### 핵심 이미지` section and upload selected images with 1-line rationale each.
+11. Report page URL + what was extracted (pages/sections used).
 
 ## Hard Rules
 
@@ -48,8 +50,14 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 - Notion path lookup fails → stop and report which node failed.
 - Duplicate title → append numeric suffix.
 
+## Dependencies
+
+- `scripts/extract_pdf_images.py` requires PyMuPDF:
+  - `python3 -m pip install --user pymupdf`
+
 ## Helpers
 
 - Summary schema: `references/prompt.txt`
 - Notion markdown conversion helper: `scripts/markdown_to_notion.py`
+- PDF image extractor: `scripts/extract_pdf_images.py`
 - Workflow checklist (operator): `references/checklist.md`
