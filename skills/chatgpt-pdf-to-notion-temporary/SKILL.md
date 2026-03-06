@@ -54,11 +54,18 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 ### Quality Baseline (must pass)
 
 - Read broad text range (not first page only): abstract/introduction/method/results/conclusion.
+- Always include `0) 논문 정보` with year/journal/citation count + APA/BibTeX format rule.
 - Problem/Method/Result each must be grounded in extracted text.
 - Never invent numeric performance claims.
 - If robust numeric tables are unavailable, report verified qualitative outcome + explicit caveat.
 - Prefer direct evidence phrasing over speculative wording.
 - Write concise, publication-style summary (no filler, no generic claims).
+- Keep structure stable for consistency:
+  - `0) 논문 정보`
+  - `1) 문제 상황`
+  - `2) Proposed Method`
+  - `3) 정량 및 정성적 결과`
+  - `### 원본 PDF`
 
 ### Execution Guardrails (must pass before done)
 
@@ -67,6 +74,8 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 - If extracted image count is 0, explicitly report and continue without image insertion only with clear reason.
 - If inline image insertion fails, retry once; if still failing, report failure explicitly (do not claim success).
 - Ensure placeholders like `(아래 이미지 삽입)` are removed when images are actually inserted.
+- Ensure nested bullets are real child bullets (never leave raw `- ...` text lines).
+- Place key images near the matching section context (not dumped at page bottom).
 
 ## Failure Handling
 
