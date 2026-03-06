@@ -45,6 +45,8 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
    - De-prioritize pure result-only plots unless they are essential to the core claim.
 9. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
 10. Insert selected key images as **inline image blocks** near relevant paragraphs (not only as file attachments).
+    - For selection, run `scripts/select_key_images.py --pdf <canonical_pdf> --images-dir <extracted_dir>` first.
+    - Never choose by filename/page number alone; verify with caption text and visual check (diagram vs plot vs photo).
 11. Add `### 원본 PDF` section and attach original PDF file.
 12. Register temporary artifacts for cleanup in 6 hours:
    - source paper PDF path
@@ -61,6 +63,7 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 - Keep markdown fidelity high (`#`/`##`/`###`, bullets, tables, symbols).
 - Use low-cost normalization in conversion script:
   - Convert indented `-` lines into true nested bullets.
+  - Convert markdown `> ...` lines into actual Notion `quote` blocks (do not leave literal `>` text).
   - Convert `**bold**` inside table cells into Notion bold annotations.
 - Minimize hallucination: only claim values seen in extracted text.
 - If a metric is missing/unclear, mark as "본문 확인 필요".

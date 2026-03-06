@@ -6,6 +6,7 @@
 - [ ] PDF title/metadata 확인 (`pdfinfo` 등)
 - [ ] 논문 메타데이터 조회 (`scripts/paper_metadata.py`) 및 `0) 논문 정보` 섹션 작성
 - [ ] citation 형식 확인: `APA`/`BibTeX` 라벨은 heading/bold, citation 본문만 quote
+- [ ] Notion 반영 후 APA/BibTeX 본문이 실제 `quote` 블록인지 확인 (문자 `>` 잔존 금지)
 - [ ] confidence 낮으면 Google Scholar 수동 검증(제목+저자+저널 기준)
 
 ## B. 본문 요약 품질

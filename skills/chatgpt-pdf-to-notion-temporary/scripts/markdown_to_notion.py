@@ -15,7 +15,7 @@ Env:
   NOTION_PARENT_PAGE_ID    required (target parent page id)
 """
 
-NOTION_VERSION = "2022-06-28"
+NOTION_VERSION = "2025-09-03"
 
 
 def rich(text: str):
@@ -119,6 +119,14 @@ def parse_markdown(md: str):
                     parent = list_stack[-1]
                     parent.setdefault("bulleted_list_item", {}).setdefault("children", []).append(item)
                     list_stack.append(item)
+            i += 1
+            continue
+
+        # block quote
+        if s.startswith(">"):
+            flush_list_stack()
+            quote_text = re.sub(r"^>\s?", "", s)
+            root_blocks.append(mk_block("quote", quote_text))
             i += 1
             continue
 
