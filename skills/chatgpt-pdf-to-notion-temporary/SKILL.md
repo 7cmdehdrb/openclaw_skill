@@ -20,7 +20,7 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
 6. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
 7. (Optional) Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
-   - **High-priority mandatory rule**: include framework/architecture figures (e.g., Fig. 3, Fig. 4 type diagrams) whenever present.
+   - **High-priority mandatory rule**: include framework/architecture-type figures whenever present (e.g., pipeline/system block/architecture diagrams; figure number is irrelevant).
    - Priority order: framework/architecture > real setup/hardware photos > representative method diagrams.
    - De-prioritize pure result-only plots unless they are essential to the core claim.
 8. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
