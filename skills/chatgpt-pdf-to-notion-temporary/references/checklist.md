@@ -24,6 +24,8 @@
 - [ ] 신규 생성 시 fingerprint marker 즉시 기록
 - [ ] 출력 카디널리티 확인: canonical PDF 1개당 Notion page 1개만 유지(중복 생성 금지)
 - [ ] Notion formatting rule applied (`#`/`##`/`###`, nested bullets, table bold)
+- [ ] heading 블록 QA: heading_1/2/3 각 블록의 텍스트가 단일 라인인지 확인(개행 포함 금지)
+- [ ] heading 블록에 불릿/마크다운 본문(`- `, `##`, `###`)이 섞여 있지 않은지 확인
 
 ## D. 핵심 이미지(누락 방지)
 - [ ] 이미지 추출 실행 완료 (`scripts/extract_pdf_images.py`) 및 추출 개수 확인

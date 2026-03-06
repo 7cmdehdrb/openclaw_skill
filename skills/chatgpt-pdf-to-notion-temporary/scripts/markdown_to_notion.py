@@ -40,7 +40,14 @@ def rich(text: str):
     return out or [{"type": "text", "text": {"content": ""}}]
 
 
+def _single_line(text: str) -> str:
+    # Notion heading blocks must be single-line to avoid "# 전체 본문" 깨짐 현상.
+    return " ".join((text or "").replace("\r", "\n").splitlines()).strip()
+
+
 def mk_block(kind, text):
+    if kind in {"heading_1", "heading_2", "heading_3"}:
+        text = _single_line(text)
     return {"object": "block", "type": kind, kind: {"rich_text": rich(text)}}
 
 

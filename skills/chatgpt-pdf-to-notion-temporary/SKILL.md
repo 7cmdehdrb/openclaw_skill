@@ -53,6 +53,8 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
    - Priority order: framework/architecture > real setup/hardware photos > representative method diagrams.
    - De-prioritize pure result-only plots unless they are essential to the core claim.
 9. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
+   - Main body insertion must use `scripts/markdown_to_notion.py` (or equivalent markdown parser), not ad-hoc heading block construction.
+   - Never send multiline heading content to Notion. Heading text must be one line only (no embedded `\n`, bullets, or markdown markers).
 10. Insert selected key images as **inline image blocks** near relevant paragraphs (not only as file attachments).
     - For selection, run `scripts/select_key_images.py --pdf <canonical_pdf> --images-dir <extracted_dir>` first.
     - Never choose by filename/page number alone; verify with caption text and visual check (diagram vs plot vs photo).
