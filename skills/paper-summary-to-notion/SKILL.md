@@ -64,11 +64,11 @@ description: Summarize research paper PDFs and upload to Notion with strict form
 10. 요약 지시 문장(예: `(아래에 ... 첨부)`)은 최종 페이지에 남기지 않는다.
 11. 구조 검증 (`scripts/validate_notion_page.py --page-id <id>`)
    - 실패 시 성공 보고 금지 + rollback(in_trash)
-11. 임시 파일 등록
+12. 임시 파일 등록
    - **실제로 사용된 파일만** 등록
    - TTL **1주일(168시간)**
    - `scripts/register_temp_artifacts.py <paths...> --ttl-hours 168`
-12. 락 해제 (성공/실패 모두)
+13. 락 해제 (성공/실패 모두)
 
 ## Formatting Guard
 - `## 논문 정보`, `## 문제 상황`, `## 제안하는 방법`, `## 결과` 아래는 본문 시작 전 한 줄 공백 유지
