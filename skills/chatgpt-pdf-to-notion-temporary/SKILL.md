@@ -19,10 +19,12 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 5. Create Notion page under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
 6. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
-7. (Optional) Extract PDF images with `scripts/extract_pdf_images.py` and select key figures (framework/architecture/main result plots).
+7. (Optional) Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
+   - Relaxed priority: framework/architecture > real setup/hardware photos > representative method diagrams.
+   - De-prioritize pure result-only plots unless they are essential to the core claim.
 8. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
-9. Add `### 원본 PDF` section and attach original PDF file.
-10. If key figures are selected, add `### 핵심 이미지` section and upload selected images with 1-line rationale each.
+9. Insert selected key images as **inline image blocks** near relevant paragraphs (not only as file attachments).
+10. Add `### 원본 PDF` section and attach original PDF file.
 11. Report page URL + what was extracted (pages/sections used).
 
 ## Hard Rules

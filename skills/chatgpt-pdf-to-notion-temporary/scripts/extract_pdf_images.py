@@ -1,11 +1,34 @@
 #!/usr/bin/env python3
 import argparse
+import io
 from pathlib import Path
 
 import fitz  # PyMuPDF
+from PIL import Image
 
 
-def extract_images_from_pdf(pdf_path_str: str) -> int:
+def _flatten_alpha_to_white(image_bytes: bytes, fallback_ext: str) -> tuple[bytes, str]:
+    """RGBA/LA/P 팔레트+투명도를 흰 배경 RGB로 평탄화한다."""
+    with Image.open(io.BytesIO(image_bytes)) as im:
+        if im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info):
+            rgba = im.convert("RGBA")
+            bg = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+            merged = Image.alpha_composite(bg, rgba).convert("RGB")
+            out = io.BytesIO()
+            merged.save(out, format="PNG")
+            return out.getvalue(), "png"
+
+        # alpha가 없으면 원본 확장자 유지
+        out = io.BytesIO()
+        fmt = "PNG" if fallback_ext.lower() == "png" else "JPEG" if fallback_ext.lower() in ("jpg", "jpeg") else "PNG"
+        # JPEG 저장 전 RGB 보장
+        if fmt == "JPEG":
+            im = im.convert("RGB")
+        im.save(out, format=fmt)
+        return out.getvalue(), fallback_ext.lower() if fallback_ext else "png"
+
+
+def extract_images_from_pdf(pdf_path_str: str, flatten_alpha: bool = True) -> int:
     pdf_path = Path(pdf_path_str)
 
     # 1) 파일 확인
@@ -36,7 +59,10 @@ def extract_images_from_pdf(pdf_path_str: str) -> int:
                 xref = img[0]
                 base_image = doc.extract_image(xref)
                 image_bytes = base_image["image"]
-                image_ext = base_image["ext"]
+                image_ext = base_image.get("ext", "png")
+
+                if flatten_alpha:
+                    image_bytes, image_ext = _flatten_alpha_to_white(image_bytes, image_ext)
 
                 image_name = f"page_{page_num + 1}_img_{img_index + 1}.{image_ext}"
                 image_filepath = output_dir / image_name
@@ -58,6 +84,11 @@ def extract_images_from_pdf(pdf_path_str: str) -> int:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PDF 파일에서 이미지를 추출하여 폴더에 저장합니다.")
     parser.add_argument("pdf_path", help="처리할 PDF 파일의 절대 경로나 상대 경로")
+    parser.add_argument(
+        "--no-flatten-alpha",
+        action="store_true",
+        help="알파 채널 평탄화(흰 배경 채움) 비활성화",
+    )
     args = parser.parse_args()
 
-    extract_images_from_pdf(args.pdf_path)
+    extract_images_from_pdf(args.pdf_path, flatten_alpha=not args.no_flatten_alpha)

@@ -11,5 +11,7 @@
 - [ ] Page created with paper title (중복 시 suffix)
 - [ ] Notion formatting rule applied (`#`/`##`/`###`, nested bullets, table bold)
 - [ ] `### 원본 PDF` 섹션 + 원본 PDF 첨부
-- [ ] (선택) 핵심 이미지 추출/선정 후 `### 핵심 이미지` 섹션에 첨부
+- [ ] (선택) 핵심 이미지 추출/선정 (기준 완화: 프레임워크 > 실험/실물 > 대표 방법 도식)
+- [ ] 이미지 전처리 확인: 알파 채널 제거 + 투명 영역 흰색 채움
+- [ ] 핵심 이미지는 가능하면 본문 문맥 위치에 인라인 삽입
 - [ ] 최종 URL/핵심 추출 근거 보고
