@@ -1,0 +1,1112 @@
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 22, NO. 1, FEBRUARY 2017
+
+41
+
+Visual Servoing of Soft Robot Manipulator
+in Constrained Environments With
+an Adaptive Controller
+Hesheng Wang, Senior Member, IEEE, Bohan Yang, Yuting Liu,
+Weidong Chen, Xinwu Liang, and Rolf Pfeifer
+
+Abstract—It is unavoidable for a soft manipulator to
+interact with environments during some tasks. These interactions may affect the soft manipulator and make the kinematic model different from the one in free space, e.g., the
+soft manipulator’s effective length and the target positions
+might change. In order to apply the soft manipulator to constrained environments, an adaptive visual servo controller
+based on piecewise-constant curvature kinematic, without
+knowing the true values of the manipulator’s length and the
+target positions, is proposed in this paper. Experimental
+results in the free space, constrained environment, and the
+gravity-influenced environment, demonstrate the convergence of the image errors under the proposed controller.
+Index Terms—Adaptive control, soft manipulator, visual
+servo.
+
+I. INTRODUCTION
+N RECENT years, the field of soft robotics has received a
+lot of attention from both scientists and engineers interested
+in adaptive behavior and biological forms of intelligence. One
+of the main reasons for this development is that often “fast,
+
+I
+
+Manuscript received April 18, 2016; revised July 2, 2016; accepted
+September 7, 2016. Date of publication September 26, 2016; date of current version February 14, 2017. Recommended by Technical Editor B.
+Daachi. This work was supported in part by the Natural Science Foundation of China under Grant 61473191, Grant 61503245, Grant 61221003,
+and Grant 61673272, in part by the Science and Technology Commission of Shanghai Municipality under Grant 15111104802, in part by the
+Shanghai Sailing Program under Grant 15YF1406300, and in part by
+the State Key Laboratory of Robotics and System (HIT). (Corresponding
+author: Weidong Chen.)
+H. Wang is with the Department of Automation, Shanghai Jiao Tong
+University, Shanghai 200240, China, also with the Key Laboratory of
+System Control and Information Processing, Ministry of Education of
+China, Shanghai 200240, China, and also with the State Key Laboratory
+of Robotics and System, Harbin Institute of Technology, Harbin 150001,
+China (e-mail: wanghesheng@sjtu.edu.cn).
+B. Yang, Y. Liu, W. Chen, and R. Pfeifer are with the Department of
+Automation, Shanghai Jiao Tong University, Shanghai 200240, China,
+and also with the Key Laboratory of System Control and Information
+Processing, Ministry of Education of China, Shanghai 200240, China
+(e-mail: ashily_220@126.com; 1648169992@qq.com; wdchen@sjtu.
+edu.cn; pfeifer@ifi.uzh.ch).
+X. Liang is with the School of Aeronautics and Astronautics, Shanghai Jiao Tong University, Shanghai 200240, China (e-mail: xinwu113@
+163.com).
+Color versions of one or more of the figures in this paper are available
+online at http://ieeexplore.ieee.org.
+Digital Object Identifier 10.1109/TMECH.2016.2613410
+
+efficient, and robust behavior can be achieved by adequately exploiting material properties in particular softness” [1]. Because
+the soft materials passively adapt to their environment, soft and
+continuum robots are especially suited for certain types of tasks,
+such as moving over uneven terrain, coping with impact, grasping hard things or objects of different shapes and interacting with
+humans in everyday situations that would be difficult for traditional robots with rigid links and joints [2]. Because biological
+systems consist largely of soft materials, nature provides a lot
+of inspiration. Researchers have attempted to imitate a number
+of creatures, e.g., the robotic elephant trunk manipulator [3] and
+the OctArm continuum manipulator [4]. Based on an analysis
+of the morphological features of the octopus arm (connective
+tissue, arm density, transverse muscles, longitudinal muscles),
+Laschi, Mazzolai and their groups designed the octopus soft
+robot arm [5], [6].
+However, opportunities and challenges are brought to us simultaneously. First, the adaptable property comes with load limitation. Runge et al. proposed a spine-like manipulator inspired
+by the still endoskeletons of the larger animals. They enveloped
+rigid elements and soft elements in a silicone skin [7]. Second, accurate position control has been easily accomplished by
+rigid robots through electrical motors, while this could hardly
+been done by a soft robot. Morgan et al. found a compromising
+way in robot design by keeping a joint-like structure with soft
+actuation [8].
+Pure soft robots are studied as well. Because a soft and continuum manipulator has an infinite number of degrees of freedom,
+control is the key challenge and has led to several substantial
+publications. For example, Duriez presented a finite element
+method model to have the robot follow a given position in
+real-time without using the external sensors [9]. Rigatos did
+a comparison between the model-based and model-free control
+methods for continuum robots [10].
+Piecewise constant curvature kinematics, an approximation
+of the continuum and soft robot kinematics model, has been
+widely used in a variety of control tasks. For example, Webster
+and Jones made a review of kinematic modeling for continuum
+robots [11]. To improve the accuracy of the kinematics model,
+Giorelli et al. presented a feed-forward neural network learning method to deal with the inverse kinetics elements calculation for a cable-driven nonconstant curvature soft manipulator.
+
+1083-4435 © 2016 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications standards/publications/rights/index.html for more information.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+42
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 22, NO. 1, FEBRUARY 2017
+
+Because there are small differences between all the individual
+soft manipulators, they all had to be trained separately in order
+to represent the relation between the position of the robot tip and
+the cables’ output force [12]. Qi et al. introduced a linearized
+continuum robot state-space model and presented a fuzzy logic
+controller to manage the position error feedback [13].
+As the traditional control method, soft robot dynamics were
+also studied by some researchers. Rone and Ben-Tzvi used a
+finite set of kinematic variables to describe the curvature variations of a continuum robot segment. Based on the principle
+of virtual power, they built a dynamic model that includes actuation, friction, elastic, inertial, and gravitational effects [14].
+Renda et al. developed a geometrically approached dynamic
+model, which accounted for the coupled tendon condition as
+well as the interaction with a dense medium, for a cable-driven
+continuum soft robot [15]. Incorporating the force effects makes
+the dynamics model more accurate than the kinematics modeling methodology. However, the increase of the model accuracy
+entails higher computational complexity. The cost of the simplicity made the real-time control of the robot difficult. Because
+of the present reason, position and shape control with the dynamic model have not been used widely by the continuum or soft
+robot researchers. Based on the physical model, Camarillo et al.
+developed another model for tendon-driven continuum manipulators, in which the redundant tendon system is characterized as
+a rotational spring and the linear displacement springs system is
+used to represent the relationship between the coupled tendons.
+They also embedded the model in a tendon position controller
+which implemented an optimal feasible methodology [16].
+Some researchers also have proposed model-free approaches
+to the soft and continuum robot control. Vikas et al. presented a
+four-step process of discretization, visualization, learning, and
+optimization, instead of the traditional-model-based methodology, to control the multilimbed soft material robots. However,
+this state-to-state control could not be applied to complicated
+configurations (such as cable-driven soft robots), because the
+numerous states have to be taken into account [17].
+Generally speaking, trying to incorporate information about
+the surroundings into control models has proved inefficient,
+especially if the environment is changing continuously. Therefore, the solution might be to do entirely without environmental
+modeling, instead of equipping the robot with perceptual abilities. Environment perception is a popular research direction for
+the soft and continuum robot. Recently, sensor-based control
+has attracted the attention of many researchers. There are many
+groups, including ourselves, that have studied vision-based
+position control. We presented a kinematic model based method
+to deal with cable-driven soft robot position and orientation
+control. A depth-independent image Jacobian matrix was used
+in the image-based visual servo controller in free space [18].
+Girard et al. designed a two degree of freedom dielectric
+elastomer sensor to feedback the accurate position of soft robot
+[19]. Using a force and a visual sensor, Kesner et al. presented
+a single degree of freedom servoing system for cardiac surgery.
+An ultrasound visual servoing system was designed to track the
+heart motion. An extended Kalman filter was used to estimate
+the cardiac motion, so that the image acquisition and processing
+delay could be compensated. This work constitutes a significant
+
+attempt at soft robot real-time automatic control by applying
+external sensors. They also designed a homemade force sensor
+with an embedded fiber optic displacement sensor, which
+can convert the displacement to the force value by nonlinear
+calibration. The inner position loop force control approach was
+used to do the single freedom force control too [20], [21]. Xu
+et al. presented a proximal force sensor-based algorithm to
+compensate the deflection caused by the external disturbances
+in real-time position control [22].
+Self-perception is another important research direction. To
+finish a task in a sophisticated unknown environment, the shape
+information of the robot is also important for the accuracy of
+the robotic control. Shape estimation is a great challenge for
+the researchers. Rone and Ben-Tzvi described a cable-driven
+continuum shape estimation model without using external sensing. Based on the principle of virtual power, they showed how
+an optimization procedure can estimate the continuum robot
+configuration by utilizing the measured displacements of the
+cables to estimate the continuum robot configuration [23]. Tully
+et al. presented a shape estimation algorithm with the information provided by a magnetic tracking sensor, which was situated
+at the distal end of the highly articulated robotic probe [24].
+Chathuranga et al. proposed a shape sensing method based on
+the electroconductive yarn. Both bending and elongation behaviors could be measured in a real-time by this embedded sensor
+system [25]. The structure and the control method of soft robots
+and continuum robots were very similar. However, the flexibility
+of the soft robot was better, because no segment structure was
+in the soft robot. In the complex environment, e.g., surgery, the
+soft robot could be adaptive to the body environment with no
+harm.
+To sum up, most studies so far have been focusing on free
+space or unconstrained environments, e.g., an underwater surrounding, without taking into account the interaction with the
+external environment (i.e., forces, friction, gravity). Because soft
+robots are—obviously—soft, they are more strongly influenced
+by the environment than a rigid robot. In practical applications,
+soft robots could not work in free space; they tend to be affected by the external physical environment. These constraints
+will affect the morphology (e.g., the length) of the soft robot
+manipulator, resulting in modeling error, and may as a consequence lead to undesired control behavior. For these problems,
+some researchers start to deal with trajectory planning for soft
+robots. Fellmann et al. presented four different trajectory generation strategies for the tubular continuum robot to finish the
+collision-free path planning task. They also tried to verify these
+strategies in a virtual medical scenario, which was a segmented
+computed-tomography dataset of an adult skull [26]. Yip and
+Camarillo introduced a novel control strategy for tendon-driven
+continuum robots, which were designed to operate in unknown
+constrained environments. Instead of the traditional geometric
+based kinematic model, they employed an optimal control strategy to extract and continuously update the relation between the
+actuator inputs and the end-effector position. A tip-constraints
+condition was also considered. Their method was leveraged by
+an eye-to-hand position control experiment [27], [28].
+However, we focus on a new question of unknown “stuck”
+position. When a soft robot is used as a surgical robot or a
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+WANG et al.: VISUAL SERVOING OF SOFT ROBOT MANIPULATOR IN CONSTRAINED ENVIRONMENTS WITH AN ADAPTIVE CONTROLLER
+
+Fig. 1.
+
+43
+
+Cable-driven soft robotic manipulator.
+
+rescue robot, a crowded environment might influence the state
+of the robot. If this place happens to be the operation location,
+unknown stuck point would bring the manipulator to an embarrassment. In order to make the soft robot manipulator applicable
+to constrained environments, an adaptive visual servo control
+method is proposed based on a piecewise constant curvature
+hypothesis with the vision feedback of the endoscope mounted
+on the end-effector. It could estimate the effective length of
+the robot manipulator and the target positions online, even if
+the soft robot manipulator was wedged somewhere by an unknown obstacle. In order to verify the validity of the control
+algorithm in constrained environments, three real-world experiments were conducted on a cable-driven soft robot manipulator
+under three conditions, such as free movement, narrow constraints, and gravity effects. The corresponding experimental
+results are analyzed, which confirmed the performance of the
+proposed method.
+II. KINEMATICS
+The manipulator studied in this paper is a cable-driven soft
+robot manipulator made up of silicone rubber. As shown in
+Fig. 1, the current prototype is cone-shaped. An endoscope camera is embedded inside the manipulator along the center axis.
+Four cables are uniformly distributed near the outer surface of
+the manipulator and run through the whole body. One side of
+these cables is tied to a ring embedded in the tip. By pulling
+the other end of these cables, the entire soft manipulator will be
+bent.
+The following kinematics and differential kinematics could be
+obtained based on a piecewise constant curvature hypothesis that
+was introduced in our previous work [18]. We could represent
+a 4 × 4 homogeneous transformation matrix i−1 Ti (q) between
+two neighbor sections of the ith segment as follows.
+In this paper we would specify scalar to be in italic, while
+vector in bold. Matrix would appear in capitals, while vector is
+
+Fig. 2.
+
+Eye-in-hand system of soft manipulator.
+
+Fig. 3. ith segment of soft manipulator. Cables are shown as blue lines,
+while the curve plane is presented as red lines.
+
+in lower case, see (1) shown at the bottom of this page, where
+q is the 4-dimensional (4-D) vector of the length of the driven
+cable. φi , θ i , ri , as shown in Fig. 3, are virtual joint variables
+of the ith segment and are represented by q.
+Applying the chain rule to all n segments, we have the homogeneous transformation between the base plane and the endeffector plane as
+e
+
+Tb (q) = 0 T1 1 T2 , . . . , n −1 Tn
+
+e
+Rb (q) e pb (q)
+=
+0
+1
+
+(2)
+
+and the differential kinematics of the soft robotic manipulator
+could be represented as
+ 
+v
+dq
+= J(q)
+(3)
+dt
+w
+
+⎡ 2
+c φi (cθi − 1) + 1 sφi cφi (cθi − 1)
+cφi sθ
+⎢
+⎢ sφi cφi (cθi − 1) s2 φi (cθi − 1) + 1 sφi sθi
+⎢
+i−1
+T i (q) = ⎢
+⎢
+−cφi sθi
+−sφi sθi
+cθi
+⎣
+0
+0
+0
+
+−ri cφi (cθi − 1)
+
+⎤
+
+⎥
+−ri sφi (cθi − 1) ⎥
+⎥
+⎥
+⎥
+ri sθi
+⎦
+1
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+(1)
+
+44
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 22, NO. 1, FEBRUARY 2017
+
+where e Tb (q) represents a 4 × 4 homogeneous transformation matrix from the base frame to the end-effector frame. The
+subscript and superscript represent three coordinate frames of
+the base frame, the end-effector frame and the camera frame;
+[vT , wT ]T are the velocities of the end-effector; dq/dt is the
+rate of change of the length of the driven cable; J(q) represents a 6 × 4 Jacobian matrix describing the velocity mapping
+between the Cartesian space and driving space.
+The setup of the eye-in-hand system of our soft manipulator is shown in Fig. 2. Let c Te (q) denote the homogeneous
+transformation matrix from the end-effector frame to the camera frame. Since the camera is fixed to the end-effector of the
+robot manipulator, c Te (q) is a constant matrix. Suppose there
+is a target point in the field of view of the camera and its 4-D
+homogeneous world coordinate is b x. Let y denote the 2-D homogeneous image coordinates of the target point on the image
+plane, and according to the perspective projection model
+ 
+y
+1
+1
+Ωc Te (q)e Tb (q)b x =
+Me x
+(4)
+=
+z
+(q)
+z(q)
+1
+where z(q) is the depth of the target point in the camera frame;
+Ω is the 3 × 4 intrinsic parameter matrix of the camera and
+it is a constant matrix; M = Ωc Te (q) is the 3 × 4 projection
+matrix; e x(t) is the 4-D homogeneous coordinate of the target
+point w.r.t. the end-effector frame. The decomposition of M is:
+M= [m1 , m2 , m3 ]T = [PT , m3 ]T , then (4) can be rewritten as
+y=
+
+1
+Pe x
+z(q)
+
+e
+z (q) = mT
+3 x.
+
+(5)
+(6)
+
+By differentiating (5) and (6), we could obtain the target
+velocity on the image plane as
+ 
+v
+•
+1
+y =
+A(y, q)
+(7)
+z(q)
+w
+ 
+v
+•
+z(t) = b(q)
+(8)
+w
+where A(y, q) is the 2 × 6 depth-independent interaction matrix proposed in our early work. b(q) is a 6-D vector. Matrixes
+A(y, q) and b(q) could be written in the following concrete
+forms [18]:
+
+
+e
+b
+e
+−I
+skew(
+R
+(q)
+x+
+p
+(q))
+3×3
+b
+b
+A(y, q) = (P − ymT
+3)
+01×3
+01×3
+e
+
+Rb (q)
+0
+×
+(9)
+e
+0
+Rb (q)
+
+
+−I3×3 skew(e Rb (q)b x+e pb (q))
+T
+b(q) = m3
+01×3
+01×3
+e
+
+Rb (q)
+0
+×
+.
+(10)
+e
+0
+Rb (q)
+
+By substituting (3) into (7) and (8), following the velocity
+relationship between joint space and image space could be obtained:
+•
+
+y =
+
+•
+•
+1
+A(y, q)J(q) q = JT (q) q
+z(q)
+
+•
+
+•
+
+z(q) = b(q)J(q) q .
+
+(11)
+
+III. VISUAL SERVOING OF SOFT ROBOT MANIPULATOR
+A. Extraction of Visual Servoing Problem
+The objective of visual servoing is to generate a control signal
+to move the robot manipulator based on the feedback of image
+errors, i.e., the deviations between the desired image point position and the actual image position, so that the projection of the
+target point will converge to the desired position on the image
+plane.
+In some narrow environments, the movement of the robot
+manipulator is constrained. The range of motion is small, and it
+may even be unable to move if some parts along the soft body
+are “stuck” somewhere. For instance, a soft cable-driven robot
+could be used as a surgical robot for some special operations. It
+might be stuck by the crowded organs environment. If this place
+happens to be the operation location, unknown stuck point would
+bring the manipulator to an embarrassment. This raises two
+issues.
+Issue 1: In a sense, the soft manipulator get “shorter,” i.e., L
+becomes smaller, because these “stuck” parts cannot move.
+Issue 2: The base frame of the soft manipulator has changed.
+This change is equivalent to a change in the target point position
+w.r.t. the base frame of the robot, i.e., b x.
+Because the shape of the robot manipulator is now different,
+the stuck point could be considered as the new base of the
+soft robot manipulator. However, “the new base frame” cannot
+not be directly known because the exact position of where it
+is stuck is unknown. In fact, the target point and the world
+frame are fixed, but the relationship between the base frame
+and target has changed. Accordingly, the target position b x and
+the length L of the robot manipulator cannot be accurately
+known.
+B. Controller Design
+Since there are uncertainties in the model parameters a =
+[b xT , L]T , the traditional Proportional–Derivative control may
+not achieve satisfactory results and convergence behavior. By
+analyzing the kinematic (11), A(y, q)J(q) and b(q)J(q) could
+be linearized by the unknown parameter vector a by assuming
+that the sectional radius of the soft robot manipulator Rm ax ≈
+Rm in (i.e., the soft robot manipulator is cylindrical). The accuracy of our model is sacrificed to reduce the computational
+complexity. Also the simplification guarantees a linear model,
+which is very important for the following derivation. Therefore,
+these parameters can be estimated by the adaptive method. A
+feedback control based on the traditional method is designed as
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+WANG et al.: VISUAL SERVOING OF SOFT ROBOT MANIPULATOR IN CONSTRAINED ENVIRONMENTS WITH AN ADAPTIVE CONTROLLER
+
+45
+
+T
+1
+= − ΔyT K1 AT (y, q) + bT (q)ΔyT J(q)JT (q)
+2
+1
+•
+× ÂT (y, q) + b̂T (q)ΔyT K1 Δy + ΔaT K2 Δ a
+2
+•
+
+= − ΔyT K1 DT J(q)JT (q)D̂K1 Δy + ΔaT K2 Δ a
+= − ΔyT K1 (DT − D̂T )J(q)JT (q)D̂K1 Δy
+Fig. 4.
+
+•
+
+− ΔyT K1 D̂T J(q)JT (q)D̂K1 Δy + ΔaT K2 Δ a
+
+Block diagram of visual servoing control algorithm.
+
+(17)
+follows:
+
+where
+
+•
+
+q = −JT (q)ÂT (y, q)K1 Δy
+1
+− JT (q)b̂T (q)ΔyT K1 Δy
+2
+Δy = y − yd
+
+1
+D = AT (y, q) + bT (q)ΔyT .
+2
+Substituting (14) into (17) and by simplification
+(12)
+
+where q are the control inputs, i.e., the length of the driven
+cables; K1 is the 2 × 2 control gain; yd is the desired position
+on the image plane. Δy is the image error. Â(y, q) and b̂(q)
+are the estimated values of A(y, q) and b(q), respectively, let
+1
+∂
+JT (q)AT (y,q)K1 Δy + JT (q)bT (q)ΔyT K1 Δy
+∂a
+2
+1
+− JT (q)AT (y,q)K1 Δy − JT (q)bT (q)ΔyT K1 Δy
+2
+= Y(y,q).
+(13)
+Following the adaptive law is developed similarly to the
+Slotine–Li approach as
+•
+
+•
+
+T
+q
+â = −K−1
+2 Y (y, q)
+
+(14)
+
+where K2 is the 4 × 4 control gain.
+A block diagram of the algorithm is shown in Fig. 4.
+C. Convergence Analysis
+To prove the stability of the system, the following Lyapunov
+candidate has been designed:
+1
+1
+V = ΔyT K1 z(q)Δy+ ΔaT K2 Δa
+2
+2
+Δa = â − a.
+
+(15)
+(16)
+
+By differentiating (15) and substituting (11), (12) into it, we
+could obtain
+•
+1
+•
+V = ΔyT K1 z(q)ẏ + ΔyT K1 ż(q)Δy + ΔaT K2 Δ a
+2
+1
+A(y, q)J(q)(−JT (q)ÂT (y, q)K1 Δy
+= ΔyT K1 z(q)
+z(q)
+
+1
+1
+− JT (q)b̂T (q)ΔyT K1 Δy) + ΔyT K1 b(q)J(q)
+2
+2
+×
+
+− JT (q)ÂT (y, q)K1 Δy
+
+1
+•
+− JT (q)b̂T (q)ΔyT K1 Δy Δy + ΔaT K2 Δ a
+2
+
+•
+
+(18)
+
+V = − Δy K1 D̂ J(q)J (q)D̂K1 Δy
+T
+
+T
+
+T
+
+− ΔyT K1 (DT − D̂T )J(q)JT (q)D̂K1 Δy
++ ΔaT K2 − K−1
+2
+
+∂ T
+(J (q)AT (y, q)K1 Δy
+∂a
+
+1
++ JT (q)bT (q)ΔyT K1 Δy − JT (q)AT (y, q)K1 Δy
+2
+T
+1
+− JT (q)bT (q)ΔyT K1 Δy) JT (q)ÂT (y, q)K1 Δy
+2
+
+1
++ JT (q)b̂T (q)ΔyT K1 Δy
+2
+= − ΔyT K1 D̂T J(q)JT (q)D̂K1 Δy
+− ΔyT K1 (DT − D̂T )J(q)JT (q)D̂K1 Δy
+1
++ JT (q)AT (y, q)K1 Δy + JT (q)bT (q)ΔyT K1 Δy
+2
+T
+1
+− JT (q)AT (y, q)K1 Δy− JT (q)bT (q)ΔyT K1 Δy
+2
+1
+× JT (q)ÂT (y, q)K1 Δy+ JT (q)b̂T (q)ΔyT K1 Δy
+2
+= − ΔyT K1 D̂T J(q)JT (q)D̂K1 Δy ≤ 0.
+
+(19)
+
+By Babrrat’s Lemma, it could be concluded that
+lim JT (q)D̂Δy = 0.
+
+t→∞
+
+(20)
+
+We assume that J(q) is a full rank matrix, i.e., the robot does
+not work in singularity space. Since the rank of matrix D̂ is 2
+[29]–[31], according to the invariant set theorem, Δy → 0 as
+t → ∞. Therefore, the asymptotic convergence of the controller
+is proved.
+IV. EXPERIMENTS
+A. Experimental Platform
+The whole system design includes a rectilinear system, a rotation system, and a soft robot manipulator [32]. In this paper,
+the structure has been simplified. We remove the previous two
+systems and keep the soft manipulator part. The base of the
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+46
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 22, NO. 1, FEBRUARY 2017
+
+Fig. 5. Experimental setup: (a) full size of setup; (b) motors and control
+board; and (c) soft manipulators.
+
+Fig. 7.
+
+Fig. 6.
+
+Experimental results in free space: (a) trajectory; (b) error curve.
+
+robot has been fixed in a table, as shown in Fig. 5(a). We focused on the robot ability of turn and curve. The full size of
+experimental platform is shown in Fig. 5(a), which includes
+a motor control board and four motors. Details of the control
+part are shown in Fig. 5(b). Four motors (SR431, Spring Model
+Electronics Inc., China) are connected to four cables. The total
+length of the soft manipulator is L = 0.32 m, the maximum
+cross-sectional radius is about Rm ax = 0.015 m, the minimum
+radius is Rm in = 0.003 m. An endoscope camera is embedded
+in the middle of the soft robot manipulator, as shown in Fig. 5(c).
+B. Experiments and Results
+a) Free Space Experiment: In the first experiment, the
+initial posture of the soft robot manipulator is vertical, it will
+be controlled in free space [18]. The initial state of the soft
+robot manipulator is shown in Fig. 5. The desired position on
+the image plane is set as [50, 50]T pixels, the control gains are
+K1 = 7.5 × 10−8 I4 and K2 = 350I4 . The experimental results
+are shown in Fig. 6. The convergence process is presented in
+Fig. 6(a). The parameter u in the result figure is the image
+position in x-axis, while v is the image position in y-axis. Δu
+is the image position error along x-axis, while Δv presents the
+image position error along y-axis.
+Finally, the end-effector follows the desire point. And the
+convergence speed along both x-axis and y-axis could be seen
+
+Soft manipulators constrained by bracket.
+
+in Fig. 6(b). This experiment is used as a contrast for the next
+experiments.
+b) Constrained Environment Experiment.: In the second experiment, the initial posture of the soft robot manipulator
+is also vertical, but this time, it will be controlled in constrained
+environments.
+As shown in Fig. 7, a point in the middle of the soft robot
+manipulator is fixed by a ring-shaped object to simulate the
+restricted environment. The whole body of the soft robot manipulator is split into two parts, A and B, by this point. It can be
+approximately assumed that the upper part A above this point
+is kept stationary; the movement of lower part B is not affected
+by part A. Thus, the length LB of B segment, which is unknown, could be considered as the effective length of the robot
+manipulator.
+Unlike the rigid arm, visual servoing of the soft robot manipulator is more susceptible to uncertainties, such as tensile deformation of driven cables, friction impact between the driven
+cables and silicone rubber. These uncertainties make it difficult
+for the soft robot manipulator to return to the same state as in
+the previous experiment.
+To study the impact of uncertainties in experiments as well
+as verify the validity of experimental results, several repetitive
+experiments under the same experimental conditions and control
+parameters have been conducted. The experimental parameters
+are listed in Table I.
+The experiment results of target tracking in constrained environment are shown in Fig. 8. The convergence processes of the
+three experiments are shown in Fig. 8(a). And the convergence
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+WANG et al.: VISUAL SERVOING OF SOFT ROBOT MANIPULATOR IN CONSTRAINED ENVIRONMENTS WITH AN ADAPTIVE CONTROLLER
+
+47
+
+TABLE I
+PARAMETERS IN REPETITIVE EXPERIMENTS
+K 1 / × 10 −8
+
+K2
+
+LB /cm
+
+y d /pixel
+
+y(0)/pixel
+
+3.5I 2
+
+I4
+
+15
+
+[160; 100]
+
+250; 170]
+
+Fig. 9. Experimental results in constrained environment: (a) trajectories; (b) error curves. The number after each parameter shows the
+experiment serial number.
+
+Fig. 8.
+
+Repetitive experimental results: (a) trajectories; (b) error curves.
+
+TABLE II
+PARAMETERS AND ITERATIVE STEPS IN CONTRAST EXPERIMENTS
+Experiment
+I
+II
+III
+
+K 1 / × 10 −8
+
+K2
+
+LB /cm
+
+y d /pixel
+
+steps
+
+6.5I 4
+3.5I 4
+3.5I 4
+
+350I 4
+350I 4
+350I 4
+
+15
+15
+5
+
+[160; 100]
+[160; 100]
+[160; 100]
+
+255
+299
+570
+
+speed along x-axis and y-axis is shown in Fig. 8(b). It takes more
+time to following the target point than the free space experiment.
+Moreover, the trajectories of these three experiments are substantially coincident. The repeatability of these experiments has
+been well verified.
+To study the influence of the control parameters and the
+constrained location (length LB ) on the movement of the soft
+robot manipulator, two comparative experiments have been conducted. First, length LB is fixed, the value of K1 is adjusted to
+study the influence of the control parameters (experiments I and
+II). Parameter K1 is set to 6.5I2 in experiment I, while in the
+experiment II this parameter is settled to 3.5I2 . In experiment
+I and experiment II, the ring is stuck to the same place, so that
+LB is unchanged. Second, the control K1 is fixed to 3.5I2 , the
+length LB is adjusted to study the effect of the constrained environment (experiments II and III). In experiment II, segment B
+is 15 cm long. And this length is changed to 5 cm in experiment
+III. Specific parameters and iteration number (converged to the
+target position) are listed in Table II.
+Experimental trace and the error curve are shown in Fig. 9.
+We could learn from the results that I (255 steps) converges to
+the desired position faster than II (299 steps), and the absolute
+value of the slope of the error curve is greater than that of II.
+
+However, two issues may appear if K1 is too large: the dynamic
+performance may be affected and the target point may leave the
+field of view of the camera easily. K1 is the proportional gain of
+feedback image errors. At the beginning, image errors are large
+and the elements in Jacobian matrix J(q) are also very large.
+Therefore, the value of matrix K1 should be chosen carefully,
+typically between 3.0 ∼ 8.0 × 10−8 I4 in our experiments.
+As can be seen from the error curve in Figs. 6 and 8, when
+the soft robot manipulator is moving in free space, its range
+of motion is significantly larger than that in constrained environments. The change of length and the base frame influence
+the performance of the tracking task. Further qualitative analysis with more comparison leads us to design the other experiments. This indicates that the movement of the manipulator
+is restricted by the environments, which raises the following
+issues. Comparing the error curves of II and III in Fig. 9, it
+should be noted that it only takes 299 steps to converge to the
+desired position in II, whereas it takes 570 steps in III. This
+shows that the more the restricted part is moved close to the
+end-effector, i.e., the shorter the manipulator, the more the rate
+of convergence slows down. The reason is that, when the robot
+manipulator is free to move, the curvature needed to achieve the
+desired position is much smaller compared to that in constrained
+environments.
+c) Horizontal Plane Experiment: In the third experiment,
+the initial attitude of the soft robot manipulator is in the horizontal plane, so the gravity will also influence the experiment result.
+The soft robot manipulator is tapped and a support platform is
+placed close to the root of the manipulator, which makes the upper part of the manipulator float in the air (see Fig. 10). Comparative experiments by a controller without an adaptive algorithm
+(IV) and a controller with an adaptive algorithm (V) have been
+conducted, where the initial attitude of the soft robot manipulator is in the horizontal plane. In these experiments, the true
+value of parameter a is a = [0.05, 0.16, 0.62, 0.17]T m; the
+initial estimate one is a(0) = [0.001, 0.001, 0.62, 0.32]T m
+which would not be adjusted in the nonadaptive experiment.
+The values of the parameters are listed in Table III.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+48
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 22, NO. 1, FEBRUARY 2017
+
+Fig. 10.
+
+Soft manipulators lying on the table.
+
+TABLE III
+PARAMETERS IN CONTRAST EXPERIMENTS WITH GRAVITY DISTURBANCE
+Experiment
+IV
+V
+
+K 1 / × 10 −8
+
+K2
+
+y d /pixel
+
+y(0)/pixel
+
+5.5I 4
+5.5I 4
+
+350I 4
+350I 4
+
+[50;220]
+[50; 220]
+
+[294;39]
+[240; 99]
+
+Fig. 12. Experimental results with adaptive observer: (a) trajectory;
+(b) error curves.
+
+We proposed a visual control method for the soft robot to deal
+with the unknown “stuck” situation, which might be met in a
+practical real-world situation, e.g., surgical manipulation. The
+actual length and target position would be estimated by our
+method. Three experiments have been conducted to verify the
+adaptability of the soft manipulator to the environment in free
+space, constrained environments, and environments with the
+influence of gravity, respectively. These experimental results
+demonstrate that the soft robot manipulator could be applied
+to the constrained environments with the proposed adaptive approach. It should also be noted that although the convergence
+could be guaranteed in constrained environments, the convergence rate is relatively slow compared to that in free space environments. Finally, this paper also analyzes the influence of the
+control parameters, the environment, and gravity to the control
+performance.
+REFERENCES
+
+Fig. 11. Experimental results without adaptive observer: (a) trajectory;
+(b) error curves.
+
+The experimental results are plotted in Figs. 11 and 12.
+In the third experiment, the effect of gravity makes the soft
+manipulator droop, while limiting its movement in the vertical direction, so that the model becomes inaccurate. It failed to
+converge in nonadaptive observer experiments IV (see Fig. 11),
+while it eventually converges to the desired point in the experiment with an adaptive approach V (see Fig. 12).
+V. CONCLUSION
+Modeling and control of the soft robot manipulator are complicated due to the soft features, which also make the motion
+ability of the soft robot manipulator susceptible to the external
+environments. In this paper, a cable-driven soft robot manipulator has been studied. An adaptive visual servo control algorithm
+has been proposed based on a kinematic model of the robot.
+
+[1] R. Pfeifer, M. Lungarella, and F. Iida, “The challenges ahead for bioinspired ‘soft’ robotics,” Commun. ACM, vol. 55, no. 12, pp. 76–87,
+2012.
+[2] D. Rus and M. T. Tolley, “Design, fabrication and control of soft robots,”
+Nature, vol. 521, no. 7553, pp. 467–475, 2015.
+[3] M. W. Hannan and I. D. Walker, “Kinematics and the implementation
+of an elephant’s trunk manipulator and other continuum style robots,” J.
+Robot. Syst., vol. 20, no. 2, pp. 45–63, 2003.
+[4] W. McMahan et al., “Field trials and testing of the OctArm continuum
+manipulator,” in Proc. IEEE Int. Conf. Robot. Autom., 2006, pp. 2336–
+2341.
+[5] C. Laschi, B. Mazzolai, M. Cianchetti, L. Margheri, M. Follador, and
+P. Dario, “A soft robot arm inspired by the octopus,” Adv. Robot., vol. 26,
+no. 7, pp. 709–727, 2012.
+[6] B. Mazzolai, L. Margheri, M. Cianchetti, P. Dario, and C. Laschi, “Soft
+robotic arm inspired by the octopus: II. From artificial requirements to
+innovative technological solutions,” Bioinspiration Biominetics, vol. 7,
+no. 2, 2012, Art. no. 025005.
+[7] G. Runge et al., “SpineMan: Design of a soft robotic spine-like manipulator for safe human-robot interaction,” in Proc. IEEE/RSJ Int. Conf. Intell.
+Robots Syst., 2015, pp. 1103–1110.
+[8] M. T. Gillespie, C. M. Best, and M. D. Killpack, “Simultaneous position
+and stiffness control for an inflatable soft robot,” in Proc. IEEE Int. Conf.
+Robot. Autom., 2016, pp. 1095–1101.
+[9] C. Duriez, “Control of elastic soft robots based on real-time finite element
+method,” in Proc. IEEE Int. Conf. Robot. Autom., 2013, pp. 3982–3987.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+WANG et al.: VISUAL SERVOING OF SOFT ROBOT MANIPULATOR IN CONSTRAINED ENVIRONMENTS WITH AN ADAPTIVE CONTROLLER
+
+[10] G. G. Rigatos, “Model-based and model-free control of flexible-link
+robots: A comparison between representative methods,” Appl. Math.
+Model., vol. 33, no. 10, pp. 3906–3925, 2009.
+[11] R. J. Webster and B. A. Jones, “Design and kinematic modeling of constant
+curvature continuum robots: A review,” Int. J. Robot. Res., vol. 29, no. 13,
+pp. 1661–1683, 2010.
+[12] M. Giorelli, F. Renda, G. Ferri, and C. Laschi, “A feed-forward neural
+network learning the inverse kinetics of a soft cable-driven manipulator
+moving in three-dimensional space,” in Proc. IEEE/RSJ Int. Conf. Intell.
+Robots Syst., 2013, pp. 5033–5039.
+[13] P. Qi, C. Liu, L. Zhang, S. Wang, H. K. Lam, and K. Althoefer, “Fuzzy
+logic control of a continuum manipulator for surgical applications,” in
+Proc. IEEE Int. Conf. Robot. Biomimetics, 2014, pp. 413–418.
+[14] W. Rone and P. Ben-Tzvi, “Continuum robot dynamics utilizing the principle of virtual power,” IEEE Trans. Robot., vol. 30, no. 1, pp. 275–287,
+Feb. 2014.
+[15] F. Renda, M. Giorelli, M. Calisti, M. Cianchetti, and C. Laschi, “Dynamic
+model of a multibending soft robot arm driven by cables,” IEEE Trans.
+Robot., vol. 30, no. 5, pp. 1109–1122, Oct. 2014.
+[16] D. B. Camarillo, C. F. Milne, C. R. Carlson, M. R. Zinn, and J. K. Salisbury,
+“Mechanics modeling of tendon-driven continuum manipulators,” IEEE
+Trans. Robot., vol. 24, no. 6, pp. 1262–1273, Dec. 2008.
+[17] V. Vikas, P. Grover, and B. Trimmer, “ Model-free control framework for
+multi-limb soft robots,” in Proc. IEEE/RSJ Int. Conf. Intell. Robots Syst.,
+2015, pp. 1111–1116.
+[18] H. Wang, W. Chen, X. Yu, T. Deng, X. Wang, and R. Pfeifer, “Visual servo
+control of cable-driven soft robotic manipulator,” in Proc. IEEE/RSJ Int.
+Conf. Intell. Robots Syst., Nov. 2013, pp. 57–62.
+[19] A. Girard, J. P. L. Bigue, B. M. O’Brien, T. A. Gisby, I. A. Anderson,
+and J. S. Plante, “Soft two-degree-of-freedom dielectric elastomer position sensor exhibiting linear behavior,” IEEE/ASME Trans. Mechatronics,
+vol. 20, no. 1, pp. 105–114, Feb. 2015.
+[20] S. G. Yuen, S. B. Kesner, N. V. Vasilyev, P. J. del Nido, and R. D. Howe,
+“3D ultrasound-guided motion compensation system for beating heart
+mitral valve repair,” Med. Image Comput. Comput.-Assisted Intervention,
+vol. 5241, pp. 711–719, 2008.
+[21] S. B. Kesner and R. D. Howe, “Force control of flexible catheter robots
+for beating heart surgery,” in Proc. IEEE Int. Conf. Robot. Autom., 2011,
+pp. 1589–1594.
+[22] R. Xu, A. Asadian, S. F. Atashzar, and R. V. Patel, “Real-time trajectory
+tracking for externally loaded concentric-tube robots,” in Proc. IEEE Int.
+Conf. Robot. Autom., 2014, pp. 4374–4379.
+[23] W. S. Rone and P. Ben-Tzvi, “Multi-segment continuum robot shape
+estimation using passive cable displacement,” in Proc. IEEE Int. Symp.
+Robot. Sens. Environ., 2013, pp. 37–42.
+[24] S. Tully, G. Kantor, M. A. Zenati, and H. Choset, “Shape estimation
+for image-guided surgery with a highly articulated snake robot,” in Proc.
+IEEE/RSJ Int. Conf. Intell. Robots Syst., 2011, pp. 1353–1358.
+[25] H. A. Wurdemann et al., “Embedded electro-conductive yarn for shape
+sensing of soft robotic manipulators,” in Proc. 37th Annu. Int. Conf. IEEE
+Eng. Med. Biol. Soc., 2015, pp. 8026–8029.
+[26] C. Fellmann and J. Burgner-Kahrs, “Implications of trajectory generation
+strategies for tubular continuum robots,” in Proc. IEEE/RSJ Int. Conf.
+Intell. Robots Syst., 2015, pp. 202–208.
+[27] M. C. Yip and D. B. Camarillo, “Model-less feedback control of continuum
+manipulators in constrained environments,” IEEE Trans. Robot., vol. 30,
+no. 4, pp. 880–889, Aug. 2014.
+[28] M. C. Yip and D. B. Camarillo, “Model-less hybrid position/force control: A minimalist approach for continuum manipulators in unknown, constrained environments,” IEEE Robot. Autom. Lett., vol. 1, no. 2, pp. 844–
+851, Jul. 2016.
+[29] Y. H. Liu, H. Wang, C. Wang, and K. Lam, “Uncalibrated visual servoing of
+robots using a depth-independent interaction matrix,” IEEE Trans. Robot.,
+vol. 22, no. 4, pp. 804–817, Aug. 2006.
+[30] H. Wang, Y. H. Liu, and D. Zhou, “Adaptive visual servoing using point
+and line features with an uncalibrated eye-in-hand camera,” IEEE Trans.
+Robot., vol. 24, no. 4, pp. 843–857, Aug. 2008.
+[31] H. Wang, Y. H. Liu, W. Chen, and Z. Wang, “A new approach to dynamic
+eye-in-hand visual tracking using nonlinear observers,” IEEE/ASME
+Trans. Mechatronics, vol. 16, no. 2, pp. 387–394, Apr. 2011.
+[32] R. Zhang, H. Wang, W. Chen, X. Wang, and R. Pfeifer, “Motion analysis and experimental study of a cable-driven soft surgical robot,” in
+Proc. IEEE Int. Conf. Cyber Technol. Autom. Control Intell. Syst., 2015,
+pp. 2085–2090.
+
+49
+
+Hesheng Wang (SM’15) received the B.Eng.
+degree in electrical engineering from the Harbin
+Institute of Technology, Harbin, China, in 2002,
+the M.Phil. and Ph.D. degrees in automation and
+computer-aided engineering from the Chinese
+University of Hong Kong, Hong Kong, in 2004
+and 2007, respectively.
+From 2007 to 2009, he was a Postdoctoral
+Fellow and a Research Assistant in the Department of Mechanical and Automation Engineering, the Chinese University of Hong Kong. Since
+2009, he has been with Shanghai Jiao Tong University, China, where
+he is currently a Professor in the Department of Automation. He worked
+as a Visiting Professor with the University of Zurich, Switzerland. His
+research interests include visual servoing, service robot, robot control,
+and computer vision.
+Dr. Wang is an Associate Editor of Robotics and Biomimetics, Assembly Automation, International Journal of Humanoid Robotics, and IEEE
+TRANSACTIONS ON ROBOTICS. From 2011 to 2015, he served as an Associate Editor in the Conference Editorial Board of the IEEE Robotics and
+Automation Society. He is actively involved in the organization of international conferences. He served as an organizing committee member for
+many international conferences, such as ICRA and IROS. He was the
+General Chair of the 2016 IEEE International Conference on Real-Time
+Computing and Robotics and the Program Chair of the 2014 IEEE International Conference on Robotics and Biomimetic. He is the Program
+Chair of the 2019 IEEE/ASME International Conference on Advanced
+Intelligent Mechatronics.
+
+Bohan Yang received the B.S. degree in automation from Hunan University, Changsha,
+China, in 2014. Since 2014, she has been working toward the M.S. degree in the Department
+of Automation, Shanghai Jiao Tong University,
+Shanghai, China.
+Her research interests include visual servoing
+and robot control.
+
+Yuting Liu received the B.S. degree in control engineering from Beihang University, Beijing, China, in 2014. Since 2014, she has been
+working toward the M.S. degree in control engineering at Shanghai Jiao Tong University,
+Shanghai, China.
+
+Weidong Chen received the B.S. and M.S. degrees in control engineering, in 1990 and 1993,
+and Ph.D. degree in mechatronics, in 1996,
+respectively, all from the Harbin Institute of Technology, Harbin, China.
+Since 1996, he has been with Shanghai Jiao
+Tong University, where he is currently the Head
+and a Professor in the Department of Automation, and the Director of the Institute of Robotics
+and Intelligent Processing.
+He is the Founder of the Autonomous Robot
+Laboratory, Shanghai Jiao Tong University. In 2012, he was a Visiting Professor in the Artificial Intelligence Laboratory, University of
+Zurich, Switzerland. From 2016 until 2017, he is a Visiting Professor in the Brain Science Life Support Research Center, University of
+Electro-Communications, Japan. His current research interests include
+autonomous robotics, assistive robotics, and medical robotics.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+50
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 22, NO. 1, FEBRUARY 2017
+
+Xinwu Liang received the B.S. and Ph.D. degrees in control engineering from Huazhong
+University of Science and Technology, Wuhan,
+China, in 2006 and 2011, respectively.
+From 2011 to 2014, he was a Postdoctoral
+Fellow in the Department of Automation, Shanghai Jiao Tong University, Shanghai, China, and
+from 2014 to 2015, he was a Postdoctoral Fellow
+in the Department of Mechanical and Automation Engineering, the Chinese University of Hong
+Kong, Hong Kong. He is currently an Associate
+Professor in the School of Aeronautics and Astronautics, Shanghai Jiao
+Tong University. His current research interests include robot control, visual servoing, adaptive control, and computer vision.
+
+Rolf Pfeifer received the Master’s degree in
+physics in 1970, and mathematics and the Ph.D.
+degree in computer science, in 1979, from the
+Swiss Federal Institute of Technology, Zurich,
+Switzerland.
+He is currently a Visiting Professor at Shanghai Jiao Tong University, China and a “Specially Appointed Professor” at Osaka University,
+Japan. Moreover, he is a Co-Founder of the
+National Robotics Centre, Switzerland. From
+1987 to 2014, he was a Professor of computer
+science at the University of Zurich and the Director of the Artificial Intelligence Laboratory. He was a Visiting Professor and a Research Fellow
+at the Free University of Brussels, the MIT Artificial Intelligence Laboratory, Cambridge, MA, USA, the Neurosciences Institute, San Diego, the
+Beijing Open Laboratory for Cognitive Science, the Ludwig-MaximiliansUniversity, Munich, the University of São Paolo, Brazil, and the Sony
+Computer Science Laboratory, Paris. In 2009, he was a Visiting Professor at the Scuola Superiore Sant’Anna, Pisa, and at Shanghai Jiao Tong
+University, China, and was appointed as a “Fellow of the School of Engineering” at the University of Tokyo and in 2016 a “Fellow of ECLT,” the
+European Center for Living Technology, Venice, Italy. In 2009, he started
+the “ShanghAI Lectures” (at Shanghai Jiao Tong University), a global,
+fully interactive videoconference-based series on natural and artificial
+intelligence that now involve more than 50 universities from around the
+planet. His book “How the Body Shapes the Way We Think – A New
+View of Intelligence” (MIT Press, 2006) has been published in English,
+Chinese, Japanese, Arabic, and French. He developed the humanoid
+robot “Roboy,” which has attracted world-wide media attention, and he
+is presently pursuing the “ROBOLOUNGE” project, where robots will
+take care of the well-being of the customers, to be launched in an Asian
+metropolis in 2017/2018.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:54:49 UTC from IEEE Xplore. Restrictions apply.
+
+
