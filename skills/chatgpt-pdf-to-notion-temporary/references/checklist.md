@@ -1,6 +1,8 @@
 # Operator Checklist
 
 ## A. 입력/메타데이터
+- [ ] 입력 카디널리티 확인: 사용자 입력 기준 canonical PDF 1개만 선택
+- [ ] 내부 중복 파일(tmp copy/분할본/이름만 다른 동일본) 제거 후 canonical 경로 고정
 - [ ] PDF title/metadata 확인 (`pdfinfo` 등)
 - [ ] 논문 메타데이터 조회 (`scripts/paper_metadata.py`) 및 `0) 논문 정보` 섹션 작성
 - [ ] citation 형식 확인: `APA`/`BibTeX` 라벨은 heading/bold, citation 본문만 quote
@@ -17,6 +19,7 @@
 ## C. 노션 반영
 - [ ] Notion path resolved: IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문
 - [ ] Page created with paper title (중복 시 suffix)
+- [ ] 출력 카디널리티 확인: canonical PDF 1개당 Notion page 1개만 생성
 - [ ] Notion formatting rule applied (`#`/`##`/`###`, nested bullets, table bold)
 
 ## D. 핵심 이미지(누락 방지)

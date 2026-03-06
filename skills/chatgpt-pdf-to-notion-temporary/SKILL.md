@@ -15,8 +15,16 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 
 ## Fixed Workflow
 
-1. Read PDF metadata/title (e.g., `pdfinfo`).
-2. Extract text from key sections (abstract/introduction/method/results/conclusion) with local tools (e.g., `pdftotext`).
+0. Enforce **single-input invariant** before anything else.
+   - Treat one user-provided paper PDF as exactly one job unit.
+   - If multiple PDF candidates appear internally (tmp copies, chunked exports, duplicate names), dedupe and select only one canonical source by this order:
+     1) exact path explicitly provided by the user
+     2) largest file size
+     3) newest mtime
+   - Hard-stop and ask clarification if multiple distinct papers are detected (different title/metadata/hash), instead of processing all.
+   - Never create multiple Notion pages from one user PDF input.
+1. Read PDF metadata/title (e.g., `pdfinfo`) from the canonical source.
+2. Extract text from key sections (abstract/introduction/method/results/conclusion) with local tools (e.g., `pdftotext`) using the same canonical source only.
 3. Fetch paper metadata (`scripts/paper_metadata.py --title "..."`) and prepare a new section:
    - `0) 논문 정보` (출간 연도, 출간 저널, citation 수)
    - Citation formatting rule:
@@ -47,6 +55,8 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 
 ## Hard Rules
 
+- **One PDF in → one summary page out**. Do not split one source into multi-page output.
+- Pin all downstream steps (metadata/text/images/attachment) to one canonical PDF path.
 - Default to local summary pipeline for cost and stability.
 - Keep markdown fidelity high (`#`/`##`/`###`, bullets, tables, symbols).
 - Use low-cost normalization in conversion script:
@@ -74,6 +84,8 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 ### Execution Guardrails (must pass before done)
 
 - Do not report completion until all checklist items are verified.
+- Input cardinality QA: exactly 1 canonical PDF selected for the run.
+- Output cardinality QA: exactly 1 Notion page created for that canonical PDF.
 - Do not skip image extraction when key-image insertion is expected.
 - If extracted image count is 0, explicitly report and continue without image insertion only with clear reason.
 - If inline image insertion fails, retry once; if still failing, report failure explicitly (do not claim success).
