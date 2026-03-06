@@ -55,6 +55,8 @@ description: Summarize research paper PDFs and upload to Notion with strict form
    - 300px 규칙 통과 이미지 전체를 `## 논문 이미지` 섹션에 인라인 삽입
    - 삽입 순서: 페이지 오름차순 → 페이지 내 이미지 인덱스 오름차순
    - `## 논문 이미지` 섹션 하위로 넣어야 하며, 페이지 최하단 임의 추가 금지
+   - 각 이미지 블록 caption에는 가능한 경우 원문 Figure caption을 입력한다. (예: `Figure 3. ...`)
+   - 캡션 매칭 실패 시 빈 캡션으로 두거나 `Figure caption not confidently matched`로 표기한다.
 9. `## 원본 PDF` 섹션에 원본 PDF file block 첨부
    - `## 원본 PDF` 섹션 하위로 넣어야 하며, 별도 말미 추가 금지
 10. 요약 지시 문장(예: `(아래에 ... 첨부)`)은 최종 페이지에 남기지 않는다.
