@@ -41,6 +41,8 @@
 - [ ] 원본 PDF 첨부는 로컬 경로 텍스트가 아닌 실제 Notion file block 업로드인지 확인
 - [ ] 불릿 QA: 중첩 항목이 raw `-` 텍스트가 아닌 실제 자식 불릿인지 확인
 - [ ] 이미지 QA: 핵심 이미지가 관련 섹션 근처에 인라인 삽입되었는지 확인
+- [ ] 구조 QA 실행: `scripts/validate_notion_page.py --page-id <id>`
+- [ ] 구조 QA 실패 시 해당 페이지 rollback(in_trash=true) 후 실패로 보고
 - [ ] 이미지/첨부 업로드 실패 시 재시도 결과 기록(실패면 완료 보고 금지)
 - [ ] 임시 파일 등록: source PDF + extracted image dir 를 `--ttl-hours 6`로 등록
 - [ ] 최종 URL/핵심 추출 근거 보고

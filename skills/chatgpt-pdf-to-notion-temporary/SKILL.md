@@ -64,7 +64,10 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
    - extracted image directory path
    - use `scripts/register_temp_artifacts.py <paths...> --ttl-hours 6`
 13. Run final validation checklist (`references/checklist.md`) before reporting.
-14. Report page URL + what was extracted (pages/sections used).
+14. Run structural post-check: `scripts/validate_notion_page.py --page-id <id>`.
+    - If validation fails (heading newline/marker contamination, missing inline image, or missing PDF file block), mark run failed.
+    - On failed final check, do not report success; rollback the just-created/updated page to trash and report failure reason.
+15. Report page URL + what was extracted (pages/sections used).
 
 ## Hard Rules
 
