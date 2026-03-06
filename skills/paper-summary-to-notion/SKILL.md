@@ -35,31 +35,41 @@ description: Summarize research paper PDFs and upload to Notion with strict form
 ## Workflow
 0. 입력 PDF canonical path 1개 확정
 1. `sha256` fingerprint 계산
-2. 중복성 검사 (부모: `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`)
+2. 동시 실행 락 확보
+   - lock key: `paper-summary-to-notion:<sha256>`
+   - 동일 key 실행 중이면 대기/스킵 (중복 쓰기 금지)
+3. 중복성 검사 (부모: `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`)
    - 중복이면 생성/수정 없이 스킵 보고
-3. 메타데이터 수집 (`scripts/paper_metadata.py`)
-4. 텍스트 추출 (`pdftotext` 등)
-5. 요약 작성 (특히 `제안하는 방법`을 디테일하게)
+4. 메타데이터 수집 (`scripts/paper_metadata.py`)
+5. 텍스트 추출 (`pdftotext` 등)
+6. 요약 작성 (특히 `제안하는 방법`을 디테일하게)
    - 입력/출력
    - 핵심 아이디어
    - 절차(파이프라인)
    - 기존 대비 차별점
-6. Notion 페이지 upsert
-   - 제목: `논문명 (연도)`
+7. Notion 페이지 upsert
+   - 제목: `원문 논문 제목 (연도)`
    - 상단에 `source_fingerprint: <sha256>` 기록
-7. 이미지 추출 (`scripts/extract_pdf_images.py`)
+8. 이미지 추출 (`scripts/extract_pdf_images.py`)
    - 300px 규칙 통과 이미지 전체를 `## 논문 이미지` 섹션에 인라인 삽입
-8. `## 원본 PDF` 섹션에 원본 PDF file block 첨부
-9. 구조 검증 (`scripts/validate_notion_page.py --page-id <id>`)
+9. `## 원본 PDF` 섹션에 원본 PDF file block 첨부
+10. 구조 검증 (`scripts/validate_notion_page.py --page-id <id>`)
    - 실패 시 성공 보고 금지 + rollback(in_trash)
-10. 임시 파일 등록
+11. 임시 파일 등록
    - **실제로 사용된 파일만** 등록
    - TTL **1주일(168시간)**
    - `scripts/register_temp_artifacts.py <paths...> --ttl-hours 168`
+12. 락 해제 (성공/실패 모두)
 
 ## Formatting Guard
 - `## 논문 정보`, `## 문제 상황`, `## 제안하는 방법`, `## 결과` 아래는 본문 시작 전 한 줄 공백 유지
 - heading 텍스트는 단일 라인만 허용
+
+## Cron Hardening (품질 편차 방지)
+- 배치/크론 실행 시에도 동일 QA를 적용한다. (수동 실행과 예외 없이 동일)
+- 다건 실행 전 `canary 1건`을 먼저 수행하고 통과 시에만 나머지를 진행한다.
+- 인터벌은 처리시간보다 충분히 길게 잡고(권장 10분+), 이전 실행 미종료 시 다음 작업 시작 금지.
+- 보고는 성공 URL만; 실패는 실패 원인 + rollback 여부를 분리 보고.
 
 ## Checklist
 - `references/checklist.md`를 최종 게이트로 사용한다.
