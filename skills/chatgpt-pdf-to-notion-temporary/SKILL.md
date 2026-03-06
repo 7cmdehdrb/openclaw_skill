@@ -38,8 +38,12 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 9. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
 10. Insert selected key images as **inline image blocks** near relevant paragraphs (not only as file attachments).
 11. Add `### 원본 PDF` section and attach original PDF file.
-12. Run final validation checklist (`references/checklist.md`) before reporting.
-13. Report page URL + what was extracted (pages/sections used).
+12. Register temporary artifacts for cleanup in 6 hours:
+   - source paper PDF path
+   - extracted image directory path
+   - use `scripts/register_temp_artifacts.py <paths...> --ttl-hours 6`
+13. Run final validation checklist (`references/checklist.md`) before reporting.
+14. Report page URL + what was extracted (pages/sections used).
 
 ## Hard Rules
 
@@ -99,4 +103,6 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 - Notion markdown conversion helper: `scripts/markdown_to_notion.py`
 - Paper metadata fetcher: `scripts/paper_metadata.py`
 - PDF image extractor: `scripts/extract_pdf_images.py`
+- Temp artifact registrar: `scripts/register_temp_artifacts.py`
+- Temp artifact garbage collector: `scripts/temp_artifact_gc.py`
 - Workflow checklist (operator): `references/checklist.md`
