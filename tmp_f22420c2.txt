@@ -1,0 +1,4252 @@
+System Modeling and Control in Soft Robotics: A Review
+From 2020 to 2025
+Donggyu Min1 , Jaehoon Jeong1 , Subeen Choi2 , Donghun Lee1*
+1*
+
+Mechanical Engineering Department, Soongsil University, Seoul, 06978, Republic of
+Korea.
+2
+School of Computer Science & Engineering, Soongsil University, Seoul, 06978, Republic
+of Korea.
+
+*Corresponding author(s). E-mail(s): dhlee04@gmail.com;
+Contributing authors: dgmin@soongsil.ac.kr; wogns1218@soongsil.ac.kr;
+schoi@soongsil.ac.kr;
+Abstract
+Soft robotics has attracted increasing attention as a promising alternative to rigid robots in applications where conventional rigid systems struggle, including unstructured environment exploration,
+agriculture, and medical robotics. However, practical deployment remains challenging due to strong
+nonlinearities, hysteresis, and effectively infinite degrees of freedom, which necessitate accurate system
+modeling and control methods. Motivated by these challenges, this review provides a comprehensive analysis of soft robotics research along two principal axes: system modeling and control. System
+modeling is defined as the mathematical representation of a soft robot’s instantaneous shape and
+state using appropriate state variables. Existing approaches are categorized into physics-based models, model-free data-driven methods that bypass explicit physical formulations, and hybrid modeling
+approaches that use physical models as a backbone while compensating for modeling inaccuracies
+through data-driven techniques. Control is defined as the computation of control inputs that drive a
+soft robot toward a desired shape or target tip position. Accordingly, control strategies are classified
+into traditional methods such as PID control, data-driven control approaches that learn input–output
+mappings, reinforcement learning–based methods that acquire control policies through interaction
+with the environment, and hybrid control frameworks that integrate physical principles with datadriven methods. Through a systematic analysis of quantitative performance metrics and technological
+development timelines, this review demonstrates that hybrid modeling approaches achieve state-ofthe-art performance in terms of accuracy, generalization capability, and interpretability. In the control
+domain, hybrid control methods exhibit the most stable and reliable performance, while reinforcement learning–based control shows increasingly competitive results. Overall, this review elucidates
+the strong interdependence between system modeling and control in soft robotics and highlights
+promising directions for the development of high-performance soft robotic systems.
+Keywords: Soft Robotics, System Modeling, Control Methodologies, Hybrid Modeling, Hybrid Control,
+Reinforcement Learning
+
+1
+
+1 Introduction
+
+soft robotics, these approaches face inherent limitations in achieving both high precision and
+robustness.[8] To address these issues, data-driven
+control have been introduced.[1] These methods
+offer the advantage of handling complex behaviors
+and nonlinearity without requiring explicit control structures. Nevertheless, they suffer from poor
+generalization performance due to their heavy
+reliance on large amounts of labeled data. To
+mitigate this drawback, hybrid control strategies
+have been proposed, in which data-driven control is combined in a complementary manner with
+physics-based structures serving as a backbone.[9]
+In addition, Reinforcement Learning (RL)–based
+control, which learns control policies via interaction with the environment rather than through
+direct data mapping, has also been explored as an
+alternative approach.
+This paper provides a systematic analysis of
+approximately 60 key publications published over
+the past five years (2020–2025) in journals in the
+field of soft robotics, offering an integrated perspective on the evolution of system modeling and
+the corresponding developments in control strategies. As illustrated in Fig. 1, soft robotics research
+is first broadly categorized from the perspectives
+of system modeling and control. Subsequently, system modeling approaches are reviewed along their
+development process from physics-based methods to data-driven methods and ultimately to
+hybrid approaches. Control strategies are likewise reviewed, spanning traditional control, datadriven control, RL–based control, and hybrid
+control. We discuss that hybrid system modeling and hybrid control which combine the high
+interpretability of physics-based approaches and
+the high adaptability for the nonlinear dynamics
+of data-driven approaches constitute the central
+direction of recent advances in soft robotics control. Furthermore, RL–based control is also discussed as a promising technique for control of soft
+robotics.
+The remainder of this paper is organized as follows. Section 2 analyzes system modeling methodologies for effectively representing the infinite
+DoF and nonlinearities inherent in soft robotics,
+categorizing them into physics-based approaches,
+data-driven approaches, and hybrid approaches.
+Section 3 provides a comprehensive review of
+control methods built upon the system models discussed in Section 2, covering traditional control,
+
+Soft robotics has emerged as a promising alternative in domains that are difficult for rigid
+robots to access, owing to its high adaptability
+in unstructured environments and its capability
+for safe physical interaction with humans.[1] However, characteristics of soft robotics systems, such
+as strong nonlinearity, infinite Degrees of Freedom(DoF) belonging to continuum structures,
+and hysteresis make system design complicate.[2]
+In contrast, rigid robots are able to design accurate system design via well-defined kinematic
+structures composed of links and joints. In the
+field of soft robotics, however, how to define
+and estimate instantaneous shape and internal
+states of the robot remains a central research
+challenge.[3]
+Research of system modeling for soft robotics
+initially focused on mathematically and physically describing these complexities using physicsbased models, such as Piecewise Constant Curvature (PCC) models and Cosserat Rod (CR)
+theory.[2, 4] While these approaches offer high
+interpretability and facilitate structured integration with control, they struggle to fully capture
+environmental uncertainties and nonlinearities of
+materials in real-world, leading to limitations such
+as increase in Mean Absolute Error (MAE) under
+varying load conditions.[3] Subsequently, driven
+by advances in machine learning, data-driven
+approaches emerged that directly estimate system states from sensor inputs and observations
+without relying on explicit physical models.[5]
+Although these methods can effectively represent
+complex nonlinear behaviors, they suffer from a
+strong dependence on large amounts of training
+datasets, typically on the order of 20,000–54,000
+samples.[6] As a result, recent research has
+increasingly converged on hybrid methodologies
+that combine physics-based model as a backbone
+with data-driven component, thereby compensating for the respective limitations of each approach.
+In soft robotics, the significance of system
+modeling lies in enabling precise control through
+accurate system representations.[7] Research on
+soft robotics control has focused on traditional
+control methods, such as PID and Model Predictive Control (MPC). However, due to the strong
+nonlinearity and time-varying characteristics of
+
+2
+
+applied to high-dimensional dynamic control problems, moving beyond simple exploratory tasks.[9,
+12]
+In summary, recent research trends indicate
+that hybrid approaches have established themselves as the mainstream by enabling accurate
+estimation with significantly less data compared
+to purely data-driven methods. In studies of
+control methodologies, the superiority of hybrid
+control is increasingly emphasized, while RL is
+gaining attention for its advantages in safety and
+environmental adaptability, forming an independent axis of development. As a result, current
+soft robotics researches are characterized by the
+coexistence of RL-based policy control and sophisticated hybrid control, with a clear orientation
+toward complex, high-speed, and dynamic tasks.
+
+data-driven control, RL–based control, and hybrid
+control. Finally, Section 4 discusses the conclusion and limitations of soft robotics represented in
+recent studies and addresses future works of this
+paper.
+
+1.1 Evolution Timeline of System
+Modeling and Control in Soft
+Robotics
+Research in soft robotics has continuously evolved
+around two central challenges: accurate system
+modeling and precise control. Figure 2 summarizes
+recent research trends in soft robotics by outlining the parallel developments in system modeling
+and control. In the early stage, corresponding to
+the period from 2015 to 2017, approaches centered on mathematical and physical models, such
+as PCC models and CR theory, dominated the
+field.[2, 4] During this period, traditional control
+methods such as PID, MPC, and linear quadratic
+regulator were applied based on equations derived
+from explicit physical models. The primary objective was to ensure system stability and verify
+controllability using explicit models. However,
+these approaches exhibited inherent limitations in
+coping with the strong nonlinearities characteristic of soft robotics.[1] Between 2018 and 2020,
+driven by advances in embedded soft sensing technologies and computing capabilities, data-driven
+modeling and control methods were actively introduced to address nonlinear behaviors. Attempts
+to estimate system models using Recurrent Neural Network (RNN) and Long Short-Term Memory (LSTM) networks became increasingly prevalent, and approaches that learned inverse models
+to infer appropriate control inputs also began
+to emerge.[10] Since 2021, hybrid modeling has
+become the mainstream, aiming to simultaneously
+overcome the limited accuracy of physics-based
+models and the strong data dependency of datadriven approaches. Hybrid modeling improves the
+low interpretability of purely data-driven models by learning the residuals between analytically
+derived physical models and actual soft robot
+behaviors using machine learning, or by embedding physical constraints directly into the learning
+process.[11] In parallel, hybrid control strategies
+have also been proposed in the control domain,
+and RL–based control has begun to be actively
+
+2 System Modeling
+Accurate system modeling serves as a critical
+link not only for precisely defining the shape and
+internal states of soft robots, but also for completion of the control framework and enabling
+intelligent interaction. Unlike rigid robots, which
+perform geometric system modeling based on sensors, system modeling for soft robotics is defined
+as a high-dimensional problem that requires the
+simultaneous reconstruction of shape based on
+continuum mechanics and the identification of
+interaction forces with the external environment.
+This section analyzes the inherent challenges and
+significance of system modeling in soft robotics
+and examines the technological developments that
+have evolved to address these challenges. Therefore, we review representative studies within each
+approach, focusing on the type of soft robot used,
+the core methodologies for system modeling, and
+quantitative results. A summary of this review is
+provided in Table A1 in the Appendix.
+The factors that make system modeling in soft
+robotics challenging can be broadly summarized
+into three aspects. First, kinematic uncertainty
+and the infinite DoF problem. Soft robotics has
+continuum structures that deform over their entire
+bodies rather than discrete combinations of links
+and joints.[7] As a result, it is difficult to accurately estimate the whole robot shape or the EndEffector (EEF) position using only a finite number
+of embedded sensors. Second, material nonlinearity. The viscoelasticity of compliant materials
+3
+
+Fig. 1 A hierarchical taxonomy of system modeling and control methodologies in roft robotics.
+
+such as silicone or textiles introduces nonlinear
+relationships between control inputs and deformations, and is often accompanied by hysteresis.[13]
+This implies that identical control inputs can lead
+to different system responses depending on the
+current state. Third, the need to individually measure interactions with the external environment
+and disturbances. The inherent compliance of soft
+robotics induces natural shape deformation upon
+contact with external objects, making it necessary
+to simultaneously estimate both the robot shape
+and the contact forces.[14]
+To address these challenges, a wide range
+of approaches have been explored in the literature, spanning from physics-based methods to
+data-driven learning-based approaches. Table 1
+implicitly summarizes the relative strengths and
+weaknesses of these approaches across key evaluation metrics in a qualitative manner. Early studies
+
+primarily relied on analytical models or numerical methods that explicitly describe the system
+dynamics. These methods do not require training
+data and offer high interpretability.[15] However,
+they suffer from low accuracy due to their limited ability to handle nonlinear behaviors.[6] As an
+alternative, data-driven approaches emerged that
+learn patterns directly from sensor data to overcome nonlinearities. While these methods achieve
+high accuracy by effectively capturing nonlinear
+behaviors, they require large amounts of labeled
+data. Moreover, they are prone to typical overfitting issues, resulting in a pronounced degradation in accuracy in out-of-distribution regimes,
+along with extremely limited interpretability.[16]
+More recently, research has evolved toward hybrid
+techniques that combine the strengths of physicsbased and data-driven approaches to achieve
+
+4
+
+Fig. 2 Timeline of soft robotics research development from 2020 to 2025; The evolution of system modeling (top); The
+progression of control (bottom);
+
+interpretability and estimation accuracy simultaneously. By adopting physics-based models as
+a backbone, these approaches enable learning
+with relatively small datasets while achieving high
+accuracy, strong extrapolation performance, and
+effective handling of nonlinearities.[11]
+
+and analytical physics-based modeling, which capture precise behaviors by accounting for material
+constitutive relations and force equilibrium.
+
+2.1 System Modeling I:
+Physics-based Approach
+
+Because soft robotics has a continuum structure with infinite DoF, it is inherently difficult
+to fully represent all deformation modes, including bending and twisting. To address this issue,
+the continuum is approximated using a reduceddimensional representation. The most representative approach is the PCC model, which assumes
+that each segment of the robot deforms into an arc
+with constant curvature. Sokolov et al.[7] applied
+the PCC assumption to a soft robot composed of
+three Pneumatic Muscle Actuators (PMA), each
+consisting of two segments, and derived an analytical forward kinematics formulation to compute
+the EEF position as a function of changes in the
+lengths of the pneumatic muscles. In this work, the
+six PAMs are actuated independently to generate
+a continuous curved shape in three-dimensional
+space. In addition, system modeling of the soft
+robot is performed using the PCC approach. For
+
+2.1.1 Geometric Approximation &
+Kinematic Modeling
+
+The most fundamental approach to system modeling is physics-based modeling, which describes
+the system state through geometric constraints or
+the principles of continuum mechanics. The core
+objective of this approach is to reduce an infinite
+DoF continuum problem to a finite-dimensional
+mathematical model, thereby analytically characterizing the shape, position, and internal forces
+of the soft robot. In this paper, physics-based
+approaches are categorized according to model
+complexity and methodological perspective, as
+shown in Fig. 3. Specifically, we distinguish
+between geometric approximation and kinematic
+modeling, which assume robot deformation as predefined geometric curves to maximize computational efficiency, and continuum mechanics–based
+5
+
+Table 1 Comparative performance of system modeling approaches in soft robotics.
+
+Evaluation Metric
+
+Physics-based
+
+Data-driven
+
+Hybrid (SOTA) 1
+
+Representative Studies
+
+[2–4, 7, 17, 21, 23, 50–
+52, 59–62]
+Moderate 2
+
+[5, 6, 14, 30–
+33, 36, 38, 58, 63, 65]
+Very High
+
+[9, 11–13, 27, 40–42]
+
+(1–2mm / 0.2–0.7°)
+
+(1.1–2.5mm / 2.5–4.0°)
+
+(1.8–2.5mm / 1.2–2.5°)
+
+Moderate 4
+Low (Hysteresis, etc.)
+
+Low
+Very High
+Very Large
+
+Very High
+High
+Moderate
+
+Precision
+Extrapolation 3
+Nonlinearity Handling
+Data Requirements
+Interpretability
+1
+
+None/Minimal
+Perfect
+
+High
+
+(20,000–54,000)
+
+(12,000–20,000)
+
+Low (Black-box)
+
+High (Gray-box)
+
+Hybrid system modeling is classified as SOTA technology. While it has slightly lower accuracy than data-driven approaches, it
+demonstrates superior extrapolation performance and requires significantly less training data.
+High numerical accuracy in physics-based methods is often reported under conditions where the evaluated soft robots closely
+match the assumed model; comparative studies indicate markedly lower accuracy for robots with greater model mismatch.
+3
+Extrapolation refers to the model’s ability to predict behavior outside the range of the training data or standard operating
+conditions.
+4
+While physics-based modeling is reported to show decent extrapolation performance outside the general operating range, its
+performance drops sharply under extreme external forces or severe deformation as curvature assumptions fail.
+
+2
+
+Fig. 3 Overview of physics-based system modeling for soft robotics; Kinematic modeling via geometric approximation
+(left); Analytical physics modeling based on continuum mechanics (right);
+
+this purpose, each segment is assumed to be
+approximated by a circular arc, while physical
+effects such as gravity, thermal expansion, and
+hysteresis are neglected. The system state is represented by a vector composed of the arc length
+(l), bending angle (θ), and the orientation of
+the bending plane (α). Through this formulation,
+the continuous behavior of the soft robot can be
+effectively represented.
+Similarly, Keyvanara et al.[3] modeled a multisegment extensible soft robot with three bellows
+under the PCC assumption, but approximated
+
+it computationally by discretizing the continuum
+into a combination of multiple small rigid links
+and joints. Vision data were subsequently fused
+using a Kalman Filter (KF) to obtain the kinematic state. Since each bellow is actuated independently, the robot can exhibit both extension
+and bending behaviors. Each segment is modeled
+as a Constant Curvature (CC) segment, and the
+system model is expressed using the parameter set
+(L, θ, ϕ). The continuum is then approximated as
+a link chain by decomposing each segment into
+
+6
+
+or large deformations occur, the underlying geometric assumptions are violated, leading to a
+rapid degradation in accuracy. Moreover, the lowdimensional approximation inherently fails to adequately represent complex deformation modes,
+such as torsion, shear, and localized bending.[8]
+
+rotary joints and prismatic joints, yielding a system state vector as expressed in Eq. 1. Finally,
+sensor data collected from an inertial measurement unit and a vision camera are mapped into
+the state space of the soft robot.
+
+q = [ek , kx , ky ]
+ek = (L − L0 )/L0
+(1)
+kx = cos(ϕ) × θ/L
+ky = sin(ϕ) × θ/L
+However, PCC-based modeling suffers from
+inherent limitations in accurately representing
+nonuniform shapes. In order to overcome this
+limitation, Gonthina et al.[17] introduced variable curvature modeling into system modeling by
+adopting Euler spirals (clothoids), in which curvature varies linearly along the arc length, thereby
+enabling precise modeling of variable-curvature
+regions that cannot be captured by PCC models.
+In this work, a soft robot composed of three parallel sections was used. Each section contains three
+slender and elongated McKibben actuators[18],
+resulting in shapes for which the CC assumption
+is severely violated. The curvature (k ) of the soft
+robot is assumed to increase linearly with respect
+to the arc length (s), and is defined as in Eq. 2.
+By substituting this curvature assumption into the
+CC model, the state vector q of each section is
+obtained, which in turn allows reconstruction of
+the continuum section shape. Here, the arc length
+s is expressed over an interval such as [s1 , s2 ]
+because s = 0 is not admissible in Eq. 2, necessitating the definition of a valid domain for s.
+Through this approach, the distance root mean
+square error (RMSE) between the actual section
+centerline and the modeled centerline was reduced
+by approximately 67.53%–93.16% compared to
+the CC model.
+
+2.1.2 Continuum Mechanics &
+Analytical Physics Modeling
+To describe material nonlinearities that cannot be
+adequately captured by purely geometric assumptions, high-fidelity modeling based on continuum
+mechanics has been actively investigated. Such
+approaches consistently formulate the deformations of a soft robot, including bending, torsion,
+shear, and extension, based on physical principles,
+and express outputs such as shape and contact
+forces induced by input pressure in a predictive
+mathematical form. This enables the construction of state models that retain interpretability
+and are therefore suitable for use in control and
+design optimization. CR theory provides a framework for soft robotics system modeling using a
+centerline and associated cross-sectional frames,
+allowing bending, torsion, and shear deformations
+to be simultaneously considered. Grazioso et al.[2]
+modeled a soft robot using CR theory in simulation and performed spatial integration through a
+finite element approach on Lie groups. By leveraging Princeton benchmark experimental data, they
+presented a CR-based dynamic model capable
+of analyzing bending, torsion, shear, and extension. Using helical shape functions[19], the infinite
+DoF of the soft robotics were reduced to a sixdimensional strain vector e(α), enabling analysis
+of strain and curvature states. As a result, the
+mean error (ME) of EEF error normalized by the
+robot length was reported to be 0.151 ± 0.102%.
+
+ps = Rv
+Rs = Rû
+qs = vt − ω × v
+ωs = ut − ω × u
+(3)
+ns = ρAR(ω × q + qt ) − f
+ms = (ρRJω )t − ps × n − l
+pt = Rq
+Rt = Rω̂
+Janabi-Sharifi et al.[20] presented a tutorial
+that systematically derives the dynamic equations
+
+k (s) = s/r
+x = (r/s) cos(s2 /r)
+
+(2)
+y = (r/s) sin(s2 /r)
+q = [r, s1 , s2 ]
+This approach is well suited for approximating overall shapes by performing dimensionality
+reduction using geometric parameters such as curvature, length variation, and deflection angles,
+rather than directly handling the continuum.
+However, when strong contact, external forces,
+
+7
+
+reported to be 0.647◦ under an input pneumatic
+pressure of 1 kg/cm2 . The primary advantage of
+this approach lies in its interpretability. Given a
+material model and boundary conditions, the relationships between pressure, shape, and force can
+be explicitly reproduced, making the approach
+well suited for integration with control. In addition, because system modeling is performed using
+continuum parameters, it enables more refined
+modeling compared to purely geometric approximation methods.[3] However, as increasingly complex nonlinear behaviors are modeled with higher
+fidelity, the resulting formulations become more
+complex, leading to a rapid increase in computational cost. Furthermore, this approach cannot
+fully capture uncertainties present in real-world
+environments, resulting in a discrepancy between
+the model and physical behavior.[23]
+
+of tendon-driven robots using CR theory and
+solves the resulting partial differential equations
+numerically via the shooting method. This work
+models a tendon-driven continuum soft robot and
+provides a unified formulation within the CR
+framework. Specifically, the position vector of the
+centerline p(s, t) ∈ R3 and the rotation matrix
+R(s, t) ∈ SO(3) are used to define the arc-length
+derivatives of position v (s, t) and curvature u(s, t).
+Based on these definitions, the CR-based partial
+differential equations governing continuum robots
+are formulated as shown in Eq. 3. These partial
+differential equations are solved using the shooting method implemented via “fslove” function in
+MATLAB, enabling analysis of the full threedimensional shape of the soft robot, its dynamic
+deformation states, the internal load distribution,
+and the trajectory of the centerline. In this formulation, the general force and moment terms f
+and l are defined as shown in Eq. 4. Here, fte and
+lte represent the force and moment terms induced
+by tendon tension, while fe and le correspond
+to force and moment terms arising from external
+effects. Consequently, the above partial differential equations define the shape and internal states
+of the soft robot as functions of tendon-induced
+forces and moments as well as externally applied
+forces and moments.
+
+2.1.3 Physics-based Approach :
+Conclusion and Limitations
+In conclusion, physics-based system modeling of
+soft robotics aims to alleviate the analytical challenges arising from Infinite DoF and hysteresis
+through low-dimensional approximations. While
+this methodology provides high interpretability
+and is therefore well suited for integration with
+control, it suffers from clear limitations, including modeling errors and excessive computational
+burden, which hinder its application to realtime control.[6] To overcome these limitations,
+data-driven methods, which construct system
+modeling without explicit physical models have
+emerged. These approaches are discussed in detail
+in Section 2.2.
+
+f = fte + fe
+(4)
+l = lte + le
+Meanwhile, studies have also been made to
+analytically characterize the inflation behavior of
+pneumatic actuators themselves. Sierra et al.[21]
+proposed an analytical model capable of predicting bending angles by formulating the relationship
+between internal chamber pressure and geometric
+deformation using bulge test theory and a NeoHookean material model.[22] Specifically, they
+fabricated a bending soft robot using a multichamber Pneumatic Soft Actuator (PSA). The
+applied pneumatic pressure was first converted
+into an equivalent energy term, and the resulting material deformation induced by this energy
+was expressed as an equation in terms of the
+stretch ratio λ using the Neo-Hookean material
+model. This deformation was then approximated
+as an elliptical shape, and the overall geometry was reconstructed by inversely computing the
+corresponding ellipse radii. Using this approach,
+the maximum angular error of each segment was
+
+2.2 System Modeling II:
+Data-Driven Approach
+Physics-based system modeling inherently suffers
+from reduced accuracy due to its reliance on lowdimensional approximations.[11] Although numerical analysis methods such as Finite Element
+Method (FEM) can be employed to improve accuracy, their excessive computational cost makes
+them difficult to apply to real-time control.[6, 24,
+25] To overcome these limitations, data-driven
+approaches have emerged that directly learn the
+mapping between sensor data and robot states
+rather than discard explicit physical principles.
+
+8
+
+the remaining three serve as actuators. The observation vector from the receptors and the state
+vector of soft robot were defined as in Eq. 5,
+and a dataset was collected using a motion capture system to train an RNN. As a result, under
+non-contact conditions, the RMSE of y (t) which
+represents state vector comprising length, pitch
+angle, and roll angle was reported to be [1.10±0.02
+mm, 0.62 ± 0.05◦ , 0.71 ± 0.06◦ ]. This approach
+allows the network to absorb hysteresis and drift
+effects, and by leveraging multiple sensor signals, it exhibits a graceful degradation property
+in which performance degrades gradually rather
+than abruptly even if some sensors are damaged.
+
+This methodology skips analytical solving of complex continuum mechanics and allows neural networks to directly infer robot shape, contact forces,
+and internal states from sensor inputs.[5] By
+avoiding the analytical complexity inherent in
+physics-based modeling while effectively capturing hysteresis and nonlinearities embedded in the
+data, this approach has established itself as a
+core methodology. In this section, as illustrated
+in Fig. 4, data-driven modeling approaches are
+categorized into embedded sensing and temporal
+learning methods based on time-series data from
+soft sensors, vision-based methods that leverage
+visual information, and latent space and efficient representation techniques that aim to reduce
+complexity and improve efficiency by compactly
+representing the former two approaches.
+
+p = [p1 (t), p2 (t), p3 (t), p4 (t)]
+(5)
+y(t) = [L(t), β (t), α(t)]
+Furthermore, probabilistic approaches have
+been explored to compensate for sensor noise
+and uncertainty. Kim et al.[31] improved modeling reliability by representing hysteresis as a
+conditional stochastic process using a dynamic
+bayesian network. In this work, an experimental setup was constructed using a PSA equipped
+with soft sensors. A dynamic bayesian network
+was then designed, as shown in Eq. 6, to model
+the kinematic random variables of the soft robot
+and the sensor-related random variables. Here, x
+denotes the bending angle of the soft actuator,
+u represents the pneumatic pressure applied to
+the actuator, and y corresponds to the output
+voltage of the soft sensor. Each probability distribution was approximated using Gaussian Process
+(GP) regression, and filtering was performed by
+applying an Extended Kalman Filter (EKF). As a
+result, training yielded an Normalized Root Mean
+Square Error (NRMSE) of 1.12 ± 0.14 for the EEF
+bending angle.
+
+2.2.1 Embedded Sensor & Time-Series
+Modeling
+Unlike rigid robots, which can accurately compute
+geometric states from high-precision sensor measurements, signals from embedded sensors integrated into a soft robot are difficult to exploit
+for real-time system modeling.[26] This difficulty
+arises because embedded soft sensors exhibit signal distortion due to time delays and nonlinearities induced by material viscoelasticity.[5, 27] In
+addition, fabricating soft actuators with embedded sensors is inherently challenging, and increasing the number of sensors leads to greater wiring
+complexity and signal interference, further complicating interpretation.[1, 28, 29] To address these
+issues, time-series modeling approaches have been
+developed that learn the time-varying characteristics of sensor signals using RNN or probabilistic modeling, enabling direct mapping without
+explicit physical interpretation.
+A representative case of these approaches is
+a global learning strategy that directly maps the
+collective signals from multiple sensors to the
+robot state without defining the physical meaning of individual sensors. Wang et al.[30] extended
+this concept by proposing an integrated soft-body
+encoding scheme that combines actuation chambers and receptor chambers to achieve generalpurpose shape modeling. They designed a soft
+robot composed of seven identical soft bellows
+chambers, of which four function as receptors and
+
+xt+1 ∼ p(xt+1 |xt , ut , ut−1 )
+(6)
+yt ∼ p(yt |yt−1 , xt , xt−1 )
+Meanwhile, studies have also been conducted
+that exploit intrinsic signals without relying on
+additional commercial sensing elements or that
+incorporate novel sensing mechanisms. Ang et
+al.[32] proposed a self-sensing technique that estimates bending angles and contact forces by learning only the internal pressure variation patterns
+of a pneumatic actuator using an LSTM. To
+this end, they fabricated a dual-chamber PSA.
+
+9
+
+Fig. 4 Overview of data-driven modeling methodologies for soft robotics; Vision-based modeling (top); Time-series analysis
+of embedded sensors based modeling (middle); Latent space approaches (bottom);
+
+Subsequently, a dataset mapping the two-channel
+pressure input P (t) to the state vector Y (t) was
+collected and analyzed using an LSTM, as formulated in Eq. 7 (where Θ denotes the bending
+angle and F denotes the contact force). As a
+result, under contact conditions, the mean bending angle error was reported to be in the range of
+2.36–3.95◦ , while the mean contact force error was
+approximately 0.002–0.01 N.
+
+(Roll). Such time-series data-driven modeling is
+significant in that it overcomes sensor inaccuracies and enables stable modeling by learning
+temporal nonlinearities through RNN-based networks, under the assumption that information
+about the robot state is inherently embedded in
+the collection of sensor signals.[32] However, due
+to the nature of data-driven methods, re-training
+is required when the robot design or sensor configuration changes, and modeling accuracy degrades
+when the robot operates outside the training
+range or is subjected to sudden disturbances.[1]
+In addition, these approaches entail structural
+limitations, including reduced compliance of the
+soft robot due to sensor embedding and increased
+fabrication complexity.[34, 35]
+
+P(t) = [P1 (t), P2 (t)]
+(7)
+Y(t) = [Θ(t), F (t)]
+Scharff et al.[33] reconstructed complex threedimensional shapes by placing Light Emitting
+Diodes (LED) and photodiodes inside pneumatic
+chambers and interpreting variations in light
+reflectance using a neural network. They designed
+a robot consisting of rigid links at the top and
+bottom and joints composed of three pneumatic
+bellows. Subsequently, LEDs and corresponding
+photodiodes were embedded inside each pneumatic chamber, and markers were attached to
+the robot surface to acquire the dataset. Training an LSTM on this dataset resulted in angular
+errors of 0.44◦ (Yaw), 0.63◦ (Pitch), and 2.76◦
+
+2.2.2 Vision-based Modeling
+Although time-series learning using embedded
+sensors has achieved meaningful results, it
+inevitably entails reduced compliance of the soft
+robot due to sensor integration. To address this
+limitation, vision-based approaches have emerged
+that emerged system modelling by learning highdimensional visual information. Vision sensors
+10
+
+provide dense spatial information from both inside
+and outside the robot, thereby offering quality
+data for precise state modeling without the need
+for physical contact-based sensors.[36] Initial studies combined external cameras with simulation
+data to model physical quantities. De Barrie et
+al.[6] developed a Convolution Neural Network
+(CNN) model to predict contact forces and stress
+distributions of a Fin Ray Effect (FRE) gripper
+without additional sensors by leveraging largescale datasets generated via FEM. Specifically,
+datasets of contact forces and stress maps produced when the FRE gripper undergoes passive
+deformation due to external contact were generated using FEM and used to train a CNN. As a
+result, the MSE of the predicted contact forces
+was reported to be in the range of 0.02–0.09 N.
+This study demonstrated that FEM can be used
+as a data generator rather than a real-time inference model, thereby alleviating computational
+cost while enabling modeling even in the absence
+of physical measurement data.
+Hofer et al.[36] embedded a miniature camera
+inside an inflatable actuator and learned internal
+pattern variations induced by deformation using a
+CNN to recognize joint angles and shapes in real
+time. In this work, a fabric-based spherical soft
+robot was fabricated, in which three bellows function as joints. LEDs and a camera were mounted
+inside the actuator to capture the deformation of
+the bellows. Subsequently, a CNN was trained to
+map three images to the angles of a movable link
+(α, β ). The resulting RMS errors were reported to
+be 1.03 ± 0.03◦ for α and 1.39 ± 0.10◦ for β .
+Faris et al.[14] embedded neuromorphic sensors to enable millisecond-level high-speed data
+processing, achieving not only proprioceptive sensing during fast motions but also the perception
+of dynamic interactions such as slip. They fabricated a FRE–based soft robot finger without the
+crossbeam, inserted circular and square marker
+patterns inside the finger, and attached three
+markers externally. Using a neuromorphic eventbased camera, a CNN was trained on a dataset
+consisting of heatmaps Hx,y (tc ) generated from
+events corresponding to internal marker changes,
+as defined in Eq. 8, and the deformation p of
+marker positions. As a result, the MEs for the
+three markers were approximately 0.15±0.012 mm
+along the x-axis and 0.05 ± 0.003 mm along the
+y-axis. These results are significant in that they
+
+overcome the limitations of conventional vision
+systems in observing high-speed motions.
+
+Hx,y (tc ) = map(Ex,y (tc ), 0, 255)
+p = [x1 , y1 , x2 , y2 , x3 , y3 ]
+(8)
+p = FCN N (Hx,y (tc ))
+As a result, vision-based modeling treats system modeling as a regression problem by performing learning on visual data acquired from
+internal and external cameras. However, issues
+such as occlusion and limited field of view have
+not yet been fully resolved, which leads to inferior generalization performance to deformations or
+objects outside the training distribution compared
+to time-series modeling approaches.[6] In addition,
+the use of cameras, which are bulkier than soft sensors, increases the hardware complexity of system
+integration and significantly enlarges the volume
+of data that must be processed.[37]
+
+2.2.3 Latent Space & Efficient
+Representation
+To reduce the computational overload and complexity of neural network model arising from the
+processing of time-series data or high-dimensional
+visual data, increasing attention has been paid
+to approaches that compress data into latent
+spaces for representation. These methods differ
+from earlier studies in that, rather than focusing on the physical interpretation of sensor signals
+or explicit visual shape reconstruction, they learn
+features that most efficiently describe the behavior of the robot. Krauss et al.[38] implemented a
+model-free approach that directly learns dynamic
+relationships without explicit analytical modeling by training a nonlinear autoregressive network
+with exogenous inputs (NARX) neural network
+on composite signals from optical waveguide sensors. They fabricated a multidirectional PSA and
+constructed a NARX network to predict the state
+vector ri = [xi , yi , zi ]. The NARX network takes
+as inputs the state vector r and an exogenous
+input vector u composed of sensor outputs s
+and pneumatic inputs p, and computes the next
+state vector as defined in Eq. 9. As a result, a
+prediction ME of approximately 2.80 mm was
+achieved. Because this approach directly incorporates delayed observations as part of the state, it
+enables effective prediction with relatively small
+
+11
+
+2.3 System Modeling III: Hybrid
+Approach
+
+datasets while retaining a physically interpretable
+structure.
+
+ri+1 = f (ri , ri−1 , ri−2 , ui , ui−1 , ui−2 )
+
+Under the growing demand for accurate system modeling of soft robotics, hybrid methodologies have emerged to complement the respective strengths and limitations of physics-based
+and data-driven approaches. Specifically, physicsbased models offer high interpretability but struggle to accurately capture strong nonlinearities,
+whereas data-driven models can inherently represent nonlinear behaviors but suffer from low interpretability. Hybrid system modeling approaches
+address this trade-off by using physics-based models to describe the kinematic skeleton or fundamental dynamic behavior of the system, thereby
+ensuring validity and interpretability. Components that are difficult to model, such as residual
+dynamics, parameter uncertainties, and hysteresis, are then compensated for through neural
+network learning. This strategy enables high estimation accuracy with relatively small datasets
+and provides greater reliability than black-box
+models, thereby attracting attention as a SOTA
+technique in soft robotics system modeling. In this
+section, as illustrated in Fig. 5, hybrid modeling
+approaches are systematically analyzed and categorized into three sub-approaches according to
+their integration strategy and objective: residual
+learning and model correction, physics-informed
+neural networks and structural coupling, and
+filtering-based hybrid estimation.
+
+(9)
+
+These approaches suggest that, in soft robotics
+systems where explicit system parameter identification is difficult, accurate system modeling can
+be achieved using only compressed representations
+of the data. While this methodology substantially improves modeling simplicity and accuracy,
+it suffers from a limitation in that the physical meaning of the compressed latent variables
+becomes obscure, making it difficult to provide
+intuitive feedback for system design or analysis.
+System modeling based on latent space representations can process data more efficiently and
+simultaneously capture robot behavior compared
+to the two preceding approaches. However, due
+to its data-driven nature, the limitation of low
+interpretability remains.
+
+2.2.4 Data-Driven Approach :
+Conclusion and Limitations
+In conclusion, data-driven system modeling offers
+an advantage in that it enables accurate modeling
+of complex nonlinearities by learning mappings
+between input and output data without explicitly
+accounting for the physical complexities inherent
+in soft robotics. Among the various methodologies,
+time-series learning captures the temporal nonlinearities of embedded sensors, vision-based learning
+exploits spatial shape information, and latent
+space learning enables efficient data representation. However, black-box approaches inherently
+limit interpretability, thereby hindering integration with control frameworks that rely on explicit
+structural understanding. In this context, hybrid
+modeling, where the results of physical models
+are corrected or complemented using data-driven
+techniques, has emerged as a State-of-the-Art
+(SOTA) approach, as it maximizes the ability of
+data-driven methods to represent the nonlinearities of soft robots while simultaneously preserving
+model interpretability. This approach is discussed
+in detail in Section 2.3.
+
+2.3.1 Residual Learning & Model
+Correction
+Residual learning is one of the most intuitive and
+effective hybrid modeling techniques, in which a
+neural network is trained to learn the residual
+which is defined as the error between the state
+predicted by a physics-based model and the actual
+system state in order to correct the output of the
+physical model. In this scheme, the physics-based
+model captures the overall system behavior, while
+the neural network compensates for unmodeled
+nonlinearities and uncertainties, forming a complementary structure. As a representative study,
+Huang et al.[11] combined a physics-based model
+of a soft robot derived using the Absolute Nodal
+Coordinate Formulation (ANCF)[39] with a multilayer neural network (MLNN). The MLNN learns
+
+12
+
+Fig. 5 Overview of hybrid modeling methodologies for soft robotics; Residual learning and model correction(top); PhysicsInformed and structural integration (middle); Filter-based hybrid estimation (bottom);
+
+Although such physics-based approximate
+models are computationally efficient, they
+inevitably exhibit discrepancies from the real
+system due to dynamic characteristics omitted by
+simplifying assumptions. To address this issue,
+residual learning using an MLNN is employed to
+estimate an error correction function h, which
+is integrated to form the final system model as
+expressed in Eq. 11. As a result, the RMSEs
+of the EEF position, velocity, and acceleration
+were reported to be 2.2, mm, 1.1, mm/s, and
+1.1, mm/s2 , respectively, corresponding to an error
+reduction of approximately 66–70% compared
+to using the physics-based model alone. This
+
+and compensates for dynamic residuals neglected
+by the quasi-static physics-based model, including
+inertial forces, viscoelastic effects, and actuatorinduced hysteresis. In this work, a soft parallel
+robot actuated by three PSAs was fabricated,
+and the system model was formulated using
+Lagrangian dynamics. The resulting equations
+were then expressed in terms of the EEF position,
+velocity, and acceleration, as shown in Eq. 10.
+
+ẍ(t) = f2 [τ (t), q(t), q̇(t)]
+ẋ(t) = f1 [τ (t), q(t)]
+x(t) = f0 [τ (t)]
+
+(10)
+
+13
+
+demonstrates a representative example of hybrid
+modeling in which an analytical model based
+on Lagrangian dynamics provides the physical
+tendencies of the system and facilitates learning
+convergence, while the data-driven component
+precisely compensates for errors introduced by
+physical simplifications, thereby achieving both
+interpretability and accuracy simultaneously.
+
+x(t) = f0 [τ (t)] + h0 [τ (t)]
+ẋ(t) = f˙1 [τ (t)] + h1 [τ (t), q(t)]
+
+systems by analyzing nonlinear dynamics in a lifting space that guarantees linearity. The system
+state vector x(t) is defined by the joint angles
+θ (t), the angular velocities θ̇ (t), and the pressures
+p(t). Although ẋ(t) should be described by differentiating this state vector, the strong nonlinearity
+and hysteresis inherent in soft robots prevent
+direct differentiation. To address this issue, a lifting technique is introduced to map the nonlinear
+state space into a higher-dimensional linear space.
+MLP-based encoder Φ(·) transforms the state x(t)
+into a lifted state variable zk . In the lifted latent
+space, the system dynamics are assumed to exhibit
+linearity, and accordingly, the state at the next
+time step is represented by a linear state equation
+as given in 14.
+
+(11)
+
+ẍ(t) = f¨2 [τ (t)] + h2 [τ (t), q(t), q̇(t)]
+Lou et al.[9] combined an analytic kinematic
+model based on the PCC assumption with a multilayer perceptron (MLP) to effectively compensate
+for position errors arising under various loading
+conditions ranging from 0 to 300 g. A threechamber PSA was fabricated, and the hybrid
+modeling of the constructed soft robot was implemented as shown in 12, in which the shape provided by the analytic model is augmented by a
+data-driven learned error term. Here, fhyb denotes
+the final output of the hybrid model as a function
+of the input pressure p and the applied load. On
+the right-hand side, fcnk represents the prediction
+of the analytic kinematic model established under
+the PCC assumption, while ϵ denotes a residual
+term that represents nonlinearity-induced errors
+occurring under different pneumatic and loading
+conditions. The residual term ϵ is defined, as in
+13, as the deviation between the three-dimensional
+coordinates obtained from physical experiments,
+xreal , and the predictions of the analytic model,
+xcnk , and the neural network is trained to approximate this error function. Experimental results
+show that, using 1, 200 training points, the resulting x(t) exhibits an MAE in the range of 5.9, mm
+to 9.1, mm.
+
+fhyb (p, load) = fcnk (p) + ϵ(p, load)
+ϵ(p, load) = xreal (p, m) − xcnk (p)
+
+zk = Φ(x(t))
+zk+1 = Azk + Buk
+
+(14)
+
+Here, A ∈ Rd×d denotes the transition matrix
+between lifted states, and B ∈ Rd×m denotes the
+control matrix that characterizes the influence of
+the control input uk on the dynamics in the lifting space. To deduce the optimal set of system
+matrices (A, B) and the lifting function Φ(·) that
+satisfy this linear relationship, a least-squaresbased objective function is defined, as shown in 15,
+which minimizes the error between the predicted
+states and the actual lifted states.
+
+L(ϕ, A, B) :=
+
+Nb
+M X
+X
+
+γ k−1 ∥ẑk (ϕ, A, B; xi1 )−ϕ(xk )∥2
+
+i=1 k=1
+
+(15)
+These results demonstrate that residual learning and model compensation approaches preserve
+the computational efficiency of the PCC model
+while enabling neural networks to accurately
+compensate for position errors caused by loaddependent compliant deformation and limitations
+of kinematic assumptions. This residual learning methodology can be regarded as a gray-Box
+approach because the learning process is grounded
+in an underlying physical structure rather than
+replacing the entire model with a data-driven formulation, which provides a certain degree of interpretability while simultaneously improving accuracy. As a consequence, methods that rely solely
+on learning are unable to adequately respond to
+input data outside the training domain, whereas
+
+(12)
+(13)
+
+Wang et al.[13] fabricated an origami-inspired
+pneumatic actuator soft exoskeleton and proposed a Deep Koopman Network. This network
+constructs a predictive model that enables the
+application of linear control theory to nonlinear
+14
+
+networks to learn within a physical kinematic
+structure enables the simultaneous achievement of
+data efficiency and geometric consistency.
+
+residual learning methodologies can partially mitigate this limitation through the embedded physical structure. However, the requirement to obtain
+residual terms from real motion data introduces
+challenges in data collection, which remains an
+aspect that requires further improvement.
+
+xE = FKr (q; θ s , θ t )
+q = g (a; θ g )
+
+(16)
+
+Tian et al.[40] proposed a hybrid model that
+combines FEM-based physical simulation with
+a neural network that processes resistive sensor data. The neural network estimates local
+deformation from sensor signals, while the FEM
+model incorporates this information as physical
+constraints to interpolate the global shape and
+inversely estimate external forces, thereby forming
+a bidirectional interaction structure. Specifically,
+the proposed method was validated using two
+soft robots, flexible strip and pneumatically actuated soft finger. The resistance value vector R
+obtained from soft sensors is mapped, using an
+MLP, to a state matrix S that defines the shape
+of the soft robot. The mapped shape information acts as a physical constraint within the FEM
+model, and the robot behavior is represented using
+a linear approximation based on a local stiffness matrix. Here, K denotes the stiffness matrix
+defined as ∂F (qi−1 )/∂q. Based on this formulation, the static equilibrium equation is given as
+shown in 17.
+
+2.3.2 Physics-Informed & Structural
+Integration
+In addition, there are studies that do not merely
+learn residuals but instead embed physical structures into the learning process to improve data efficiency and enable real-time control. This methodology designs the neural network architecture
+itself to comply with physical principles or injects
+physical prior knowledge into the neural network.
+Yoon et al.[12] proposed a Kinematics-Informed
+Neural Network (KINN) that explicitly integrates
+the forward kinematic structure of rigid robots
+into the final layer of a neural network. In
+this approach, instead of directly outputting the
+EEF position, the neural network predicts virtual Pseudo-Rigid Body (PRB) joint variables and
+computes the EEF position by substituting them
+into deterministic kinematic equations. Through
+this design, the model structure is constrained
+such that only physically plausible shapes can
+be predicted even in extrapolation regions. For
+this purpose, both pneumatic-based and tendondriven soft robots were fabricated. Subsequently,
+as shown in 16, the EEF position xE is defined as
+a rigid forward kinematics function with respect
+to the virtual joint variables q. The nonlinear relationship between the soft robot actuation input a
+and the virtual joint variables q is then learned
+through a neural network. Here, θ s denotes structural parameters such as poff and Roff , θ t denotes
+the joint types (Revolution(R), Prismatic(R), or
+Fixed(F) type), and θ g denotes the neural network
+learning parameters. As a result, KINN exhibits a
+hybrid structure in which virtual joint values are
+inferred from the input a and subsequently passed
+through an interpretable rigid kinematics function
+FKr (·) to obtain the EEF position xE . Using this
+framework, an L-2 distance error of 1.794, mm was
+achieved for the pneumatic-based soft robot, while
+the tendon-driven soft robot exhibited an L-2 distance error reduced by approximately 1.0423, mm
+compared to the pure neural network approach.
+These results demonstrate that guiding neural
+
+S = F (R)
+F (qi ) ≈ F (qi−1 ) + K(qi−1 )∆qi
+0 = −K(qi−1 )∆q + P − Fint (qi−1 ) + H⊤ λ
+(17)
+By assuming that there are no variations in
+the internal pressure and internal forces and transforming the formulation into the EEF displacement δ e , the simulated displacement is derived
+as shown in 18. Here, Wef denotes the matrix
+that maps variations in contact forces to variations in the EEF displacement. Based on this
+formulation, an optimization problem is defined to
+estimate the external forces that best explain the
+experimentally observed displacement.
+δ e,sim = He K−1 H⊤ ∆λ = Wef ∆λ
+∆λ∗ = arg min ∥Wef ∆λ − ∆δ real ∥2
+∆λ
+
+15
+
+(18)
+
+(FNN)-based predictor that maps the extracted
+features into the state space. In addition, to estimate the unknown external contact force u2,k
+based on the state vector and the input pneumatic pressure, a separate hybrid neural network
+is constructed.
+
+Through this approach, the shape and external
+forces are simultaneously estimated from sensorderived resistance values via a framework that
+integrates an MLP with FEM. As a result, shape
+errors of 2.82% for the flexible strip and 2.95% for
+the soft finger were obtained, and in particular,
+the soft finger exhibited an error of 3.61% even in
+regions without embedded sensors. Such physicsinformed and structurally coupled approaches
+impose structural constraints that prevent neural networks from exploring physically implausible
+solutions, thereby simultaneously enhancing data
+efficiency, extrapolation stability, and real-time
+control feasibility. However, a limitation remains
+in that retraining is required when the robot
+shape, material properties, or sensor configuration
+changes, since the underlying physical structure is
+altered.
+
+hxk = Gx (xk , u1,k−1 , u2,k−1 , hxk−1 )
+xk = Fx (hxk )
+huk = Gu (xk , u1,k , huk−1 )
+u2,k = Fu (huk )
+
+(19)
+
+Subsequently, as shown in 20, the learned neural network model is employed as the nonlinear
+transition function of the Unscented Kalman Filter (UKF) to correct the prediction system. In
+the state prediction step of the UKF, the learned
+neural network is used instead of a purely mathematical prediction to compute the state estimate
+and the error covariance. Here, Fy denotes a separate FNN model for estimating the Flex sensor
+values. As a result, an NRMSE of 3.99% was
+reported.
+
+2.3.3 Filter-based Hybrid Approach
+Meanwhile, there have also been attempts to
+approximate the dynamics of soft robots using
+learned or probabilistic models without relying
+on a complete physical model, and to combine
+these models with filtering techniques to probabilistically compensate for sensor noise and drift.
+This methodology inserts data-driven models into
+a probabilistic filtering framework, such as a KF,
+thereby learning system dynamics while statistically managing uncertainty. Loo et al.[41] proposed a neural network assisted filtering approach
+that combines a RNN with an Adaptive Unscented
+Kalman Filter (AUKF). This approach learns
+the nonlinear dynamics of soft robots, for which
+explicit analytical derivation is difficult, using an
+RNN, while preserving a probabilistic filtering
+framework to perform state estimation that is
+robust to sensor drift and noise. In this work,
+the proposed framework was validated using a
+PSA. As shown in 19, the motion of the soft
+robot is assumed to be planar bending motion
+in a two-dimensional plane, and the state vector
+xk is defined accordingly. To model the system dynamics, a hybrid neural network structure
+is constructed that estimates the current state
+using past states xk−1 , the input pneumatic pressure u1 , and the external contact force u2 . Here,
+Gx denotes an RNN-based memory block that
+extracts temporal features from time-series data,
+while Fx denotes an Feedforward Neural Network
+
+−
+χ−
+i,k = fN N (χi,k−1 , u1,k , u2,k ) → x̂k =
+
+2n
+X
+
+Wi χ−
+i,k
+
+i=0
+
+Pkxx− =
+
+2n
+X
+
+−
+−
+− T
+Wi (χ−
+i,k − x̂k )(χi,k − x̂k ) + Qk
+
+i=0
+
+yk = h(xk ) + vk ≈ Fy (xk )
+u2,k = g (xk , u1,k ) + ek ≈ Fu (huk )
+(20)
+Tan et al.[42] proposed an approach that learns
+the dynamics and observation models of a PSA
+system using GP and integrates them with a UKF.
+By directly incorporating the predictive uncertainty provided by GP into the filter update process, this method achieves reliable state estimation
+even in environments characterized by severe nonlinearity and hysteresis. In this work, an input
+vector x ∗ a, t = [θt , P ∗ t − 1, Pt ]T , composed of
+the bending angle θ and the input pneumatic pressure P , is defined to model the dynamic behavior
+of the soft actuator, and a nonlinear mapping
+function fa that predicts the bending angle at
+the next time step is modeled using GP. In addition, the prediction of sensor data corresponding
+
+16
+
+black-box models via physically grounded restrictions. However, hybrid approaches still involve
+several unresolved challenges. First, there is a lack
+of clear criteria for determining the optimal balance between physical models and learning-based
+models. Since the complexity of the errors to be
+compensated depends on the degree of simplification in the physical assumptions, the design of an
+appropriate neural network architecture remains
+largely dependent on empirical tuning. Second,
+hybrid approaches cannot fundamentally escape
+the intrinsic limitations of physical models. When
+multiple contacts occur or when severe deformations arise beyond the admissible range of the
+physical model, the stability and performance of
+the hybrid model may also degrade. In addition,
+when physical models based on FEM or complex
+differential equations are included, the computational cost of the overall system increases in conjunction with neural network computation, which
+can impose a significant burden on high-speed
+control loops.
+
+to the observation model is also performed using
+GP. When the sensor input vector is defined as
+x ∗ s, t = [r ∗ t − 1, θt−1 , θt ]T , the current sensor
+resistance value rt is predicted through a nonlinear function fs , which is likewise defined to follow
+a GP distribution, as shown in 21. The learned GP
+models are integrated into the UKF framework,
+enabling the effective propagation and correction of state uncertainty over time through the
+predictive mean and covariance provided by the
+probabilistic models, thereby overcoming the nonlinear characteristics of soft robots. As a result,
+even with only 64 training points, the NRMSE
+was reduced to 30.9% of that obtained with a
+simple GP and to 57.6% of that obtained with
+an multihypothesis EKF, yielding an RMSE of
+2.049, mm.
+
+θt+1 = fa (xa,t ) fa ∼ GP (0, ka (·, ·))
+rt = fs (xs,t ) fs ∼ GP (0, ks (·, ·))
+
+(21)
+
+These approaches are significant in that datadriven and probabilistic models are not merely
+used as predictors or compensators, but are
+instead integrated into the state space estimation
+structure of the filter to jointly address reliability
+and uncertainty. Through this integration, sufficiently valid states can be estimated for control
+purposes even under incomplete observation of
+sensors and the system. However, outside the coverage of the models, the estimation may become
+unstable, and due to the use of the UKF, there
+exists a potential degradation of estimation stability caused by noise covariance settings or model
+mismatch.
+
+2.4 Quantitative Performance
+Comparison Based on Metrics
+for Each System Modeling
+Approach.
+The system modeling of soft robotics has progressively evolved from physics-based modeling in
+Section 2.1, to data-driven modeling in Section
+2.2, and further to hybrid modeling in Section 2.3.
+This evolution originates from approaches that
+approximate the inherently infinite DoF of soft
+robotics using low-dimensional models to achieve
+interpretability, then advances toward compensating for unmodeled nonlinearities that are difficult to capture with physical models through
+data-driven methods, and finally moves toward
+restoring the interpretability and generalization
+capability degraded by learning-based approaches
+through integration with physical models. In this
+section, based on the quantitative performance
+metrics summarized in Table 2, the performance
+characteristics of each modeling paradigm are
+comparatively analyzed, and the validity and limitations of these technological developments are
+examined.
+The most critical challenge in system modeling
+of soft robotics is how accurately complex continuum dynamics can be represented. Since soft
+
+2.3.4 Hybrid Approach : Conclusion
+and Limitations
+Hybrid modeling combines the structural stability
+of physical models with the nonlinear approximation capability of data-driven models, and
+represents a SOTA technique that most effectively addresses ths issues of system modeling
+currently faced by soft robotics. In particular,
+it simultaneously achieves practical applicability and theoretical validity by overcoming data
+dependency through the incorporation of physical
+constraints and by regulating the uncertainty of
+
+17
+
+Table 2 Quantitative analysis of system modeling methodologies: Metrics and Accuracy.
+Ref
+
+Authors
+
+Soft Robot
+
+Size [mm] Performance
+
+PSA
+3-Chamber Soft Manipulator
+PSA
+- (Simulation)
+14-DoF Pneumatic Humanoid
+Pneumatic Bending Actuator
+Soft Polyhedral Networks Finger
+PSA
+- (Simulation)
+PSA (Simulation)
+Multi-Chamber Actuator
+3-McKibben Manipulator
+PSA
+3 PAMs
+
+70
+500
+64.4
+64.4
+154
+524
+
+N/A (Used for RL training)
+N/A (Used For RL Training)
+Hysteresis: 2.63 ∼ 6.70%
+N/A (Used for Control)
+N/A (Used For Control)
+N/A (Used For Control)
+Whole-Body Deformation Error: 1.96mm (2.1%)
+N/A (Used For Control)
+EEF ME: 0.151% ± 0.102%
+EEF ME (Max): ±0.19◦ (±0.50◦ )
+Segment Max Bending Error: 0.647◦
+Centerline RMSE: Reduced By 67.5 ∼ 93.2% Vs CC
+N/A (Used For Control)
+N/A (Theoretical Derivation)
+
+FRE Gripper Finger
+Dual-Chamber Continuum Actuator
+3 Fabric-Based Bellow Actuators
+Passive Anthropomorphic Finger
+FRE Gripper Finger
+3-Chamber Bellows Actuator
+3-Chamber 3-Module PSA
+PSA
+7-Bellows Manipulator
+Planar Single-Segment Soft Robot
+PneuNet Finger 2-DoF
+McKibben/Cable Actuator
+PSA
+Tendon-Driven Planar
+Soft Continuum Joint soft
+
+120
+598
+120
+124
+90
+375
+185
+-
+
+Force MSE: 0.02 ∼ 0.09 N
+ME: 2.36◦ ∼ 3.95◦ (Angle), 0.002 ∼ 0.04 N (Force)
+RMSE (α, β): 1.03◦ ± 0.03◦ , 1.39◦ ± 0.10◦
+Force RMSE: 0.17 N
+Marker MAE: X ≈ 0.15mm, Y ≈ 0.05mm
+N/A (Used For RL Training)
+N/A (Used For RL Training)
+EEF Accuracy: 2.17 ± 1.65 mm
+RMSE: 1.10mm (L), 0.62◦ (Pitch), 0.71◦ (Roll)
+Bending RMSE: 2.78◦ (Uni), 3.79◦ (Bi-Dir)
+EEF ME: 2.80 mm
+N/A (Used For Control)
+EEF Bending NRMSE: 1.12%
+EEF ME: 1.12 mm
+ME: Rotation (0.44◦ ∼ 2.76◦ ), Marker (1.18mm)
+
+3-PMA Manipulator
+3 PSAs
+2 PSAs
+PMA
+PSA
+Origami Exoskeleton
+Pneumatic Bending Actuator
+Pneumatic/Tendon
+Strip / Finger
+
+77-252
+175
+140
+220
+101
+1800/120
+80-85
+
+3D Shape Points RMSE: 2.302 mm
+EEF RMSE: 2.2mm, 1.1mm/s, 1.1mm/s2
+EEF MAE: 5.9 ∼ 9.1 mm
+N/A (Used For RL Training)
+Bending Angle NRMSE: 3.99%
+Prediction Error 1.2◦
+Bending RMSE (NRMSE): 2.049◦ (0.053)
+
+Physics-based Modeling
+[52]
+[51]
+[23]
+[4]
+[50]
+[59]
+[60]
+[3]
+[2]
+[61]
+[21]
+[17]
+[62]
+[7]
+
+Zhu, M. et al.
+Li, Y. et al.
+Mak, Y.X. et al.
+Grube, M. et al.
+Best, C.M. et al.
+Xavier, M.S. et al.
+Guo, N. et al.
+Keyvanara, M. et al.
+Grazioso, S. et al.
+Caasenbrood, B. et al.
+Sierra, E.M. et al.
+Gonthina, P.S. et al.
+Dickson, A. et al.
+Tech. Univ. Kosice
+
+Data-Driven Modeling
+[6]
+[32]
+[36]
+[5]
+[14]
+[44]
+[55]
+[58]
+[30]
+[63]
+[38]
+[64]
+[31]
+[65]
+[33]
+
+De Barrie, D. et al.
+Ang, B.W.K. et al.
+Hofer, M. et al.
+George Thuruthel, T. et al.
+Faris, O. et al.
+Berdica, U. et al.
+Nazeer, M.S. et al.
+George Thuruthel, T. et al.
+Wang, L. et al.
+Weerakoon, L. et al.
+Krauss, H. et al.
+Tang, Z. et al.
+Kim, D. et al.
+Hayati, M. et al.
+Scharff, R. et al.
+
+Hybrid Modeling
+[27]
+[11]
+[9]
+[43]
+[41]
+[13]
+[42]
+[12]
+[40]
+
+Zou, S. et al.
+Huang, X. et al.
+Lou, G. et al.
+Wang, S. et al.
+Loo, J.Y. et al.
+Wang, J. et al.
+Tan, K. et al.
+Yoon, T. et al.
+Tian, S. et al.
+
+EEF L-2 Norm: 1.794 mm
+Shape Error: Strip ≈ 3%, Finger 2.82%
+
+angle errors in the range of 0.6◦ to 1.5◦ , indicating overall improved performance compared to
+physics-based modeling. Finally, hybrid modeling
+reports EEF position errors on the order of 2mm
+to 4mm, corresponding to 1% to 3% of the total
+length, and bending angle errors in the range of
+2◦ to 3◦ , exhibiting accuracy comparable to datadriven modeling while demonstrating a tendency
+toward more stable performance.
+However, caution is required when interpreting these results as evidence that physics-based
+modeling achieves very high accuracy, which in
+this context corresponds to errors on the order
+of 1–2 mm and 0.2–0.7◦ . This is because most
+experiments are conducted under conditions without external contact, with small or constant loads,
+or where hysteresis effects are weak or negligible.
+Under such conditions, low-dimensional geometric
+approximation models such as PCC can represent
+the actual behavior with high fidelity, which leads
+
+robotics exhibit continuum characteristics, it is
+inherently difficult to directly compare and validate the accuracy of a constructed system model
+over the entire shape [27]. For this reason, most
+prior studies adopt the EEF position error as a
+key metric that represents the overall shape, and
+specifically employ ME, MAE, RMSE, and the
+L-2 norm. In addition, when bending actuators
+are used, the RMSE or NRMSE of the bending
+angle is commonly adopted as a primary metric
+for evaluating the accuracy of shape degrees of
+freedom. Specifically, as shown in Table 2, physicsbased modeling reports EEF position errors of
+approximately 2mm, which corresponds to about
+2% of the total robot length, while bending angle
+errors are reported in the range of 0.5◦ to 1.0◦ .
+Data-driven modeling reports EEF position errors
+on the order of 1.0mm to 3.0mm, corresponding
+to 0.6% to 3% of the total length, and bending
+
+18
+
+to an apparent overestimation of the accuracy
+of physics-based models. In contrast, in environments dominated by hysteresis, the limitations
+of physics-based models become evident. Under
+such conditions, physics-based models exhibit an
+approximately tenfold increase in EEF position
+MAE compared to hybrid approaches [9], a threefold to fourfold increase in EEF position RMSE
+[11], up to a fivefold increase in RMSE [27],
+and significantly larger tracking errors on the
+order of 90% in extrapolation regions [12], thereby
+revealing structural limitations in handling hysteresis. These comparative results are summarized
+in Table 3.
+
+the data efficiency of hybrid approaches in a striking manner by achieving practical accuracy with
+only 64 data points.
+Table 4 Summary of learning-based and hybrid system
+modeling studies with reported training data size.
+Ref.
+[6]
+[32]
+[36]
+[5]
+[14]
+[44]
+[55]
+[58]
+[30]
+[63]
+[38]
+[64]
+[31]
+[33]
+
+Table 3 Quantitative comparison with physics-based
+system modeling under conditions involving mismatch
+between physics-based model and system.
+Ref.
+
+Metric
+
+[9]
+
+EEF MAE
+
+[11]
+
+EEF RMSE
+
+[27]
+
+EEF RMSE
+
+[12]
+
+Tracking error
+
+Performance Gain
+over Physics-based
+Models
+
+System Modeling
+
+Data-driven
+
+Average ± Standard Deviation
+
+Approximately
+one
+order of magnitude
+lower error
+Approximately 3–4×
+reduction in error
+Approximately
+5×
+lower error
+Approximately 90%
+reduction in error
+
+[27]
+[11]
+[9]
+[43]
+[41]
+[13]
+[42]
+[12]
+
+Hybrid
+
+[40]
+
+Average ± Standard Deviation
+
+Meanwhile, the scale of the dataset required
+to construct a system model is also an important
+comparative metric. Physics-based system modeling enables zero-shot modeling, which represents
+no dedicated data collection process is required,
+or only a very small amount of experimental data
+is sufficient for identifying physical parameters
+such as material properties. In contrast, datadriven and hybrid modeling approaches require
+relatively large datasets to capture nonlinearities
+and hysteresis effects. As shown in Table 5, datadriven modeling requires, on average, approximately 75,000 data samples, whereas hybrid modeling achieves comparable performance with a significantly smaller dataset of approximately 15,000
+samples by learning only residuals or by employing a physical model as a backbone rather than
+modeling the full dynamics. In particular, a study
+that combined GP with an UKF[42] demonstrated
+
+Number of Training
+Datasets
+20,000
+15,000
+54,000
+400,000
+33,824
+–
+6,000
+10,000
+30,000
+115,410
+30,000
+100 (offline data)
+28,000
+242,131
+75,728 ± 112,592
+29,791
+20,000 (Low) / 100,000
+(High)
+1,200
+3,000
+3,000
+–
+64
+2,000 (Tendon) / 5,644
+(Pneumatic)
+18,000 (Flexible strip) /
+27,000 (Pneumatic)
+15,422 ± 19,764
+
+The system modeling of soft robotics is generally evaluated within a millimeter-scaled error,
+and the reported accuracy tends to improve in
+the order of physics-based modeling, hybrid modeling, and data-driven modeling. However, even
+though data-driven modeling exhibits the highest
+quantitative accuracy, it corresponds to a model
+that approximates the mapping between inputs
+and outputs, and therefore its direct use for control is accompanied by difficulties due to low
+interpretability. In addition, data-driven modeling typically requires datasets that are more than
+approximately five times larger than those used
+for hybrid modeling, and its generalization performance degrades sharply when operating outside
+the training data distribution. In contrast, hybrid
+19
+
+Table 5 Summary of learning-based and hybrid system
+modeling studies with reported training data size.
+Ref.
+[6]
+[32]
+[36]
+[5]
+[14]
+[44]
+[55]
+[58]
+[30]
+[63]
+[38]
+[64]
+[31]
+[33]
+
+System Modeling
+
+Number of Training
+Datasets
+
+Data-driven
+
+20,000
+15,000
+54,000
+400,000
+33,824
+–
+6,000
+10,000
+30,000
+115,410
+30,000
+100 (offline data)
+28,000
+242,131
+
+Average ± Standard Deviation
+
+75,728 ± 112,592
+
+[27]
+[11]
+[9]
+[43]
+[41]
+[13]
+[42]
+[12]
+
+Hybrid
+
+[40]
+
+Average ± Standard Deviation
+
+rigid robots have been ineffective.[43] However,
+to fully exploit these advantages, control methods that can stably handle the strong nonlinearity and hysteresis inherent to soft robotics are
+essential.[6] Even when accurate system modeling
+of soft robotics is available, directly controlling
+a continuum system with infinite DoF remains
+extremely challenging.[44] Accordingly, a common
+strategy is to approximate soft robotics as equivalent low DoF systems for control design. This
+approximation process inevitably entails a loss of
+expressiveness, which leads to degraded control
+performance.[4] To examine this issue, the core
+methods of representative studies within each control category are reviewed with a focus on the type
+of soft robot used, the key control methodology,
+and the reported quantitative results, while studies that do not explicitly discuss these aspects are
+summarized in Table A2.
+To address these challenges, research on
+soft robotics control has evolved from traditional control methods to data-driven control
+models, and more recently to RL-based control. Table 6 provides a qualitative, metric-wise
+comparison of the relative strengths and weaknesses of these approaches. Early studies primarily pursued system stability by adopting traditional control techniques such as PID and
+MPC. In these approaches, partial compensation for nonlinearity was attempted by updating
+control parameters online, but fundamental limitations remained in fully addressing nonlinear
+and hysteretic behaviors. As an alternative, datadriven control approaches were proposed, including methods that learn inverse mappings to compute inputs corresponding to desired target configurations. However, although these approaches
+are purely data-driven in the sense that they
+learn input–output mappings, they often rely
+on the construction of substantially more complex systems, such as learning inverse models,
+rather than straightforward data collection and
+training, which limits their practicality. Consequently, recent research has proposed hybrid
+control approaches that selectively combine the
+expressive power of learning models while preserving interpretability through physical structures, as well as RL-based control approaches that
+learn control policies encompassing nonlinearity
+
+29,791
+20,000 (Low) / 100,000
+(High)
+1,200
+3,000
+3,000
+–
+64
+2,000 (Tendon) / 5,644
+(Pneumatic)
+18,000 (Flexible strip) /
+27,000 (Pneumatic)
+15,422 ± 19,764
+
+modeling leverages the interpretability and structural stability provided by physics-based models
+as a backbone, while compensating for unmodeled nonlinearities and hysteresis effects through
+learning, thereby achieving high precision and
+generalization performance simultaneously with a
+relatively small amount of data. From this perspective, hybrid modeling can be regarded as the
+most practical SOTA system modeling approach
+at present, as it effectively combines the advantages of physics-based and data-driven modeling
+in terms of data efficiency, interpretability, and
+applicability to real-world environments.
+
+3 Control
+Soft robotics offer advantages in that they exhibit
+high adaptability to unstructured environments
+and enable safe physical interaction with humans,
+thereby addressing application domains in which
+
+20
+
+and drift without relying on conventional control loops.[45] These two approaches are currently
+regarded as the most promising next-generation
+control strategies in the field of soft robotics
+control.
+
+y (k ) =
+
+n
+X
+
+wi Fri [u, y0 ](k )
+
+i=1
+
+(22)
+
+′T
+
+u(k ) = F −1 (y (k )) = w Fr′ [y, u0 ](k )
+
+3.1 Control I: Traditional Control
+
+A feedforward input that compensates for hysteresis is generated using the P-I inverse model,
+and a PID control method is designed to correct
+the residual error. When the PID control method
+is expressed in a discretized and incremental form,
+it is formulated as shown in Eq. 23, and only the P
+term is replaced with a Fuzzy output, as shown in
+Eq. 24. As a result, compared to the conventional
+PID control approach, the overshoot is reduced by
+94% and the settling time is reduced by 64%.
+
+In the field of soft robotics control, traditional
+control methodologies continue to occupy a central position.[46] In this paper, traditional control is defined as a closed-loop control approach
+based on explicit control principles. Although
+such approaches cannot perfectly address the
+strong nonlinearity inherent in soft robotics, they
+have the advantage of clearly explaining the
+causal relationship between control inputs and
+system behavior.[10] Owing to these characteristics, traditional control has been widely adopted
+as a standard technique in application domains
+where system stability and reliability must be
+prioritized.[47] In this section, traditional control
+methods in soft robotics are discussed by categorizing them into adaptive and feedback control,
+and model predictive control, as illustrated in Fig.
+6.
+
+∆y (k ) = Kp [e(k ) − e(k − 1)] + Ki T e(k )
+(23)
+Kd
++
+[e(k ) − 2e(k − 1) + e(k − 2)]
+T
+∆y (k ) = KF P h(k ) + Ki T e(k )
+(24)
+Kd
+[e(k ) − 2e(k − 1) + e(k − 2)]
++
+T
+Fan Xu et al.[49] introduced a visual servoing
+approach to simultaneously perform EEF position
+control and active force regulation during pushing
+tasks. In this work, a cable-driven continuum soft
+robot manipulator is used to move the EEF to the
+contact point, and a visual servoing pushing control approach is proposed to execute the pushing
+task. This approach refers to a control strategy
+in which the soft robot is controlled using feature
+points extracted from images. The control framework consists of a reaching control phase that
+drives the robot toward the target point and a subsequent stable pushing control phase after contact
+is achieved. As defined in Eq. 25, the EEF position
+Pew (q (t)) is projected onto the camera image plane
+and represented as a pixel coordinate p, and by
+linearizing this relationship, a jacobian Jm ∈ R2×6
+is defined to map the velocity in the actuation
+space to the velocity of image feature points. Here,
+q (t) ∈ R6 denotes the actuation space composed of
+2-DoF associated with the base motion and 4-DoF
+associated with tendon actuation, M represents
+the camera projection matrix, and d(q (t)) denotes
+the depth of the image projection.
+
+3.1.1 Adaptive and Feedback Control
+Adaptive and feedback control approaches aim to
+passively address nonlinearity by compensating
+for modeling errors and environmental uncertainty within a real-time feedback loop. Zhaobing
+Liu et al.[48] proposed a cascade control structure that separates pressure and angle control for
+a multi-environment actuator operating in both
+aerial and underwater conditions. This study combines hysteresis feedforward compensation based
+on a Prandtl-Ishlinskii (P-I) inverse model with
+a Fuzzy P+ID control scheme, thereby effectively
+mitigating nonlinearity induced by environmental
+changes without fundamentally altering the control structure. In this work, a bellows-type PSA is
+used. As a result, the bending angle θ of the PSA is
+not linearly defined with respect to the input pressure p. Therefore, a P-I inverse model is employed
+to compute the input u that accounts for hysteresis in achieving the target state y . The P-I forward
+and inverse models are designed as shown in 22.
+
+21
+
+Table 6 Comparative analysis of soft robotics control approaches based on quantitative metrics.
+
+Evaluation
+Metric
+
+Traditional
+
+Data-Driven
+
+RL
+
+Hybrid (SOTA)
+
+Representative
+Studies
+
+[3–5, 8, 13, 16, 23,
+36, 48–
+50, 59, 62, 63, 66]
+Moderate
+
+[10, 34, 37, 46, 57]
+
+[9, 28, 35, 43–45,
+51–53, 56, 67, 68]
+
+[11, 12, 64]
+
+High
+
+High 1
+
+Superior
+
+Control Precision
+Extrapolation
+
+(0.24 ∼ 3.35◦ , ∼4.27mm)
+
+(2.84◦ , 1mm)
+
+(0.1mm ∼ 15mm)
+
+(0.4 ∼ 2.2mm)
+
+Moderate
+
+Low
+High
+
+Low
+Very High 2
+
+High
+
+Data Requirements
+
+Zero-shot
+Very Fast
+
+(∼15,000)
+
+(60 ∼ 3,000,000 episodes)
+
+(100 ∼ 5,000)
+
+Moderate
+
+(∼50 Hz)
+
+(∼25 Hz)
+
+Execution Time
+
+Very Fast
+(∼15 Hz)
+
+3
+
+Low
+Fast
+(∼30 Hz)
+
+1
+Large variance exists due to environmental factors and the Sim-to-Real gap.
+Data requirements for RL are expressed in training episodes as the total number of data points is not explicitly specified.
+3
+RL execution is inherently fast( 3 ms), but reported values are often constrained by the system’s observation frequency.
+
+2
+
+Fig. 6 Overview of traditional control for soft robotics.
+
+[p(q (t)), 1]T =
+
+1
+M [Pew (q (t)), 1]T
+d(q (t))
+ṗ = Jm q̇
+
+Subsequently, the rate of change in the actuation space with respect to the error between the
+projected EEF and the projected target point in
+the image plane is defined as shown in Eq. 26.
+Here, the target point is divided into the error
+associated with the point to be reached before
+
+(25)
+
+22
+
+pushing, defined as e1 = p − pd1 , and the error
+associated with the point to be pushed after reaching, defined as e2 = p − pd2 . Since Jm is not a
+square matrix, the Moore–Penrose pseudoinverse
+is employed. Through this formulation, the rate
+of change of the actuation space corresponding
+to variations in pixel error can be defined. (Here,
+K denotes the control gain, and ξ denotes an
+arbitrary vector with the same dimension as q̇ .)
+This approach is significant in that it places the
+core control strategy within a traditional feedback loop control framework while retaining a
+partial capability to cope with modeling errors
+and environmental uncertainties. However, since
+it addresses these issues by compensating the control output signal, it exhibits a limitation in that
+it fails to fully reflect the physical characteristics
+of the soft robot.
+
+pressure, thereby computing the input u that
+achieves the target with minimal force (where q
+and r denote weighting parameters). As a result,
+the tracking RMSE is improved from a range of
+2.1305 − 5.6402◦ when using PID control to a
+range of 0.9069 − 3.2650◦ . This work represents
+a representative example in which a data-driven
+modeling approach is introduced while the actual
+control relies on traditional optimal control theory
+to ensure stability.
+(1)
+
+min
+(1)
+
+−1
+{uk+t|k }N
+t=0 t=1
+
+(28)
+Charles M. Best et al.[50] proposed an MPC
+approach that explicitly incorporates the pressure dynamics of pneumatic chambers into the
+state variables. In this study, a 14-DoF pneumatically inflated humanoid is used to perform
+torque-based MPC control. Specifically, each link
+is approximated as an inverted pendulum and further modeled as a first-order linear system. Here,
+P denotes the chamber pressure and Pd denotes
+the input pressure. Based on this formulation, a
+pressure sequence that minimizes the objective
+function is obtained as shown in Eq. 29. This optimization computes a pressure sequence in which
+the joint angles are close to the target angles,
+the joint angular velocities remain small, and the
+pressure of each bladder is close to the reference
+pressure PT . As a result, a rise time of 1.360
+seconds, a settle time of 2.592 seconds, and an
+overshoot of 2.59% are achieved, corresponding to
+improvements of -3.02% (performance decrease),
+15.13%, and 843.35%, respectively, compared to
+a 2-state MPC. This study demonstrates that
+MPC can achieve sufficient performance for precise control of high-DoF soft robots by performing
+real-time optimization that considers not only
+angular position and angular velocity but also
+pressure states. Consequently, while MPC exhibits
+the advantage of better reflecting physical characteristics compared to adaptive and feedback
+control approaches, it also reveals a limitation in
+that handling drift and related effects remains
+challenging due to the linear approximation of soft
+robotics dynamics.
+
+†
+T
+T −1
+Jm
+= Jm
+(Jm · Jm
+)
+†
+q˙1 = −Jm
+· Kp1 · e1
+†
+′
+†
+q˙2 = −Jm
+· Kp1
+· e′1 − Jm
+· Kp2 · e2
+
+(2)
+
+zk+1 = Azk + B1 uk + B2 uk
+(27)
+N 
+
+X
+(1)
+q∥xk+t|k − xrk+t ∥2 + r∥uk+t−1|k ∥2
+
+(26)
+
+†
++ (I − Jm
+Jm ) · K3 ξ
+
+3.1.2 Model Predictive Control
+Since adaptive and feedback control approaches
+fail to fully reflect the physical characteristics
+of a soft robotics, MPC, which computes optimal inputs based on a dynamics model, is also
+employed for soft robotics control. MPC is well
+suited for controlling a soft robot because it determines control outputs by explicitly considering
+the linearized physical characteristics of the soft
+robotics.
+Junxiang Wang et al.[13] utilized a Koopman operator to lift the nonlinear dynamics of
+an origami-inspired pneumatic actuator into a
+higher-dimensional linear space and performed
+control within a linear MPC framework. Specifically, the lifted dynamics in Eq. 14 are reformulated as Eq. 27 by decomposing the input
+matrix B into two components corresponding
+to the control input and the exogenous input.
+Accordingly, B is partitioned as B = [B1 ∈
+Rd×1 , B2 ∈ Rd×(m−1) ]. An optimization problem
+is then solved, as defined in Eq. 28, to minimize the sum of the error between the predicted
+angle and the desired angle and the actuation
+
+23
+
+address the degradation of static model validity
+caused by hydrodynamic forces and disturbances
+in underwater environments. This work presents
+a method for controlling an underwater bimanual
+soft manipulator operating underwater. Specifically, an Online-Learning-based Inverse Kinematics Controller (OLC) is proposed to compensate
+for tracking errors of the inverse kinematics model
+through online updates. First, a direct-learningbased inverse kinematics controller, implemented
+as an MLP with online-updatable parameters,
+is trained as shown in Eq. 30. Subsequently,
+although the parameter wu must be updated, y (i)
+cannot be directly differentiated with respect to
+wu . To address this issue, an LSTM-based forward
+kinematics model Φy (·) is trained as shown in Eq.
+31.
+
+L
+sin(q ) = τa
+2
+Ṗ = −αP + βPd
+
+I q̈ + Kd q̇ + mg
+
+min
+
+T 
+X
+
+∥qgoal − q [k ]∥2Q + ∥q̇ [k ]∥2R
+
+k=0
+
++ ∥P0 [k ] − PT ∥2S + ∥P1 [k ] − PT ∥2S
+
+
+
+(29)
+
+3.1.3 Traditional Control : Conclusion
+and Limitations
+Traditional control is a methodology that computes control inputs based on explicit control
+principles, whose performance and stability have
+been validated over an extended period of time.
+As a result, it is predominantly employed in
+environments where stability and reliability are
+required. However, since soft robotics are typically
+approximated by reducing their infinite DoF to a
+low dimensional representation or by linearizing
+their inherent nonlinearities, the performance and
+stability of soft robot control are degraded compared to those of rigid robot control. To overcome
+these limitations, data-driven control methodologies have recently begun to emerge, which are
+discussed in detail in Section 3.2.
+
+û(n + 1) = Φu (y ∗ (n + 1), y (n), u(n), wu )
+h
+iT
+
+ yT (0) uT (0) ,
+n − k ≤ 0,
+X(n − k ) = h
+i
+T
+
+ yT (n − k − 1) uT (n − k ) , otherwise.
+(30)
+
+ŷ (n) = Φy (X (n − k + 1 : n), wy )
+
+(31)
+
+The forward kinematics model Φy (·) is treated
+as a jacobian approximation model for propagating the tracking error y ∗ [m] − y (i) to the inverse
+kinematics parameter wu , and an online update
+is performed as defined in Eq. 32. Through this
+procedure, the inverse kinematics model receives
+real-time updates of sensitivity between input
+and output, resulting in the construction of an
+OLC that naturally adapts under real-world conditions. As a result, while the L-2 distance MA
+of the EEF increases for the direct-learning-based
+inverse kinematics controller, it decreases for the
+OLC, and the time required to track the trajectory
+is also reduced by 17%-37%.
+
+3.2 Control II: Data-Driven Control
+(Supervised Learning,
+Non-Reinforcement Learning)
+The infinite DoF and material nonlinearities of
+a soft robotics make it difficult to establish an
+accurate mathematical system model. This constitutes a primary factor that limits the performance of traditional control when controlling a soft robot. As an alternative, data-driven
+control has emerged, which approximates nonlinear behavior by learning mappings between
+input and output data instead of solving complex physical equations. This approach enhances
+computational efficiency and overcomes modeling uncertainty by replacing the system identification process with neural network training
+or by directly learning inverse kinematics models with collected data from offline environment.
+Yi Shen et al.[46] proposed an online learningbased inverse kinematics control approach to
+
+∂ ŷ T /∂u ≈ ∂y T /∂u
+T
+T
+ˆ w Lol (i) = − ∂u ∂ ŷ (y ∗ [m] − y (i))
+∇
+u
+∂wu ∂u
+wu (i) = wu (i − 1) − η ∇wu Lol (i)
+
+(32)
+
+Zixi Chen et al.[34] proposed a Bidirectional
+Long Short-Term Memory (BiLSTM)-based shape
+
+24
+
+through data mapping. However, since it is primarily based on supervised learning, it exhibits
+limited capability in handling inputs outside the
+training range and suffers from limitations in
+addressing drift or variations in the characteristics
+of a soft robot over long-term operation.
+
+control approach to address the difficulty of applying conventional neural network control methods
+with fixed input dimensionality to systems with
+task-dependent, reconfigurable structures. This
+approach treats the modular configuration of the
+robot as a spatial sequence rather than a temporal sequence. Specifically, instead of using timeordered sequences in the LSTM, spatial sequences
+from the base module to the terminal module
+are employed. In addition, two LSTM networks
+are used to process the forward sequence and
+the backward sequence, respectively, and the outputs of these two LSTM networks are merged
+and passed through a fully connected layer to
+obtain the desired input values. By learning intermodule interactions propagated from the base to
+the terminal or from the terminal to the base, this
+approach effectively captures the continuum structure of the soft robotics. As a result, the maximum
+path tracking error of a pneumatically actuated
+modular soft robot is reduced from 7.62% to
+3.95% compared to a conventional LSTM-based
+approach.
+
+3.3 Control III: Reinforcement
+Learning Control
+The high-dimensional state space and complex
+nonlinear dynamics of a soft robotics cannot be
+fully addressed by traditional control, while datadriven control suffers from limitations in establishing a control model that is robust to drift errors
+or variations in the characteristics of a soft robot.
+As a solution to these challenges, RL, in which
+a robot autonomously learns a behavior policy
+that maximizes rewards through interaction with
+the environment, has attracted significant attention. RL is a method that directly learns a control
+policy from rewards obtained through interaction
+between the robot and the environment, aiming
+to acquire reward-maximizing action strategies
+with data-driven appraoches rather than explicitly
+defining relationships between input and output or
+state transition models. When applying RL to soft
+robotics control, a simulation environment with
+domain randomization, as illustrated in Fig. 7, is
+employed to enhance adaptation to hysteresis in
+a soft robotics, and physical models such as PCC
+or pre-trained models are used as the simulation
+environment for training. Through this approach,
+instead of ignoring or approximating aspects that
+typically cause difficulties in soft robotics control, these factors are incorporated as part of the
+environment during policy learning. As a result,
+policies applicable under conditions involving the
+absence of accurate physical models, uncertainty
+in system parameters, and the presence of external
+disturbances can be learned.
+
+(
+ui (t) + Γ1 ei (t) + Γ2 ėi (t), i ≥ 1
+ui+1 (t) =
+0,
+i=0
+(33)
+Taku Sugiyama et al.[10] proposed a method
+that utilizes an autoencoder to extract latent
+representations that embed the actuation characteristics of actuators. In this work, to perform
+control of a fiber-reinforced soft bending actuator,
+a dataset for inverse model learning is generated
+using an iterative learning controller, as defined in
+Eq. 33, and is learned through a FNN, enabling
+a single network to adapt to both pneumatic and
+hydraulic systems with different physical properties. Through this process, a network is trained
+to output the control input at a given time step
+by taking the encoded latent vector as its input.
+As a result, path tracking RMSEs of 2.84 ± 0.09◦
+under pneumatic conditions and 5.52±0.21◦ under
+hydraulic conditions are obtained. This represents a case in which hardware heterogeneity is
+overcome and generalized control performance is
+achieved using only simple response data. Such
+data-driven control is significant in that it enables
+the formulation of control strategies that inherently capture the nonlinearities of a soft robot
+
+3.3.1 Domain Randomization
+Since collecting large-scale data from a soft robot
+in real-world environments is difficult, virtual
+training using physics engines is generally preferred. In this context, domain randomization is
+commonly employed to address the discrepancy
+between simulation and real environments, called
+the Sim-to-Real gap. Carlo Alessi et al.[35] trained
+
+25
+
+Fig. 7 Overview of reinforcement learning control for soft robotics.
+
+3.3.2 Hybrid System Model
+Integration
+
+an RL policy based on Proximal Policy Optimization (PPO) within a CR-based simulator to
+perform pushing tasks using a two-module pneumatic soft manipulator. During policy training,
+domain randomization was applied to parameters related to robot geometry, fixed joints, and
+the environment, and the policy was designed to
+return pneumatic inputs as actions by observing CR parameters and target object information.
+Through this approach, an average reaching distance of 34 ± 14 mm was achieved. In addition,
+Yingqi Li et al.[51] trained an RL policy based on
+Deep Deterministic Policy Gradient (DDPG) to
+track a moving target using a three-chamber soft
+manipulator. The policy was trained in simulation
+using a CC model and subsequently transferred
+to the real system. In this process, domain randomization was implemented by adding Gaussian
+noise to observation information such as the EEF
+position, resulting in an RMSE on the order of
+1.26 mm.
+
+RL has the advantage of control policies without
+explicitly modeling complex nonlinear systems.
+However, it suffers from limitations such as low
+sample efficiency and a lack of physical plausibility. To mitigate these issues, approaches that
+utilize pre-learned system models as the environment for RL have been actively studied. Gaoming
+Lou et al.[9] performed system modeling of a twomodule, three-chamber PSA using a hybrid model
+that combines a PCC-based analytical kinematic
+model with MLP-based residual compensation,
+and employed this model as a virtual environment
+to train a PPO RL policy for target position tracking of a three-chamber PSA. The policy uses the
+EEF position, the positional error relative to the
+target, the input pneumatic pressure, and load
+information as observations, and generates input
+pressures as outputs. As a result, MAE values of
+3.9–6.7 mm in the simulation environment and
+12.1–15.4 mm in the real robot environment were
+26
+
+reported. This discrepancy illustrates a case in
+which the Sim-To-Real gap significantly amplifies
+errors when transferring RL policies. Shuopeng
+Wang et al.[43] learned the physical characteristics
+of PMA using a deep Lagrangian networks model
+that embeds Lagrangian mechanics into a neural
+network structure, and employed this model as
+the environment for RL to train a PPO policy for
+reaching and tracking tasks. Experimental results
+achieved RMSE values of 0.11 mm for the reaching
+task and 1.63 mm for the tracking task. Meanwhile, Mingzhu Zhu et al.[52] proposed a DDPG
+policy for a pneumatic soft gripper that combines stiffness modulation and motion control to
+rapidly reach a target position while suppressing
+vibrations. This approach uses a PCC model and
+accelerometer measurements as observations, and
+reports up to approximately 87% vibration suppression along with task success rates in the range
+of 80–100%. Furthermore, Uljad Berdica et al.[44]
+trained a PPO policy for target reaching using a
+pre-trained LSTM-based model as the simulation
+environment for a three-chamber bellows-type
+PSA, achieving a position error of approximately
+3 mm in the reaching task. Similarly, Andrea Centurelli et al.[28] adopted an RL approach using a
+pre-trained LSTM-based environment model for
+a two-module, three-chamber PSA, and trained
+a TRPO policy for trajectory tracking, reporting
+tracking errors of approximately 11.8–15.5 mm.
+
+Liu et al.[53] proposed an adaptive control strategy for an opposite-bending-and-stretching structured soft robot manipulator operating in underwater environments, in which a baseline PID control is constructed and its parameters are adjusted
+online through RL. In this process, Friend-orFoe Q-learning[54] was applied to autonomously
+balance conflicting control objectives, effectively
+overcoming disturbances and environmental perturbations caused by underwater flows. Experimental results demonstrated an improvement in
+task success rate to 83.3%. Muhammad Sunny
+Nazeer et al.[55] proposed a real-time adaptation strategy that combines Bayesian optimization and Gaussian process-based compensators to
+alleviate performance degradation when transferring policies learned in simulation to real environments. Specifically, the dynamics of a threechamber, three-module PSA were pre-trained
+using supervised learning and employed as a
+simulation environment to train a PPO policy.
+Subsequently, the policy output was compensated
+using Bayesian optimization assisted coaching or
+Gaussian process-based recurrent cerebellar architecture, enabling successful task execution. In
+addition, Lanpei Li et al.[56] trained a PPO policy for in-hand manipulation that rotates grasped
+objects using a four-finger pneumatic soft gripper. In this study, a policy for rotating a specific
+object was pre-trained, and continual policy distillation was applied to ensure that previously
+learned knowledge was retained while handling
+diverse objects. As a result, a single unified policy
+achieved rotation of a cubic object by up to 240◦ .
+
+3.3.3 Structural Enhancement with
+Adaptive Learning
+As the DoF of a robot increases, the complexity of the control structure grows rapidly, and
+accordingly, research aimed at ensuring structural
+stability and safety has been actively conducted
+within the field of RL-based control. Guanglin Ji
+et al.[45] introduced a multi-agent RL architecture
+in which each DoF is modeled as an individual
+agent in order to control a 2-DoF cable-driven
+continuum surgical robot using RL. In addition,
+by applying a shielding technique to preemptively
+block unsafe actions, stability was ensured for
+applications that require high precision and safety,
+such as surgical robots. As a result, tracking
+RMSE values in the range of 0.54–0.71 mm were
+achieved in trajectory tracking experiments. Jiaqi
+
+3.3.4 Reinforcement Learning Control
+: Conclusion and Limitations
+RL-based control is a methodology that formulates control by enabling a system to
+autonomously learn behavior policies that maximize rewards through interaction with the surrounding environment. This approach has the
+advantage of control policies that inherently
+accommodate environments characterized by high
+hysteresis and drift, while also being well suited
+for integration with hybrid system models that
+consider physical structures. In contrast, it entails
+limitations in that relatively greater computational resources and training time are required
+
+27
+
+denote the control gains for position control and
+bending constraints, respectively, u ∈ R3 denotes
+a unit bending direction vector, and u⊤ xE corresponds to the component of the EEF position
+projected onto the bending direction.
+
+during the learning process compared to non-RLbased control approaches. Nevertheless, because
+the representational capacity and adaptability
+provided by RL-based control are difficult to
+replace with conventional control methods, it has
+emerged as a core technology for realizing soft
+robot control.
+
+xE = FKr (q ; θs , θt )
+q = g (a; θg )
+
+
+Kp (xtar − xE ) 
+e=
+Kc dtar − u⊤ xE
+
+3.4 Control IV: Hybrid Control
+Hybrid control strategies have emerged to simultaneously address the limitations of data dependency and generalization performance inherent in
+previous methodologies, as well as the challenges
+associated with handling complex nonlinearities
+and high computational cost. As illustrated in Fig.
+8, this approach aims to construct stable datadriven control by using physics-based models as
+the structural backbone of the system to enhance
+interpretability, while reinforcing complex nonlinearities that are difficult to express with physical
+equations through learning. Through this framework, computational complexity is reduced to
+improve real-time control performance, and generalization capability is enhanced so that control
+remains stable even outside the training domain.
+Taerim Yoon et al.[12] proposed a KINN model.
+The core idea of this methodology is to approximate the continuum behavior of pneumatic and
+tendon-driven soft robots using a virtual rigidbody model composed of a finite number of joints
+and links, referred to as a PRB, and to combine
+the inference capability of neural networks with
+the interpretability of physical models by extracting the jacobian of this model to perform inverse
+kinematics control. To this end, the soft robotics
+is approximated by a PRB, and its forward kinematics are expressed, as shown in Eq. 34, using
+a limited set of virtual joint variables q and the
+EEF position xE ∈ R3 . The joint variables are
+determined by a learned network as a function
+of the soft robot input a, where θs , θt , and θg
+denote model parameters that define the PRB
+kinematic structure and the input mapping. The
+objective of this control approach is not only to
+move the EEF position to the target position xtar ,
+but also to simultaneously determine the direction and magnitude of bending of the soft robot.
+For this purpose, an error vector that jointly considers the position error and bending constraints
+is defined as shown in Eq. 35. Here, Kp and Kc
+
+(34)
+(35)
+
+Subsequently, for linear approximation in the
+input space, the sensitivity of the EEF position
+and bending components with respect to the soft
+robot input a is defined as a jacobian matrix,
+as shown in Eq. 36. In this system, the soft
+robot is regarded as possessing both rigid-body
+and compliant structures, and a vector is defined
+by combining the rigid robot input variation δar
+and the soft robot input variation δa. A hybrid
+inverse kinematics equation, given in Eq. 37, is
+then solved to simultaneously satisfy the constraints of both the rigid robot and the soft robot.
+In this formulation, wr denotes the pose variables of the rigid robot EEF, and Kw represents
+the gain associated with pose control. Through
+this approach, the constraints of the rigid robot
+and the soft robot are interpreted within a single unified inverse kinematics problem to compute
+hybrid inverse kinematics, resulting in a trajectory
+tracking error of 2.295 mm.
+
+
+
+∇a xE 
+J=
+(36)
+∇a u⊤ xE
+
+
+
+
+∇ar xE ∇a xE  
+Kp (xtar − xE )
+δa
+r
+r
+ ∇ar wr 03×na 
+− wr )  .
+=  Kw (wtar
+δa
+⊤
+Kc (dtar − u⊤ xE )
+01×nar u J
+(37)
+In addition, Xinjia Huang et al.[11] proposed a
+physics-learning hybrid modeling framework that
+combines an ANCF-based physical model with a
+MLNN. In this study, the ANCF model serves
+as a physical system model that describes the
+behavior of three PSAs, while the neural network is responsible for learning and compensating
+nonlinear dynamic errors such as hysteresis in
+
+28
+
+Fig. 8 Overview of hybrid control approaches in soft robotics.
+
+model is predicted as the position error resulting from applying the input ûpi to the system, as
+defined in Eq. 39, and this predicted error is used
+to update the reference position as shown in Eq.
+40. (Here, Ûpi denotes an augmented input vector
+that includes temporal history, H0 (·) denotes the
+position-level compensation response for the corresponding input, γ denotes a step-size parameter
+that controls the convergence rate of error correction, xdi denotes the desired EEF position at
+step i, and F denotes external forces or additional
+state information included in the model.) By iteratively repeating this reference position update
+and inverse input computation process, the input
+ûpi at which the norm of the predicted error ∥ê∥
+converges is obtained as the final solution. As a
+result, this method explicitly constructs a hybrid
+dynamic model and solves its inverse problem
+through an iterative correction process, achieving
+an RSME on the order of 2.2 mm.
+
+pneumatic actuation and material viscoelasticity. Based on this system model, the authors
+designed feedforward control and feedback linearization control, respectively. The feedforward
+control generates inputs that account for pressure hysteresis, whereas the feedback linearization
+control cancels system nonlinearities to achieve
+high tracking performance. The hybrid dynamic
+model is formulated, as shown in Eq. 38, in a form
+that directly computes the position and velocity
+of the EEF with respect to the actuation input
+τ (t). (Here, f0 (·) denotes the explicit dynamics
+function, and h0 (·) denotes the learning-based
+compensation function.)
+
+x(t) = f0 [τ (t)] + h0 [τ (t)] ,
+ẋ(t) = f˙0 [τ (t)] + h1 [τ (t), q (t)] ,
+
+(38)
+
+ẍ(t) = f¨0 [τ (t)] + h2 [τ (t), q (t), q̇ (t)] .
+Using the hybrid model, a problem is formulated to inversely compute the control pressure (or
+input) required at step i for a desired EEF trajectory xd (t). In this process, the deviation caused
+by errors and nonlinearities in the physics-based
+
+ 
+ê = xref + H0 Ûpi − x̂di ,
+x̂ref = xref − γ ê,
+
+29
+
+γ ∈ [0, 1],
+
+(39)
+(40)
+
+3.4.1 Hybrid Control : Conclusion and
+Limitations
+
+is utilized in a joint-based structure, the tracking accuracy of target bending angles or joint
+angles is also considered an important performance metric. Furthermore, in order to evaluate
+the dynamic characteristics of a control system,
+there exist studies that measure traditional control performance indices such as rise time, settling
+time, and overshoot. As shown by the quantitative
+results summarized in Table 7, traditional control
+methods exhibit bending errors on the order of
+0.24 ∼ 3.35◦ and EEF position errors below 4.27
+mm. In the case of data-driven control methods,
+improved precision is achieved compared to traditional control, with bending errors below 2.84◦
+and EEF position errors below 1 mm. RL-based
+control methods demonstrate EEF position accuracy within 3 mm in simulation environments, and
+in some studies, extremely high precision on the
+order of 0.1 mm has been reported. However, due
+to the influence of the Sim-to-Real gap, the error
+tends to increase to as much as 15 mm when
+applied to real robots. In contrast, hybrid control
+methods, by combining physics-based models with
+data-driven components, achieve EEF position
+errors on the order of 0.4–2.2 mm, thereby maintaining high control precision stably even in realworld environments. These results indicate that
+control precision has generally improved progressively in the order of traditional control methods,
+data-driven control methods, and hybrid control
+methods. Although RL-based control exhibits the
+highest potential precision in simulation environments, it simultaneously reveals the limitation
+that performance variability significantly increases
+in real applications if the Sim-to-Real gap is not
+sufficiently addressed.
+In addition, the amount of training data
+required to construct a control system is an important indicator for assessing the practicality of each
+control methodology. Traditional control methods typically rely on partially linearized system
+models, such as MPC, or on online adjustment
+of parameters such as control gains, and therefore require no prior training data or only a very
+limited amount of data. In contrast, data-driven
+control and RL-based control methods generally
+require relatively large amounts of data to achieve
+satisfactory control performance. As summarized
+in Table 8, data-driven control methods typically require on the order of approximately 15,000
+training samples. However, in approaches such as
+
+Hybrid control studies of this kind are evolving
+in a complementary strategy, in which physicsbased models are used to overcome data sparsity
+issues and limitations in generalization performance, while neural networks compensate for
+the incompleteness of physical models. These
+approaches effectively offset the respective drawbacks of purely physics-based models and purely
+data-driven models, and have established themselves as a core technology that enables reliable
+operation of soft robots in complex, unstructured
+environments.
+
+3.5 Quantitative Performance
+Comparison Based on Metrics
+for Each Control Approach
+The control methodologies for soft robots have
+evolved from the traditional control approaches
+described in Section 3.1 and the data-driven control approaches presented in Section 3.2, and
+have more recently expanded to RL-based control
+methods discussed in Section 3.3 and hybrid control strategies introduced in Section 3.4. This progression originates from the application of control
+methods with verified stability to low dimensional
+approximated system models, and subsequently
+advances toward compensating nonlinearities and
+hysteresis that cannot be sufficiently explained by
+linear or quasi-linear assumptions through datadriven approaches. Furthermore, it has extended
+to directions in which physical and kinematic
+information is explicitly embedded within the control structure, or control policies are designed to
+autonomously adapt through interaction with the
+environment. In this section, the performance of
+each control methodology is comparatively analyzed based on the quantitative performance metrics summarized in Table 7, and the validity of this
+evolutionary trajectory in control methodologies
+is examined.
+The most fundamental objective in soft
+robotics control is to ensure that the EEF accurately and stably reaches the target position
+intended by the user. To evaluate this objective,
+metrics such as tracking error and position error,
+quantified by RMSE, MAE, and the L-2 norm, are
+commonly used. In addition, when a soft robotics
+
+30
+
+Table 7 Quantitative performance comparison based on metrics for each control approach.
+Ref
+
+Authors
+
+Soft Robot
+
+Size [mm] Performance
+
+Traditional Control
+[36]
+[5]
+[16]
+[48]
+[49]
+[23]
+[63]
+[4]
+[8]
+[13]
+[50]
+[59]
+[66]
+[3]
+[62]
+
+Hofer, M. et al.
+Thuruthel, T. et al.
+Liu, F. et al.
+Liu, Z. et al.
+Xu, F. et al.
+Mak, Y.X. et al.
+Weerakoon, L. et al.
+Grube, M. et al.
+Shen, J. et al.
+Wang, J. et al.
+Best, C.M. et al.
+
+3 Fabric-Based Bellow Actuators
+Passive Anthropomorphic Finger
+Soft Multimodal Gripper
+Bellows-type PSA
+Cable-Driven Soft Robot
+PSA
+Planar single-segment soft robot
+- (Simulation)
+PMA-Based Bending Actuator
+Origami-Inspired Exoskeleton
+14-DoF Pneumatic Inflatable
+Humanoid
+Xavier, M.S. et al.
+Pneumatic Bending Actuator
+Garcı́a-Samartı́n, J.F. et al. Pneumatic Articulated Ultrasoft
+Limb
+Keyvanara, M. et al.
+PSA
+Dickson, A. et al.
+PSA
+
+RMSE (α, β): 1.03◦ ± 0.03◦ , 1.39◦ ± 0.10◦
+Force RMSE (Steady-State): 0.17 N
+Success Rate: 93% (Sim) / 88% (Real)
+RMSE: 1.68 (42.9% imp), Overshoot: 0.24◦
+Image Error: Convergence Confirmed
+MAE (Bending/Phase): 0.75◦ / 1.8◦
+RMSE: Tracking (3.35◦ ), Estimation (2.78◦ )
+
+108
+240
+124
+500
+101
+100
+
+Rise/Settle/Over/Steady: Detailed comparison
+Tracking Error RMSE: 0.608◦ ∼ 1.70◦
+Tracking Error RMSE: 0.91◦ ∼ 3.27◦
+Improvement(%): -3.02%(Rise Time), 15.13%(Settle Time),
+843.35%(Overshoot)
+Tracking ME: ∼ 9 (Similar Across Controllers)
+EEF error: 4.27 ± 2.67 mm
+
+64.4
+-
+
+Tracking Error: < 3 mm
+Trajectory Gen Time: 23x Faster
+
+180
+87-92
+
+Bending Angle Max Error: 3.95%
+Endpoint/Shape Error: Convergence Confirmed
+Bending RMSE: 2.84◦ (Pneumatic), 5.52◦ (Hydraulic)
+
+Data-Driven Control
+[34]
+[57]
+[10]
+
+Chen, Z. et al.
+Lu, Y. et al.
+Sugiyama, T. et al.
+
+[46]
+
+Shen, Y. et al.
+
+[37]
+
+Thuruthel, T. et al.
+
+Pneumatic Modular Soft Robot
+Soft Continuum Manipulator
+Fiber-Reinforced Soft Bending
+Actuator
+Underwater Bimanual Soft
+Manipulator
+- (Simulation)
+
+-
+
+Cumulative Tracking Error: 2289.78 mm · s
+
+-
+
+Solver Error: 1 mm
+
+Reinforcement Learning
+[53]
+
+Liu, J. et al.
+
+[28]
+[56]
+[9]
+[43]
+[35]
+
+Centurelli, A. et al.
+Li, L. et al.
+Lou, G. et al.
+Wang, S. et al.
+Alessi, C. et al.
+
+[44]
+[55]
+[52]
+[67]
+[51]
+[45]
+[68]
+
+Berdica, U. et al.
+Nazeer, M.S. et al.
+Zhu, M. et al.
+Bianchi, D. et al.
+Li, Y. et al.
+Ji, G. et al.
+Ansari, Y. et al.
+
+Opposite-Bending-And-Stretching
+Structured Soft Manipulator
+3-Chamber 2-Module PSA
+Pneumatic soft gripper (4-Finger)
+2 PSA
+PMA
+2-Module Pneumatic Soft
+Manipulator
+3-Chamber Bellows Soft Robot
+3-Chamber 3-Module PSA
+PSA
+Modular Arm (I-Support)
+3-Chamber Manipulator
+Cable-Driven Surgical Robot
+3 McKibben Actuators
+
+3 PSA
+Pneumatic / Tendon
+McKibben/Cable Actuator
+
+-
+
+Success Rate: 83.3%
+
+220
+140
+220
+202
+
+Tracking Error: 11.8 ∼ 15.5 mm
+Task: Successful 240◦ rotation
+Tracking MAE: 3.9-6.7mm (Sim), 12.1-15.4mm (Real)
+Policy RMSE: Reaching 0.11mm, Tracking 1.63mm
+Reaching Dist/Ang: 34 ± 14mm / 0.40 ± 0.29 rad
+
+598
+409
+70
+80
+205
+
+Reaching Error: 3 mm
+Task Performance: Success Confirmed
+Vibration reduction: 87%, Success: 0 → 100%
+Success: 63%, Dist Error: 61.7 mm
+Tracking Error RMSE: 1.26 mm
+Tracking Error RMSE: 0.54 ∼ 0.71 mm
+Reaching Accuracy: 0.79 ± 0.18 cm
+
+175
+1800/120
+375
+
+Mean Tracking Error: 0.4 ∼ 1.1 mm
+Tracking Error: 2.295 mm
+RMSE: Pos X 4.6-5.5mm, Z 0.7-1.7mm
+
+Hybrid Control
+[11]
+[12]
+[64]
+
+Huang, X. et al.
+Yoon, T. et al.
+Tang, Z. et al.
+
+[57], where the model is updated online, or [10],
+where limited data are augmented and reused,
+the exact scale of the utilized data is not always
+explicitly reported. For RL-based control, due
+to the nature of learning policies through unsupervised exploration, it is difficult to define a
+static dataset size in a strict sense. Nevertheless,
+a synthesis of existing studies indicates that, on
+average, more than approximately 67,000 training
+episodes are required, implying a very high learning cost and experimental burden. By comparison,
+hybrid control methods are reported to use, on
+average, approximately 25,000 training samples,
+while some studies achieve EEF position precision on the order of 2.295 mm using as few as
+approximately 5,000 samples. These results suggest that by embedding physics-based models into
+
+the learning process, data-efficient control policy
+learning can be achieved.
+In addition, distinct characteristics are also
+observed in the control frequency of each control methodology. As shown in Table 9, traditional control methods achieve a very fast control
+frequency of approximately 180 Hz on average.
+This is because traditional control performs control computations based on simplified models
+or linearized assumptions, rather than explicitly
+accounting for the complex nonlinear dynamics of
+soft robots, resulting in a relatively low computational burden. In contrast, data-driven control
+methods exhibit comparatively slower control frequencies. This is often due to limitations in the
+response speed of soft sensors required for datadriven control [58], or because recurrent neural
+
+31
+
+Table 8 Summary of control studies with reported
+training data requirements.
+Ref.
+
+Control
+
+[34]
+[57]
+[10]
+[46]
+[37]
+
+Data-driven
+
+Average ± Standard Deviation
+[64]
+[11]
+
+Hybrid
+
+[12]
+
+Number of Training
+Datasets
+
+Ref.
+[36]
+[5]
+[16]
+[48]
+[49]
+[23]
+[63]
+[4]
+
+11,848 ± 7,397
+100 (Offline)
+20,000 (Low) / 100,000
+(High)
+2,000 (Tendon) / 5,644
+(Pneumatic)
+25,548 ± 42,344
+
+[53]
+[28]
+[44]
+[56]
+[55]
+[35]
+[67]
+[45]
+[68]
+[9]
+[43]
+[52]
+[51]
+
+60–70 Episode
+3,000,000 Step
+400,000+ Episode
+4×106 Step
+15,000 Episode
+120,000 Episode
+–
+60–70 Episode
+100 Episode
+–
+–
+1,000 Episode
+500 Episode
+
+Average ± Standard Deviation
+
+Table 9 Summary of control studies with reported
+control frequency.
+
+16,000 (Simulation) /
+15,000 (Real)
+(Online update)
+770 (+ Augmentation)
+15,625
+–
+
+Average ± Standard Deviation
+
+RL
+
+sufficient computational efficiency for real-time
+control.
+
+Control
+
+Traditional
+
+[8]
+[13]
+[50]
+[59]
+[66]
+[3]
+[62]
+Average ± Standard Deviation
+[34]
+[57]
+[10]
+[46]
+[37]
+
+67,091 ± 140,720
+episode
+
+187.3 Hz ± 143.0
+
+Data-driven
+
+Average ± Standard Deviation
+
+13.6 Hz ± 13.2
+
+[55]
+[52]
+[67]
+[51]
+[45]
+[68]
+
+10 Hz
+10 Hz
+–
+–
+30 Hz
+10 Hz
+2 Hz (Physical
+Limitation)
+–
+–
+– (Open loop control)
+1 ms (1000 Hz)
+20 Hz
+–
+
+Average ± Standard Deviation
+
+154.6 Hz ± 372.8
+
+RL
+
+[11]
+Hybrid
+[12]
+[64]
+Average ± Standard Deviation
+
+32
+
+30 Hz
+25 Hz
+–
+60 Hz
+–
+–
+–
+5 Hz (Kinematic) / 10
+Hz (MPC) / 1000 Hz
+(LQI)
+200 Hz
+–
+300 Hz
+5 ms (200 Hz)
+50 ms (20 Hz)
+300–400 Hz
+300–400 Hz
+
+2.5 Hz
+20 Hz
+30 Hz
+2 Hz
+–
+
+[53]
+[28]
+[56]
+[9]
+[43]
+[35]
+[44]
+
+network architectures such as BiLSTM require
+substantial computation time to perform both forward and backward operations [34]. RL-based control and hybrid control methods generally achieve
+high control frequencies. RL-based control can
+compute control inputs solely through a forward
+pass of the policy network, and thus records an
+average control frequency of approximately 150
+Hz, which is comparable to that of traditional
+control. Hybrid control methods exhibit a somewhat lower average frequency of approximately
+30 Hz when considering the overall control loop
+update rate. However, this value corresponds to
+the update frequency of the entire control structure, whereas the computational speed within a
+single control loop is reported to be on the order
+of 300 Hz. These results demonstrate that, despite
+combining physics-based models with data-driven
+components, hybrid control methods maintain
+
+Control Frequency
+
+50 Hz (Control loop) /
+2.6–3.4 ms (294–384 Hz)
+(Computation time)
+–
+10 Hz
+30.0 Hz ± 28.3
+
+• Concrete methodologies and standardization
+efforts to mitigate the Sim-to-Real gap in RLbased control.
+• Identification of the technological convergence
+directions among diverse control strategies.
+• Comparative analysis of control performance
+with respect to different definitions and state
+representations of soft robot systems.
+
+4 Conclusion and Future
+Works
+This paper analyzed more than 60 papers published from 2020 to the present, providing an
+overview of the technological progress in system modeling and control within soft robotics.
+We systematically reclassified the developmental trajectories of these two core technologies
+according to the level of machine learning integration, and arranged them along a temporal
+axis to identify how learning paradigms have
+evolved within systems as the technology has
+advanced. This approach provides meaningful
+insight into the recent methodological trends
+in soft robotics research. However, unlike rigid
+robots, soft robotics possess continuum characteristics, and the adopted approach can fundamentally differ depending on how the system is
+defined, that is, how it is represented in a low
+dimensional form. Through methodological analysis, this study clarified how each work defined and
+modeled a soft robotics and confirmed the corresponding meaningful performance improvements.
+Nevertheless, it was limited in deriving ontological answers to why such definitions were chosen
+in each study. Therefore, future research requires
+a more in-depth examination of the system definition of soft robots itself.
+From the perspective of technological trends,
+the field of system modeling exhibits a clear tendency to converge toward hybrid models that combine the advantages of physics-based models and
+purely data-driven modeling, following an evolutionary path from physical models to learningbased approaches. In contrast, while the control
+field follows a similar developmental trajectory,
+RL-based control strategies have also emerged as
+a dominant trend. Although RL-based control still
+faces a critical challenge in the form of the Simto-Real gap between simulation and real-world
+deployment, many recent studies have identified
+this issue as a key limitation and are actively
+exploring solutions, suggesting promising future
+progress in this area. In conclusion, to achieve full
+autonomy and high-performance control of soft
+robotics, future research should further consider
+the following aspects from both system modeling
+and control perspectives:
+
+Declarations
+Funding. This work was supported by
+the National Research Foundation of Korea
+(NRF) grant funded by the Korea government
+(MSIT)(RS-2025-00563228);
+This
+work was supported by the Institute of
+Information
+&
+Communications
+Technology Planning & Evaluation(IITP)-Innovative
+Human Resource Development for Local Intellectualization program grant funded by the
+Korea government(MSIT)(IITP-2025-RS-202200156360)
+Conflict interests. The authors declare no
+conflict interests.
+
+Appendix A
+
+33
+
+Summary of
+Representative
+System
+Modeling and
+Control
+Methods for
+Soft Robots
+
+Table A1 Summary of representative studies on system modeling methodologies for soft robots.
+Ref Authors
+
+Soft Robot
+
+Size [mm] Key Methods
+
+70
+500
+-
+
+PCC
+CC
+PCC And Stiffness-Based Dynamics Model
+PCC
+Substitution Of Hydraulic Input With Rigid Body Dynamics
+
+64.4
+64.4
+
+-
+
+Pneumatic Dynamics Using Polytropic Gas Law + Valve Model
+Tetrahedron Modeling With Energy Function Estimation Via
+ArUco Markers
+PCC Modeling Discretized Into Small Rigid Links
+Cosserat Rod Modeling And Spatial Integration On Lie Group
+PCC Approximation And Application Of Differential Geometry
+Of Spatial Curves
+Neo-Hookean Material Model Based On Pneumatic Energy Input
+And Ellipse Approximation
+Euler Spiral (Clothoids) Variable Curvature Model
+
+524
+
+RPPR Rigid Robot Modeling Assuming PCC Segments
+PCC
+
+-
+
+CNN (Encoder-Decoder) Trained On FEA Data
+Self-Sensing Via LSTM
+
+Physics-based Modeling
+[52]
+[51]
+[23]
+[4]
+[50]
+
+Zhu, M. et al.
+Li, Y. et al.
+Mak, Y.X. et al.
+Grube, M. et al.
+Best, C.M. et al.
+
+[59]
+[60]
+
+Xavier, M.S. et al.
+Guo, N. et al.
+
+PSA
+3-Chamber Soft Manipulator
+PSA
+N/A (Simulation)
+14-DoF Pneumatic Inflatable
+Humanoid
+Pneumatic Soft Bending Actuator
+Soft Polyhedral Networks Finger
+
+[3]
+[2]
+[61]
+
+Keyvanara, M. et al.
+Grazioso, S. et al.
+Caasenbrood, B.J. et al.
+
+PSA
+N/A (Simulation)
+PSA (Simulation)
+
+[21]
+
+Sierra, E.M. et al.
+
+Multi-Chamber PSA
+
+[17]
+
+Gonthina, P.S. et al.
+
+[62]
+[7]
+
+Soft Manipulator With 3 Thin
+McKibben Actuators
+Dickson, A. et al.
+PSA
+Technical Univ. of Kosice et al. 3 PAMs
+
+154
+
+Data-Driven Modeling
+[6]
+[32]
+
+De Barrie, D. et al.
+Ang, B.W.K. et al.
+
+[36]
+
+Hofer, M. et al.
+
+[5]
+[14]
+[44]
+[55]
+[58]
+[30]
+
+George Thuruthel, T. et al.
+Faris, O. et al.
+Berdica, U. et al.
+Nazeer, M.S. et al.
+George Thuruthel, T. et al.
+Wang, L. et al.
+
+[63]
+[38]
+[64]
+
+Weerakoon, L. et al.
+Krauss, H. et al.
+Tang, Z. et al.
+
+[31]
+
+Kim, D. et al.
+
+[65]
+
+Hayati, M. et al.
+
+[33]
+
+Scharff, R.B.N. et al.
+
+FRE Gripper Finger
+Dual-Chamber Soft Continuum
+Actuator
+3 Fabric-Based Inflatable Bellow
+Actuators
+Passive Anthropomorphic Finger
+FRE Gripper Finger
+3-Chamber Bellows-Type Actuator
+3-Chamber 3-Module Soft Actuator
+PSA
+Soft Manipulator With 7
+Pneumatic Bellows
+Planar Single-Segment Soft Robot
+PneuNet Finger (2-DoF)
+McKibben-Based Pneumatic And
+Cable-Driven Actuator
+PSA
+Soft Tendon-Driven Planar
+Actuator
+Soft Continuum Joint / Soft
+Deformable Membrane
+
+-
+
+CNN Based On 3 Camera Images
+
+120
+598
+120
+-
+
+LSTM Using Strain Sensors
+CNN Using Neuromorphic Camera
+LSTM
+Supervised Learning-Based Dynamics Learning
+LSTM
+LSTM Utilizing Receptor Data
+
+124
+90
+375
+
+Learning PCC Curvature Via LSTM
+Learning Via NARX Neural Network
+Gaussian Process (GP) Based Probabilistic Model
+
+-
+
+Probability Distribution Approximation Via GP And Filtering
+Via EKF
+LSTM Estimating Control Points With Bezier Curve Shape
+Definition
+Learning Internal LDR Signals Via LSTM
+
+185
+-
+
+Hybrid Modeling
+[27]
+
+Zou, S. et al.
+
+[11]
+
+Huang, X. et al.
+
+[9]
+[43]
+[41]
+[13]
+
+Lou, G. et al.
+Wang, S. et al.
+Loo, J.Y. et al.
+Wang, J. et al.
+
+[42]
+[12]
+
+Tan, K. et al.
+Yoon, T. et al.
+
+[40]
+
+Tian, S. et al.
+
+Continuum Manipulator With 3
+PMAs
+3 PSAs
+Two 3-Chamber PSA
+PMA
+PSA
+Origami-Inspired Pneumatic
+Actuator Soft Exoskeleton
+Pneumatic Soft Bending Actuator
+Pneumatic / Tendon-Driven Soft
+Robots
+Flexible Strip / Pneumatic Soft
+Finger
+
+77-252
+
+Calibration Of CC Model Via DNN
+
+175
+
+Hybrid Model Defining State Via Lagrangian Mechanics And
+Calibrating Dynamics Via Learning
+Calibration Of PCC Model Via MLP
+Deep Lagrangian Networks
+Combining LSTM-Estimated State Models With AUKF
+System Linearization Via Lifting Using Deep Koopman Network
+
+140
+220
+101
+
+GP Modeling Calibrated By UKF
+1800 / 120 KINN Approximating Soft Robot As Rigid Robot
+80-85
+
+34
+
+Mapping Sensor Resistance To Shape Via FFNN And Solving
+Inverse Problem Via FEM
+
+Table A2 Summary of representative studies on control strategies for soft robots.
+Ref Authors
+
+Soft Robot
+
+Size [mm] Key Methods
+
+Traditional Control
+[36]
+
+Hofer, M. et al.
+
+PID Control Converting Control Angle To Target Pressure
+
+George Thuruthel, T. et al.
+Liu, F. et al.
+
+3 Fabric-Based Inflatable Bellow
+Actuators
+Passive Anthropomorphic Finger
+Soft Multimodal Gripper
+
+-
+
+[5]
+[16]
+
+-
+
+[48]
+
+Liu, Z. et al.
+
+Bellows-type PSA
+
+108
+
+[49]
+[23]
+
+Xu, F. et al.
+Mak, Y.X. et al.
+
+Cable-Driven Soft Robot
+PSA
+
+240
+-
+
+[63]
+[4]
+[8]
+
+Weerakoon, L. et al.
+Grube, M. et al.
+Shen, J. et al.
+
+Planar Single-Segment Soft Robot
+N/A (Simulation)
+PMA-Based Soft Bending Actuator
+
+124
+500
+-
+
+[13]
+
+Wang, J. et al.
+
+101
+
+[59]
+
+Xavier, M.S. et al.
+
+Origami-Inspired Pneumatic
+Actuator Soft Exoskeleton
+Pneumatic Soft Bending Actuator
+
+P Control Of Force
+High-Level Decision Via RL, Tendon Actuation Via Analytical
+Formulas
+Fuzzy Cascade Control (Single-input FUZZY P+ID) based on P-I
+hysteresis compensation
+Visual Servoing Mapping Pixel Changes To End-Effector Changes
+Feedforward + Adaptive PID Control Using Experimental
+Stiffness Data
+Slotine–Li Adaptive Control To Minimize Curvature Error
+Comparison Of Kinematic Control, MPC, And LQI Control
+PD Control Using Real Dual-PMA Actuator As A Physical
+Reservoir
+MPC Control Using Acquired Koopman Model
+
+[66]
+[3]
+
+Garcı́a-Samartı́n, J.F. et al. Pneumatic Articulated Ultrasoft
+Limb
+Keyvanara, M. et al.
+PSA
+
+64.4
+
+[62]
+
+Dickson, A. et al.
+
+PSA
+
+-
+
+Pneumatic Modular Soft Robot
+Soft Continuum Manipulator
+Fiber-Reinforced Soft Bending
+Actuator
+Underwater Bimanual Soft
+Manipulator
+N/A (Simulation)
+
+180
+87-92
+
+Opposite-Bending-And-Stretching
+Structured Soft Manipulator
+3-Chamber 2-Module Soft Actuator
+Pneumatic Soft Gripper (4-Finger)
+
+100
+
+Comparison Of SDRE, Sliding Mode, Feedback Linearization, And
+PI+FF
+P Control Of Bladder Inflation Time Via FFNN
+Dynamics-Based Feedforward + Feedback (PD) With IK
+Formulated As Optimization
+Algebraic Inverse Kinematics Solving RPPR Rigid Robot Model
+Dynamics
+
+Data-Driven Control
+[34]
+[57]
+[10]
+
+Chen, Z. et al.
+Lu, Y. et al.
+Sugiyama, T. et al.
+
+[46]
+
+Shen, Y. et al.
+
+[37]
+
+George Thuruthel, T. et al.
+
+-
+
+Input Estimation For Target Via BiLSTM
+Online Learning And Control Of NN-Based Combined Jacobian
+Inverse Problem Learning Via FNN With Autoencoder
+Compression And Iterative Learning Controller
+OLC Updating MLP Parameters
+
+-
+
+Inverse Kinematics Learning Via Supervised Learning
+
+-
+
+PID Parameter Tuning Via Reinforcement Learning
+
+220
+-
+
+Reinforcement Learning
+[53]
+
+Liu, J. et al.
+
+[28]
+[56]
+
+Centurelli, A. et al.
+Li, L. et al.
+
+[9]
+
+Lou, G. et al.
+
+[43]
+[35]
+
+Wang, S. et al.
+Alessi, C. et al.
+
+[44]
+[55]
+[52]
+[67]
+
+Berdica, U. et al.
+Nazeer, M.S. et al.
+Zhu, M. et al.
+Bianchi, D. et al.
+
+[51]
+[45]
+
+Li, Y. et al.
+Ji, G. et al.
+
+[68]
+
+Ansari, Y. et al.
+
+2 Pneumatic 3-Chamber Soft
+Actuators
+PMA
+2-Module Pneumatic Soft
+Manipulator
+3-Chamber Bellows-Type Actuator
+3-Chamber 3-Module Soft Actuator
+PSA
+Modular Soft Robot Arm
+(I-Support)
+3-Chamber Soft Manipulator
+2-DoF Cable-Driven Continuum
+Surgical Robot
+3 McKibben-Based Actuators
+
+140
+
+TRPO Policy Tracking Trajectory Using LSTM Simulation
+Unified PPO Policy For Object Rotation Using Continuous Policy
+Distillation
+PPO Policy Using Hybrid Model Simulation
+
+220
+202
+
+PPO Policy For Reaching And Tracking
+PPO Policy Using Dynamic CR Model Simulation
+
+598
+409
+70
+80
+
+PPO Policy For Goal Reaching Using LSTM Simulation
+Calibrated PPO Policy Using Learned Dynamics Simulation
+DDPG Policy For Low-Vibration Reaching Using PCC Simulation
+Open-Loop PPO Policy For Ball Throwing Using Learned Direct
+Model Simulation
+DDPG Policy Using CC Model Simulation With Offline Retraining
+Policy Using Multi-Agent Deep Q Network And Shielding
+
+205
+
+Model-Free RL Policy Learning Goal Reaching On Real Robot
+
+Hybrid Control
+[11]
+[12]
+
+Huang, X. et al.
+Yoon, T. et al.
+
+[64]
+
+Tang, Z. et al.
+
+3 PSAs
+Pneumatic / Tendon-Driven Soft
+Robots
+McKibben-Based Pneumatic And
+Cable-Driven Actuator
+
+175
+Feedforward Via Hybrid Model + Linearized Feedback Control
+1800 / 120 Inverse Kinematics-Based Control Using Virtual Joints
+375
+
+35
+
+Feedforward Via MPC + Feedback Via Locally Weighted
+Projection Regression
+
+Appendix B
+
+List of
+Abbreviations
+
+36
+
+Table B3 List of abbreviations used in this paper
+
+Abbreviation
+
+Nomenclature
+
+ANCF
+AUKF
+BiLSTM
+CC
+CNN
+CR
+DDPG
+DoF
+EEF
+EKF
+FEM
+FNN
+FRE
+GP
+KF
+KINN
+LED
+LQI
+LSTM
+MAE
+ME
+MLP
+MLNN
+MPC
+NARX
+NRMSE
+OLC
+PCC
+PMA
+PPO
+PRB
+PSA
+RL
+RMSE
+RNN
+SOTA
+UKF
+
+Absolute Nodal Coordinate Formulation
+Adaptive Unscented Kalman Filter
+Bidirectional Long Short-Term Memory
+Constant Curvature
+Convolution Neural Network
+Cosserat Rod
+Deep Deterministic Policy Gradient
+Degrees of Freedom
+End-Effector
+Extended Kalman Filter
+Finite Element Method
+Feedforward Neural Network
+Fin Ray Effect
+Gaussian Processes
+Kalman Filter
+Kinematics-Informed Neural Network
+Light Emitting Diode
+Linear Quadratic Integral
+Long Short-Term Memory
+Mean Absolute Error
+Mean Error
+Multilayer Perceptron
+Multilayer Neural Network
+Model Predictive Control
+Nonlinear Autoregressive Network with Exogenous Inputs
+Normalized Root Mean Square Error
+Online-Learning-based Inverse Kinematics Controller
+Piecewise Constant Curvature
+Pneumatic Muscle Actuators
+Proximal Policy Optimization
+Pseudo-Rigid Body
+Pneumatic Soft Actuator
+Reinforcement Learning
+Root Mean Square Error
+Recurrent Neural Network
+State-of-the-Art
+Unscented Kalman Filter
+
+37
+
+References
+
+MODEL OF A TWO-SEGMENT ROBOT.
+MM Science Journal 2024(6) (2024) https:
+//doi.org/10.17973/MMSJ.2024 12 2024105
+
+[1] George Thuruthel, T., Ansari, Y., Falotico,
+E., Laschi, C.: Control Strategies for
+Soft Robotic Manipulators: A Survey. Soft
+Robotics 5(2), 149–163 (2018) https://doi.
+org/10.1089/soro.2017.0007
+
+[8] Shen, J., Miyazaki, T., Kawashima, K.:
+Control Pneumatic Soft Bending Actuator
+With Feedforward Hysteresis Compensation
+by Pneumatic Physical Reservoir Computing. IEEE Robotics and Automation Letters
+10(2), 1664–1671 (2025) https://doi.org/10.
+1109/LRA.2024.3523229
+
+[2] Grazioso, S., Di Gironimo, G., Siciliano, B.:
+A Geometrically Exact Model for Soft Continuum Robots: The Finite Element Deformation Space Formulation. Soft Robotics
+6(6), 790–811 (2019) https://doi.org/10.
+1089/soro.2018.0047
+
+[9] Lou, G., Wang, C., Xu, Z., Liang, J., Zhou,
+Y.: Controlling Soft Robotic Arms Using
+Hybrid Modelling and Reinforcement Learning. IEEE Robotics and Automation Letters
+9(8), 7070–7077 (2024) https://doi.org/10.
+1109/LRA.2024.3418312
+
+[3] Keyvanara, M., Goshtasbi, A., Kuling, I.A.:
+A Geometric Approach towards Inverse Kinematics of Soft Extensible Pneumatic Actuators Intended for Trajectory Tracking. Sensors 23(15), 6882 (2023) https://doi.org/10.
+3390/s23156882
+[4] Grube, M., Wieck, J.C., Seifried, R.: Comparison of Modern Control Methods for Soft
+Robots. Sensors 22(23), 9464 (2022) https:
+//doi.org/10.3390/s22239464
+
+[10] Sugiyama, T., Kutsuzawa, K., Owaki, D.,
+Hayashibe, M.: Latent RepresentationBased Learning Controller for Pneumatic
+and
+Hydraulic
+Dual
+Actuation
+of
+Pressure-Driven
+Soft
+Actuators.
+Soft
+Robotics 11(1), 105–117 (2024) https:
+//doi.org/10.1089/soro.2022.0224
+
+[5] George Thuruthel, T., Gardner, P., Iida,
+F.: Closing the Control Loop with TimeVariant Embedded Soft Sensors and Recurrent Neural Networks. Soft Robotics 9(6),
+1167–1176 (2022) https://doi.org/10.1089/
+soro.2021.0012
+
+[11] Huang, X., Rong, Y., Gu, G.: HighPrecision Dynamic Control of Soft Robots
+With the Physics-Learning Hybrid Modeling Approach. IEEE/ASME Transactions on
+Mechatronics 30(3), 1658–1669 (2025) https:
+//doi.org/10.1109/TMECH.2024.3403151
+
+[6] De Barrie, D., Pandya, M., Pandya, H., Hanheide, M., Elgeneidy, K.: A Deep Learning
+Method for Vision Based Force Prediction
+of a Soft Fin Ray Gripper Using Simulation Data. Frontiers in Robotics and AI 8,
+631371 (2021) https://doi.org/10.3389/frobt.
+2021.631371
+
+[12] Yoon, T., Chai, Y., Jang, Y., Lee, H., Kim,
+J., Kwon, J., Kim, J., Choi, S.: KinematicsInformed Neural Networks: Enhancing Generalization Performance of Soft Robot Model
+Identification. IEEE Robotics and Automation Letters 9(4), 3068–3075 (2024) https:
+//doi.org/10.1109/LRA.2024.3362644
+
+[7] Technical University of Kosice, Faculty of
+Manufacturing Technologies with a seat in
+Presov, Sokolov, O., Hosovsky, A., Technical
+University of Kosice, Faculty of Manufacturing Technologies with a seat in Presov,
+Sokolov, S., Sumy State University, Pitel,
+B., Technical University of Kosice, Faculty
+of Manufacturing Technologies with a seat
+in Presov: STUDY ON THE PIECEWISE
+CONSTANT CURVATURE KINEMATIC
+
+[13] Wang, J., Zhang, H., Wang, Z., Chen,
+H., Wang, P., Chen, W.: Design and
+Koopman Model Predictive Control of A
+Soft Exoskeleton Based on Origami-Inspired
+Pneumatic Actuator for Knee Rehabilitation. arXiv (2025). https://doi.org/10.48550/
+arXiv.2510.11094
+[14] Faris, O., Muthusamy, R., Renda, F., Hussain, I., Gan, D., Seneviratne, L., Zweiri,
+38
+
+Y.: Proprioception and Exteroception of
+a Soft Robotic Finger Using Neuromorphic Vision-Based Sensing. Soft Robotics
+10(3), 467–481 (2023) https://doi.org/10.
+1089/soro.2022.0030
+
+[22] Zhao, W., Zhang, J., Zhang, W., Yuan, X.:
+Internal resonance characteristics of hyperelastic thin-walled cylindrical shells composed of mooney–rivlin materials. ThinWalled Structures 163, 107754 (2021)
+
+[15] Armanini, C., Boyer, F., Mathew, A.T.,
+Duriez, C., Renda, F.: Soft Robots Modeling:
+A Structured Overview. IEEE Transactions
+on Robotics 39(3), 1728–1748 (2023) https:
+//doi.org/10.1109/TRO.2022.3231360
+
+[23] Mak, Y.X., Naghibi, H., Lin, Y., Abayazid,
+M.: Adaptive control of a soft pneumatic
+actuator using experimental characterization data. Frontiers in Robotics and AI
+10, 1056118 (2023) https://doi.org/10.3389/
+frobt.2023.1056118
+
+[16] Liu, F., Sun, F., Fang, B., Li, X., Sun, S.,
+Liu, H.: Hybrid Robotic Grasping With a
+Soft Multimodal Gripper and a Deep Multistage Learning Scheme. IEEE Transactions
+on Robotics 39(3), 2379–2399 (2023) https:
+//doi.org/10.1109/TRO.2023.3238910
+
+[24] Xavier, M.S., Fleming, A.J., Yong, Y.K.:
+Finite Element Modeling of Soft Fluidic
+Actuators: Overview and Recent Developments. Advanced Intelligent Systems 3(2),
+2000187 (2021) https://doi.org/10.1002/aisy.
+202000187
+
+[17] Gonthina, P.S., Kapadia, A.D., Godage, I.S.,
+Walker, Ian.D.: Modeling Variable Curvature Parallel Continuum Robots Using Euler
+Curves. In: 2019 International Conference
+on Robotics and Automation (ICRA), pp.
+1679–1685. IEEE, Montreal, QC, Canada
+(2019). https://doi.org/10.1109/ICRA.2019.
+8794238
+
+[25] Xavier, M.S., Tawk, C.D., Zolfagharian, A.,
+Pinskier, J., Howard, D., Young, T., Lai, J.,
+Harrison, S.M., Yong, Y.K., Bodaghi, M.,
+Fleming, A.J.: Soft Pneumatic Actuators:
+A Review of Design, Fabrication, Modeling, Sensing, Control and Applications. IEEE
+Access 10, 59442–59485 (2022) https://doi.
+org/10.1109/ACCESS.2022.3179589
+
+[18] Daerden, F., Lefeber, D., et al.: Pneumatic
+artificial muscles: actuators for robotics and
+automation. European journal of mechanical
+and environmental engineering 47(1), 11–21
+(2002)
+
+[26] Hegde, C., Su, J., Tan, J.M.R., He, K., Chen,
+X., Magdassi, S.: Sensing in Soft Robotics.
+ACS Nano 17(16), 15277–15307 (2023) https:
+//doi.org/10.1021/acsnano.3c04089
+
+[19] Grazioso, S., Di Gironimo, G., Siciliano, B.:
+From differential geometry of curves to helical kinematics of continuum robots using
+exponential mapping. In: International Symposium on Advances in Robot Kinematics,
+pp. 319–326 (2018). Springer
+
+[27] Zou, S., Lyu, Y., Qi, J., Ma, G., Guo, Y.:
+A deep neural network approach for accurate
+3D shape estimation of soft manipulator with
+vision correction. Sensors and Actuators A:
+Physical 344, 113692 (2022) https://doi.org/
+10.1016/j.sna.2022.113692
+
+[20] Janabi-Sharifi, F., Jalali, A., Walker, I.D.:
+Cosserat Rod-Based Dynamic Modeling of
+Tendon-Driven Continuum Robots: A Tutorial. IEEE Access 9, 68703–68719 (2021)
+https://doi.org/10.1109/ACCESS.2021.
+3077186
+
+[28] Centurelli, A., Arleo, L., Rizzo, A., Tolu,
+S., Laschi, C., Falotico, E.: Closed-Loop
+Dynamic Control of a Soft Manipulator
+Using Deep Reinforcement Learning. IEEE
+Robotics and Automation Letters 7(2), 4741–
+4748 (2022) https://doi.org/10.1109/LRA.
+2022.3146903
+
+[21] Sierra, E.M., Ordoñez-Avila, J.L.: Mathematical Modeling of a Multi-Chamber Pneumatic Soft Actuator. Actuators 11(8), 221
+(2022) https://doi.org/10.3390/act11080221
+
+[29] Gariya, N., Kumar, S., Shaikh, A., Prasad,
+B., Nautiyal, H.: A review on soft pneumatic
+actuators with integrated or embedded soft
+39
+
+[37] Thuruthel, T.G., Falotico, E., Cianchetti, M.,
+Laschi, C.: Learning Global Inverse Kinematics Solutions for a Continuum Robot.
+In: Parenti-Castelli, V., Schiehlen, W. (eds.)
+ROMANSY 21 - Robot Design, Dynamics and Control vol. 569, pp. 47–54.
+Springer, Cham (2016). https://doi.org/10.
+1007/978-3-319-33714-2 6
+
+sensors. Sensors and Actuators A: Physical
+372, 115364 (2024) https://doi.org/10.1016/
+j.sna.2024.115364
+[30] Wang, L., Lam, J., Chen, X., Li, J., Zhang,
+R., Su, Y., Wang, Z.: Soft Robot Proprioception Using Unified Soft Body Encoding
+and Recurrent Neural Network. Soft Robotics
+10(4), 825–837 (2023) https://doi.org/10.
+1089/soro.2021.0056
+
+[38] Krauss, H., Takemura, K.: Enhanced ModelFree Dynamic State Estimation for a Soft
+Robot Finger Using an Embedded Optical Waveguide Sensor. IEEE Robotics and
+Automation Letters 9(7), 6123–6129 (2024)
+https://doi.org/10.1109/LRA.2024.3399590
+
+[31] Kim, D., Park, M., Park, Y.-L.: Probabilistic Modeling and Bayesian Filtering for
+Improved State Estimation for Soft Robots.
+IEEE Transactions on Robotics 37(5), 1728–
+1741 (2021) https://doi.org/10.1109/TRO.
+2021.3060335
+
+[39] Yakoub, R.Y., Shabana, A.A.: Three dimensional absolute nodal coordinate formulation for beam elements: implementation and
+applications. J. Mech. Des. 123(4), 614–621
+(2001)
+
+[32] Ang, B.W.K., Yeow, C.-H.: A LearningBased Approach to Sensorize Soft Robots.
+Soft Robotics 9(6), 1144–1153 (2022) https:
+//doi.org/10.1089/soro.2020.0172
+
+[40] Tian, S., Cangan, B.G., Navarro, S.E., Beger,
+A., Duriez, C., Katzschmann, R.K.: MultiTap Resistive Sensing and FEM Modeling
+Enables Shape and Force Estimation in Soft
+Robots. IEEE Robotics and Automation Letters 9(3), 2830–2837 (2024) https://doi.org/
+10.1109/LRA.2023.3339434
+
+[33] Scharff, R.B.N., Fang, G., Tian, Y.,
+Wu, J., Geraedts, J.M.P., Wang, C.C.L.:
+Sensing and Reconstruction of 3-D Deformation on Pneumatic Soft Robots.
+IEEE/ASME Transactions on Mechatronics 26(4), 1877–1885 (2021) https:
+//doi.org/10.1109/TMECH.2021.3078263
+
+[41] Loo, J.Y., Ding, Z.Y., Baskaran, V.M.,
+Nurzaman, S.G., Tan, C.P.: Robust Multimodal Indirect Sensing for Soft Robots Via
+Neural Network-Aided Filter-Based Estimation. Soft Robotics 9(3), 591–612 (2022)
+https://doi.org/10.1089/soro.2020.0024
+
+[34] Chen, Z., Bernabei, M., Mainardi, V.,
+Ren, X., Ciuti, G., Stefanini, C.: A Novel
+and Accurate BiLSTM Configuration Controller for Modular Soft Robots with Module Number Adaptability. Soft Robotics,
+2024–0015 (2024) https://doi.org/10.1089/
+soro.2024.0015
+
+[42] Tan, K., Ji, Q., Feng, L., Törngren, M.:
+Edge-Enabled Adaptive Shape Estimation of
+3-D Printed Soft Actuators With Gaussian
+Processes and Unscented Kalman Filters.
+IEEE Transactions on Industrial Electronics
+71(3), 3044–3054 (2024) https://doi.org/10.
+1109/TIE.2023.3270505
+
+[35] Alessi, C., Bianchi, D., Stano, G.,
+Cianchetti, M., Falotico, E.: Pushing with Soft Robotic Arms via Deep
+Reinforcement Learning. Advanced Intelligent Systems 6(8), 2300899 (2024)
+https://doi.org/10.1002/aisy.202300899
+
+[43] Wang, S., Wang, R., Liu, Y., Zhang, Y., Hao,
+L.: Dynamic modeling and control of pneumatic artificial muscles via Deep Lagrangian
+Networks and Reinforcement Learning. Engineering Applications of Artificial Intelligence
+148, 110406 (2025) https://doi.org/10.1016/
+j.engappai.2025.110406
+
+[36] Hofer, M., Sferrazza, C., D’Andrea, R.: A
+Vision-Based Sensing Approach for a Spherical Soft Robotic Arm. Frontiers in Robotics
+and AI 8, 630935 (2021) https://doi.org/10.
+3389/frobt.2021.630935
+
+40
+
+Adaptive Continuous Control of Soft Robotic
+Manipulator using Reinforcement Learning.
+In: 2022 IEEE/RSJ International Conference on Intelligent Robots and Systems
+(IROS), pp. 7074–7081. IEEE, Kyoto, Japan
+(2022). https://doi.org/10.1109/IROS47612.
+2022.9981335
+
+[44] Berdica, U., Jackson, M., Veronese, N.E.,
+Foerster, J., Maiolino, P.: Reinforcement
+Learning Controllers for Soft Robots Using
+Learned Environments. In: 2024 IEEE 7th
+International Conference on Soft Robotics
+(RoboSoft), pp. 933–939. IEEE, San Diego,
+CA, USA (2024). https://doi.org/10.1109/
+RoboSoft60065.2024.10522003
+
+[52] Zhu, M., Dai, J., Feng, Y.: Robust Grasping of a Variable Stiffness Soft Gripper in
+High-Speed Motion Based on Reinforcement
+Learning. Soft Robotics 11(1), 95–104 (2024)
+https://doi.org/10.1089/soro.2022.0246
+
+[45] Ji, G., Yan, J., Du, J., Yan, W., Chen, J.,
+Lu, Y., Rojas, J., Cheng, S.S.: Towards Safe
+Control of Continuum Manipulator Using
+Shielded Multiagent Reinforcement Learning. IEEE Robotics and Automation Letters
+6(4), 7461–7468 (2021) https://doi.org/10.
+1109/LRA.2021.3097660
+
+[53] Liu, J., Song, Z., Lu, Y., Yang, H.,
+Chen, X., Duo, Y., Chen, B., Kong, S.,
+Shao, Z., Gong, Z., Wang, S., Ding, X.,
+Yu, J., Wen, L.: An Underwater Robotic
+System With a Soft Continuum Manipulator for Autonomous Aquatic Grasping.
+IEEE/ASME Transactions on Mechatronics
+29(2), 1007–1018 (2024) https://doi.org/10.
+1109/TMECH.2023.3321054
+
+[46] Shen, Y., Tai, R., Zhang, J., Deng, L., Yuan,
+Y., Su, R., Zhang, F., Ding, H.: Planning
+and Motion Control for Underwater Bimanual Soft Manipulator in Underwater Grasping
+Task. IEEE/ASME Transactions on Mechatronics 29(4), 2487–2498 (2024) https://doi.
+org/10.1109/TMECH.2023.3333317
+
+[54] Littman, M.L., et al.: Friend-or-foe q-learning
+in general-sum games. In: ICML, vol. 1, pp.
+322–328 (2001)
+
+[47] Zhou, S., Li, Y., Wang, Q., Lyu, Z.: Integrated Actuation and Sensing: Toward Intelligent Soft Robots. Cyborg and Bionic Systems
+5, 0105 (2024) https://doi.org/10.34133/
+cbsystems.0105
+
+[55] Nazeer, M.S., Laschi, C., Falotico, E.: RLBased Adaptive Controller for High Precision
+Reaching in a Soft Robot Arm. IEEE Transactions on Robotics 40, 2498–2512 (2024)
+https://doi.org/10.1109/TRO.2024.3381558
+
+[48] Liu, Z., Yin, X., Peng, K., Wang, X.,
+Chen, Q.: Soft pneumatic actuators adapted
+in multiple environments: A novel fuzzy
+cascade strategy for the dynamics control
+with hysteresis compensation. Mechatronics
+84, 102797 (2022) https://doi.org/10.1016/j.
+mechatronics.2022.102797
+
+[56] Li, L., Donato, E., Lomonaco, V., Falotico,
+E.: Continual Policy Distillation of Reinforcement Learning-based Controllers for Soft
+Robotic In-Hand Manipulation. In: 2024
+IEEE 7th International Conference on Soft
+Robotics (RoboSoft), pp. 1026–1033. IEEE,
+San Diego, CA, USA (2024). https://doi.org/
+10.1109/RoboSoft60065.2024.10522027
+
+[49] Xu, F., Wang, H., Liu, Z., Chen, W., Wang,
+Y.: Visual Servoing Pushing Control of the
+Soft Robot with Active Pushing Force Regulation. Soft Robotics 9(4), 690–704 (2022)
+https://doi.org/10.1089/soro.2020.0178
+[50] Best, C.M., Gillespie, M.T., Hyatt, P., Killpack, M., Rupert, L., Sherrod, V.: Model
+predictive control for pneumatically actuated
+soft robots. IEEE Robotics & Automation
+Magazine 2(9), 31 (2016)
+
+[57] Lu, Y., Chen, W., Lu, B., Zhou, J., Chen,
+Z., Dou, Q., Liu, Y.-H.: Adaptive Online
+Learning and Robust 3-D Shape Servoing of Continuum and Soft Robots in
+Unstructured Environments. Soft Robotics
+11(2), 320–337 (2024) https://doi.org/10.
+1089/soro.2022.0158
+
+[51] Li, Y., Wang, X., Kwok, K.-W.: Towards
+
+[58] Thuruthel, T.G., Shih, B., Laschi, C., Tolley,
+41
+
+[65] Hayati, M., Turkseven, M.: Shape Reconstruction of a Soft Actuator Based on Bezier
+Curves Using Soft Strain Sensors. In: 2024
+IEEE 7th International Conference on Soft
+Robotics (RoboSoft), pp. 977–982. IEEE, San
+Diego, CA, USA (2024). https://doi.org/10.
+1109/RoboSoft60065.2024.10521994
+
+M.T.: Soft robot perception using embedded
+soft sensors and recurrent neural networks.
+Science Robotics 4(26), 1488 (2019) https://
+doi.org/10.1126/scirobotics.aav1488
+[59] Xavier, M.S., Fleming, A.J., Yong, Y.K.:
+Model-Based Nonlinear Feedback Controllers
+for Pressure Control of Soft Pneumatic Actuators Using On/Off Valves. Frontiers in
+Robotics and AI 9, 818187 (2022) https://
+doi.org/10.3389/frobt.2022.818187
+
+[66] Garcı́a-Samartı́n,
+J.F.,
+Molina-Gómez,
+R., Barrientos, A.: Model-Free Control of a Soft Pneumatic Segment.
+Biomimetics 9(3), 127 (2024) https:
+//doi.org/10.3390/biomimetics9030127
+
+[60] Guo, N., Han, X., Zhong, S., Zhou, Z., Lin,
+J., Dai, J.S., Wan, F., Song, C.: Proprioceptive State Estimation for Amphibious Tactile
+Sensing. IEEE Transactions on Robotics 40,
+4662–4676 (2024) https://doi.org/10.1109/
+TRO.2024.3463509
+
+[67] Bianchi, D., Antonelli, M.G., Laschi, C.,
+Sabatini, A.M., Falotico, E.: SofToss: Learning to Throw Objects With a Soft Robot.
+IEEE Robotics & Automation Magazine
+31(4), 113–123 (2024) https://doi.org/10.
+1109/MRA.2023.3310865
+
+[61] Caasenbrood, B.J., Pogromsky, A.Y., Nijmeijer, H.: Dynamic modeling of hyper-elastic
+soft robots using spatial curves. IFACPapersOnLine 53(2), 9238–9243 (2020)
+https://doi.org/10.1016/j.ifacol.2020.12.
+2209
+
+[68] Ansari, Y., Manti, M., Falotico, E., Mollard,
+Y., Cianchetti, M., Laschi, C.: Towards the
+development of a soft manipulator as an assistive robot for personal care of elderly people.
+International Journal of Advanced Robotic
+Systems 14(2), 1729881416687132 (2017)
+https://doi.org/10.1177/1729881416687132
+
+[62] Dickson, A., Garcia, J.C.P., Jing, R., Anderson, M.L., Sabelhaus, A.P.: Real-Time Trajectory Generation for Soft Robot Manipulators Using Differential Flatness. In: 2025
+IEEE 8th International Conference on Soft
+Robotics (RoboSoft), pp. 1–7. IEEE, Lausanne, Switzerland (2025). https://doi.org/
+10.1109/RoboSoft63089.2025.11020810
+[63] Weerakoon, L., Ye, Z., Bama, R.S., Smela, E.,
+Yu, M., Chopra, N.: Adaptive Tracking Control of Soft Robots Using Integrated Sensing
+Skins and Recurrent Neural Networks. In:
+2021 IEEE International Conference on
+Robotics and Automation (ICRA), pp.
+12170–12176. IEEE, Xi’an, China (2021).
+https://doi.org/10.1109/ICRA48506.2021.
+9561447
+[64] Tang, Z., Xin, W., Wang, P., Laschi,
+C.: Learning-Based Control for Soft
+Robot–Environment
+Interaction
+with
+Force/Position
+Tracking
+Capability.
+Soft Robotics 11(5), 767–778 (2024)
+https://doi.org/10.1089/soro.2023.0116
+
+42
+
+
