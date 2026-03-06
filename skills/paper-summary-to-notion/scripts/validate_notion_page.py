@@ -27,22 +27,63 @@ def main():
     bad = []
     has_image = False
     has_file = False
+    bad_directives = []
 
-    for b in r.json().get("results", []):
+    blocks = r.json().get("results", [])
+    img_heading_idx = None
+    pdf_heading_idx = None
+    image_indices = []
+    file_indices = []
+
+    for i, b in enumerate(blocks):
         t = b.get("type")
+        text = ""
+        if t in b and isinstance(b[t], dict):
+            text = plain(b[t].get("rich_text", []))
+
+        if "(아래에" in text and "첨부" in text:
+            bad_directives.append({"block": b.get("id"), "text": text[:200]})
+
         if t == "image":
             has_image = True
+            image_indices.append(i)
         if t == "file":
             has_file = True
+            file_indices.append(i)
         if t in {"heading_1", "heading_2", "heading_3"}:
-            txt = plain(b.get(t, {}).get("rich_text", []))
+            txt = text
+            if txt.strip() == "논문 이미지":
+                img_heading_idx = i
+            if txt.strip() == "원본 PDF":
+                pdf_heading_idx = i
             if "\n" in txt:
                 bad.append({"block": b.get("id"), "reason": "heading contains newline", "text": txt[:200]})
             if txt.strip().startswith(("#", "- ", "> ")):
                 bad.append({"block": b.get("id"), "reason": "heading contains markdown marker", "text": txt[:200]})
 
-    ok = (len(bad) == 0) and has_image and has_file
-    print(json.dumps({"ok": ok, "badHeadings": bad, "hasImage": has_image, "hasFile": has_file}, ensure_ascii=False))
+    bad_placement = []
+    if img_heading_idx is None:
+        bad_placement.append("missing '논문 이미지' heading")
+    if pdf_heading_idx is None:
+        bad_placement.append("missing '원본 PDF' heading")
+
+    if img_heading_idx is not None and pdf_heading_idx is not None:
+        # images should be under '논문 이미지' section and before '원본 PDF'
+        if not any(img_heading_idx < idx < pdf_heading_idx for idx in image_indices):
+            bad_placement.append("images are not under '논문 이미지' section")
+        # file should be after '원본 PDF' heading
+        if not any(idx > pdf_heading_idx for idx in file_indices):
+            bad_placement.append("file is not under '원본 PDF' section")
+
+    ok = (len(bad) == 0) and has_image and has_file and (len(bad_directives) == 0) and (len(bad_placement) == 0)
+    print(json.dumps({
+        "ok": ok,
+        "badHeadings": bad,
+        "hasImage": has_image,
+        "hasFile": has_file,
+        "badDirectives": bad_directives,
+        "badPlacement": bad_placement,
+    }, ensure_ascii=False))
 
 
 if __name__ == "__main__":

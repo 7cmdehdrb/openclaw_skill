@@ -26,6 +26,7 @@ description: Summarize research paper PDFs and upload to Notion with strict form
    - 판정 기준: `(제목 + 연도)` 또는 `source_fingerprint(sha256)` 일치
 3. 이미지는 **선별이 아니라 전체 삽입**
    - 단, `max(width, height) >= 300px`만 추출/삽입
+   - 삽입 순서는 논문 원문 순서(페이지 오름차순 → 페이지 내 이미지 인덱스 오름차순)
 4. 표 사용은 기본 지양
    - 불릿/자식 불릿 중심
 5. Notion 문법 오염 절대 금지
@@ -52,8 +53,12 @@ description: Summarize research paper PDFs and upload to Notion with strict form
    - 상단에 `source_fingerprint: <sha256>` 기록
 8. 이미지 추출 (`scripts/extract_pdf_images.py`)
    - 300px 규칙 통과 이미지 전체를 `## 논문 이미지` 섹션에 인라인 삽입
+   - 삽입 순서: 페이지 오름차순 → 페이지 내 이미지 인덱스 오름차순
+   - `## 논문 이미지` 섹션 하위로 넣어야 하며, 페이지 최하단 임의 추가 금지
 9. `## 원본 PDF` 섹션에 원본 PDF file block 첨부
-10. 구조 검증 (`scripts/validate_notion_page.py --page-id <id>`)
+   - `## 원본 PDF` 섹션 하위로 넣어야 하며, 별도 말미 추가 금지
+10. 요약 지시 문장(예: `(아래에 ... 첨부)`)은 최종 페이지에 남기지 않는다.
+11. 구조 검증 (`scripts/validate_notion_page.py --page-id <id>`)
    - 실패 시 성공 보고 금지 + rollback(in_trash)
 11. 임시 파일 등록
    - **실제로 사용된 파일만** 등록
