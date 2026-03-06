@@ -1,0 +1,1535 @@
+Article
+
+Isotropic 6-DOF VR Locomotion via Fingertip-based Gesture for
+Seamless Viewpoint Maneuvering in Logistics Environments
+Jaehoon Jeong 1 , Haneul Jeon 1 , Haegyeom Choi 1 , Donggyu Min 1 , and Donghun Lee 1, *
+1
+
+*
+
+Mechanical Engineering Department, Soongsil University, Seoul 06978, Republic of Korea;
+wogns1218@soongsil.ac.kr, skyjeon95@gmail.com, choihg@soongsil.ac.kr, dgmin@soongsil.ac.kr
+Correspondence: dhlee04@ssu.ac.kr
+
+Abstract
+
+1
+
+Viewpoint control is a critical challenge in VR-based telemanipulation, especially in highdensity logistics environments where stable line-of-sight is essential. Conventional gesturebased methods, such as the fist-based approach, often suffer from posture-dependent
+anisotropy due to anatomical wrist constraints, leading to trajectory distortion. Furthermore, gaze-coupled methods limit seated accessibility, as users must physically strain to
+achieve downward or backward views. This study proposes a flight-like VR locomotion
+framework utilizing an MLP-based fingertip gesture recognition model and decoupled
+6-DOF velocity mapping. By anchoring the navigation vector to the HMD-frame origin, the
+method achieves posture-invariant control isotropy and 360° seated accessibility. Experimental results indicate improved tracking precision, particularly during significant joint
+articulation. Circular path evaluations showed a 21.89% reduction in RMSE and a 53.86%
+reduction in maximum trajectory error compared to the fist-based method. In complex sequential navigation tasks, the proposed system demonstrated enhanced stability, recording
+a Trajectory RMSE of 0.18. Additionally, the decoupled scheme achieved a 93% success
+rate for extreme viewing angles, providing high accessibility where gaze-coupled methods
+faced ergonomic constraints. These findings suggest the decoupled fingertip-pointing interface is a robust, ergonomic alternative for industrial teleoperation in confined virtual
+environments.
+Keywords: VR locomotion; viewpoint control; control isotropy; seated accessibility; logistics
+robot;
+
+Received:
+Revised:
+Accepted:
+Published:
+Citation: Jeong, J.; Jeon, H.; Choi, H.;
+Min, D.; Lee, D. Title. Journal Not
+Specified 2025, 1, 0. https://doi.org/
+Copyright: © 2026 by the authors.
+Submitted to Journal Not Specified for
+possible open access publication under
+the terms and conditions of the
+Creative Commons Attri- bution (CC
+BY) license (https://creativecommons.
+org/licenses/by/4.0/).
+
+1. Introduction
+
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+20
+21
+
+22
+
+As manufacturing automation and smart factories continue to advance, the importance
+of efficient material-handling systems that connect production processes and logistics hubs
+is increasingly emphasized.[1–4] In this context, teleoperation technologies utilizing virtual
+reality (VR) are receiving attention as an approach that enables operators to intuitively
+control robots even in complex industrial environments. However, in logistics environments where cargo is densely stored in confined spaces, automated pick-and-place tasks
+performed by robots impose various physical constraints.[5] In such situations, depending
+on the viewpoint, visual occlusion may occur in which the target object or the robot gripper
+is obscured, and this acts as a factor that degrades task accuracy and success rate.[6–8]
+In particular, in environments that require precise grasping operations, such occlusion
+interferes with the alignment between the robot end effector and the target object, thereby
+reducing operational efficiency.[9] Therefore, to overcome these limitations, tasks must be
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+2
+
+https://doi.org/10.3390/1010000
+
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+2 of 15
+
+carried out in a state where an appropriate line of sight (LoS) is secured through suitable
+VR locomotion methods.[10]
+VR locomotion methods are categorized into roomscale-based, teleportation-based,
+controller-based, and motion-based methods according to the interaction modality, and
+each approach exhibits distinct technical characteristics under the physical constraints
+of high-density logistics environments.[11] First, roomscale methods restrict the range of
+virtual movement to the actual physical space occupied by the operator, leading to a spatial
+mismatch issue in logistics sites where large-scale shelf structures must be explored.[12,13]
+Teleportation-based methods support instantaneous relocation through destination targeting. However, the abrupt change in viewpoint degrades the operator’s spatial awareness
+and limits the fine adjustments needed for precise alignment of suction grippers.[14–17]
+Furthermore, while controller-based methods provide continuous movement through
+devices such as joysticks, they necessitate the possession of separate hardware. This complicates teleoperation tasks, where robot control and viewpoint manipulation must be
+performed simultaneously.[18,19] Conversely, motion-based methods utilizing bodily actions are considered alternatives as they allow for intuitive control without additional
+devices. Nonetheless, commonly studied techniques such as walk-in-place or arm swinging
+require an excessive range of motion. These methods not only induce physical fatigue
+during sustained operations but also cause upper-body swaying, which acts as physical
+interference, hindering the precise manipulation of the robot’s end effector. Therefore,
+to maintain the stability of precise manipulation, there is a requirement for an interface
+design that minimizes the range of body motion while supporting continuous viewpoint
+control.[20,21]
+
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+
+Table 1. Comparison of Viewpoint Control Methods in Terms of Manipulability
+Method Type
+
+Reference
+
+Orientation Control
+
+Simultaneous 6-DOF Control
+
+Reference Frame
+
+Speed Control
+
+Control Isotropy
+
+Fist-based
+
+Tomberlin et al.[22]
+Xiao et al.[23]
+
+Wrist Orientation
+Fist Spatial-pose
+
+6
+3
+
+Absolute
+Absolute
+
+Continuous
+Continuous
+
+Low
+N/A
+
+Fingertip-based
+
+Ganapathi et al.[24]
+Kang et al.[25]
+Proposed
+
+Fingertip Position
+Fingertip Position
+Fingertip Position
+
+Gaze-coupled
+3
+6
+
+Relative
+Relative
+Relative
+
+Discrete
+Continuous
+Continuous
+
+N/A
+N/A*
+High
+
+* Control isotropy is not applicable due to gaze-coupled orientation.
+
+Table 2. Comparison of Viewpoint Control Methods in Terms of UX-related Constraints
+Method Type
+
+Reference
+
+Seated Accessibility
+
+Occlusion Robustness
+
+Forearm Alignment
+
+Axial-rotation Constraint
+
+Fist-based
+
+Tomberlin et al.[22]
+Xiao et al.[23]
+
+Supported
+Supported
+
+Low (Gesture)
+High
+
+None
+Constrained
+
+Constrained
+None
+
+Fingertip-based
+
+Ganapathi et al.[24]
+Kang et al.[25]
+Proposed
+
+Limited
+Limited
+Supported
+
+High
+High
+High
+
+None
+None
+None
+
+None
+None
+None
+
+To ensure the stability of precision manipulation, several studies have explored singlehand gesture-based viewpoint control utilizing Head-Mounted Display (HMD)-embedded
+cameras.[22–25] A representative approach is the fist-based method[22,23], which maps
+the wrist’s orientation to viewpoint rotation and translation. While this method supports
+continuous velocity control, it inherently suffers from a lack of control isotropy due to the
+anatomical constraints of the human wrist joint. Achieving a full 3 degree-of-freedom (DOF)
+motion without rotating the forearm is physically limited, making the reachable control
+workspace highly dependent on the initial reference frame. For instance, if the gesture
+
+58
+59
+60
+61
+62
+63
+64
+65
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+3 of 15
+
+begins with a specific hand pose such as the back of the hand facing the 9 o’clock direction
+the movement becomes severely distorted or physically blocked in certain sectors, notably
+the 4–8 o’clock range. Although changing the starting posture may shift this restricted zone
+(e.g., shifting the dead zone to 4–8 o’clock), the fundamental issue of a constrained forearm
+axis remains. Consequently, users are often forced to reset their hand pose frequently to
+maintain a fixed-forward forearm alignment, disrupting control continuity. Furthermore,
+the fist gesture is vulnerable to self-occlusion by the forearm, leading to low occlusion
+robustness and potential recognition failures during downward-aiming maneuvers.
+Alternatively, a pointing-based method[24,25] has been proposed, where the viewpoint’s translation is determined by the direction of the index finger. In this framework,
+the viewpoint orientation is strictly gaze-coupled, meaning it is dictated by the HMD’s
+orientation. While this approach offers high intuitiveness, it presents significant ergonomic
+challenges, limiting seated accessibility. Since the pose is coupled with the head direction,
+users must physically rotate their entire body or strain their necks to navigate toward
+backward or top-down views. Moreover, these systems often rely on discrete velocity
+control, which limits the operational efficiency for tasks requiring fine-tuned, high-speed
+navigation in expansive environments.
+To overcome these limitations specifically the posture-dependent control anisotropy,
+ergonomic constraints of gaze-coupling, and low occlusion robustness this study proposes a
+velocity-based flight-like VR locomotion method. Our approach utilizes a fingertip pointing
+gesture to simultaneously control both linear and angular velocities, enabling seamless
+6-DOF viewpoint maneuvering without explicit mode switching. The core research contributions of this paper are as follows:
+•
+
+•
+
+•
+
+Enhanced Control Isotropy via Pointing-based Mapping: By utilizing a fingertipbased mapping instead of a wrist-posture-dependent method, we eliminate the trajectory distortion caused by anatomical joint limits, ensuring uniform control sensitivity
+across all directions regardless of the initial posture.
+Seated-Position Full-Accessibility via Decoupled Control: By decoupling the viewpoint orientation from the user’s head gaze, our system enables intuitive navigation
+toward downward or backward views from a seated position, removing the physical
+rotation constraints of the body.
+Robust Continuous Velocity Control: We introduce an anchor-based reference frame
+that allows for continuous velocity modulation. This method ensures high occlusion
+robustness by maintaining a clear LoS to the fingertip and supports both rapid travel
+and stabilized fine-tuning.
+
+The remainder of this paper is organized as follows: Section 2 describes the proposed
+flight-like VR locomotion framework, including the Multi-Layer Perceptron(MLP)-based
+gesture recognition and the velocity-mapping algorithm. Section 3 presents the experimental setup and methodology, including the evaluation of control isotropy on a Head-Forward
+Plane (HFP) and sequential navigation in complex logistics environments. Section 4 analyzes the experimental results, focusing on isotropic maneuverability and task efficiency
+compared to conventional methods.
+
+2. Methods
+Based on the framework illustrated in Figure 1, this section describes the mechanism
+for real-time path generation and tracking, enabling an operator to reach a designated point
+within the VR field of view. The system consists of three core modules designed to convert
+physical inputs into virtual viewpoint transition sequences:
+
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+
+101
+102
+103
+104
+105
+106
+107
+
+108
+109
+110
+111
+112
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+4 of 15
+
+MLP-based Locomotion
+Triggering Module
+
+{𝑂}
+
+𝑇𝐹𝑂
+
+Relative Spatial Path-based
+Velocity Mapping
+
+Multi-axis Velocity Vector -based
+Viewpoint Update
+
+Relative Spatial Path
+Generation Module
+
+Operator Pose in VR
+
+𝐵 𝑡, 𝑇𝐹𝑂 , 𝑡 ∈ [0,1]
+
+next (𝑉, 𝜔)
+𝑇𝑝𝑙𝑎𝑦𝑒𝑟
+
+𝑇𝐹𝑂
+𝑇𝑝𝑙𝑎𝑦𝑒𝑟
+
+𝑉, 𝜔
+
+{𝐹}
+
+Multi-axis Velocity Vector
+Mapping Module
+
+{𝑀}
+
+𝑉 𝐵, 𝑉𝑚𝑎𝑥 , 𝑑𝑚𝑖𝑛 , 𝑑𝑚𝑎𝑥
+
+𝑀 ∶ 𝑀𝑎𝑝 𝑓𝑟𝑎𝑚𝑒
+𝑂 ∶ 𝑂𝑝𝑒𝑟𝑎𝑡𝑜𝑟𝑓𝑟𝑎𝑚𝑒
+𝐹 ∶ 𝐹𝑖𝑛𝑔𝑒𝑟 𝑓𝑟𝑎𝑚𝑒
+
+Gesture
+
+𝜔(𝐵, 𝜃, a)
+
+Figure 1. Overall framework of the proposed VR locomotion system
+
+•
+
+•
+
+•
+
+MLP-based Locomotion Triggering Module: This module identifies the operator’s
+locomotion intent in real-time by processing skeleton data from HMD sensors through
+a MLP, determining the activation of the transition.
+Relative Spatial Path Generation Module: It calculates the spatial linkage between
+the operator’s viewpoint which is same as HMD and the current fingertip position to
+generate an optimal trajectory for the intended movement.
+Multi-axis Velocity Vector Mapping Module: This module calculates the linear and
+angular velocities required to precisely follow the generated path, ensuring a smooth
+viewpoint transition.
+
+113
+114
+115
+116
+117
+118
+119
+120
+121
+
+Furthermore, visual feedback is integrated to enhance usability and intuitive control.
+By visualizing the generated path and gaze direction in the virtual space, the operator can
+predict the transition trajectory in advance and maintain stable gesture inputs.
+
+124
+
+2.1. MLP-based Locomotion Triggering Module
+
+125
+
+For the user hand gesture recognition required in this study, hand skeleton data
+acquired through the Oculus Integration Software Development Kit(SDK)[26]. The hand
+skeleton data consists of 24 joints, and each joint contains information on its spatial position
+vector(x, y, z) and rotation represented as quaternion(qx, qy, qz, qw). The joints are composed
+of the major parts of the human hand: the forearm, wrist, thumb, index, middle, ring, and
+pinky; the thumb and pinky are further subdivided into 5 joints each, while the index,
+middle, and ring fingers are subdivided into 4 joints each. The thumb comprises the
+trapezium, metacarpal, proximal, distal, and tip, while the pinky consists of the metacarpal,
+proximal, intermediate, distal, and tip. Additionally, the index, middle, and ring fingers are
+divided into the proximal, intermediate, distal, and tip, respectively. The hand skeleton data,
+represented in the wrist reference frame {W }, is split into a training set and a validation
+set at a 8:2 ratio for training the hand gesture recognition model. The hand-skeleton data
+were acquired from continuous movements, and a total of 4,312 data points were used for
+training. The training set was used to update the model’s weights during training, while
+the validation set was used to prevent overfitting and to determine the timing of early
+stopping.
+The input for hand gesture recognition consists of skeleton data, comprising the positions and orientations of hand joints, in which joint-level geometric structures and relative
+relationships serve as the primary discriminative features. Zhang et al.[27] demonstrated
+that, in skeleton-based action recognition, MLP-based architectures that learn point-wise
+joint features can achieve sufficient representational capacity without relying on complex
+
+122
+123
+
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+5 of 15
+
+spatiotemporal modeling or explicit graph structures. Compared to full-body action recognition, the hand skeleton-based gesture classification problem addressed in this study
+involves lower-dimensional inputs and a limited number of gesture classes, making these
+characteristics even more pronounced. Additionally, even in recent studies that do not
+employ skeleton-based recognition models, perceptron-based architectures have been observed. [28] Consequently, an MLP is sufficient to achieve high classification performance
+in this setting. Moreover, due to its simple architecture and lower computational cost
+than CNNs or Transformers, the MLP is advantageous for lightweight models and stable
+inference, which are critical requirements in real-time VR locomotion environments. Based
+on these considerations, an MLP-based classification model was adopted in this study.
+Since the architecture and training performance of an MLP model can vary significantly
+with hyperparameter configuration, a hyperparameter search was conducted over the
+number of hidden layers, the number of nodes per layer, the batch size, the number of
+epochs, and the early stopping patience. As a result, the final model was configured
+with two hidden layers consisting of 32 and 128 nodes, respectively, while the trainingrelated hyperparameters were set to a batch size of 32, 50 training epochs, and an early
+stopping patience of 25. The trained model achieved an accuracy of 99.8% on a test dataset
+consisting of 666 samples that were not used during training. However, since frame-wise
+classification results may lead to occasional misclassifications, a sliding window–based postprocessing method was applied to ensure recognition continuity and stability. Specifically,
+the recognized gesture is maintained when a majority of frames within a predefined
+temporal window are classified as the same gesture, effectively suppressing discontinuous
+recognition results. The resulting stabilized gesture recognition outputs are used as input
+commands for viewpoint control in the proposed VR locomotion method.
+2.2. Relative Spatial Path Generation Module
+Once the operator’s locomotion intent is identified, the system utilizes gaze information and pointing coordinates as geometric constraints to generate a curved path for optimal
+viewpoint transitions in complex 3D environments. The trajectory follows a quadratic Bezier
+curve that smoothly connects the user’s current position to the destination. The three points
+defining the curve’s geometry are established as follows: The starting point (P0 ) is defined
+as the operator’s current HMD position. The destination (P2 ) is intuitively specified in the
+virtual environment using the 3D coordinates of the operator’s index fingertip during the
+pointing gesture. Finally, the intermediate control point (P1 ) dictates the initial steering and
+curvature of the trajectory; it is positioned at an offset distance d (0.3m) along the current
+gaze vector (d⃗curr ), as illustrated in Figure 2.
+
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+6 of 15
+
+Algorithm 1 Relative Spatial Path Generation
+Input: P0 , P2 , Mgesture , dcurr , d
+Output: B(t)
+while Mgesture == POINTING do
+P1 ← P0 + d · dcurr
+B(t) ← (1 − t)2 P0 + 2(1 − t)tP1 + t2 P2 , t ∈ [0, 1]
+return B(t)
+
+𝑃2
+Bezier curve
+
+𝑃0
+𝑃1
+
+: Gaze direction vector 𝑑𝑔𝑎𝑧𝑒
+: Pointing direction vector 𝑑𝑓𝑖𝑛𝑔𝑒𝑟𝑡𝑖𝑝
+: Motion direction vector 𝑑𝑚𝑜𝑡𝑖𝑜𝑛
+Figure 2. Relationship between gaze, pointing, and motion direction vectors for intuitive viewpoint
+control
+
+The resulting path equation, B(t), is defined as a Bezier curve with respect to the
+parameter t ∈ [0, 1]. This trajectory is formed on the 3D plane shared by the gaze vector
+and the pointing vector (the vector connecting the operator’s head to the index fingertip),
+as shown in Figure 2. As described in Algorithm 1, operators can actively modulate the
+curvature of the path by adjusting their hand position while maintaining a fixed head
+orientation, or conversely, by shifting their gaze while holding the hand stationary. This
+mechanism enables the intuitive design of trajectories to avoid occlusions or to approach
+targets at specific angles in obstacle-dense environments, such as warehouse shelving
+systems.
+2.3. Multi-axis Velocity Vector Mapping Module
+This section describes the control algorithm that smoothly transitions the user’s viewpoint along the generated Bezier trajectory. The system calculates linear and angular
+velocities in real-time by analyzing the geometric properties of the path and the user’s
+gesture state. The linear velocity (vlin ) is determined based on the distance between the
+current HMD position (Phmd ) and the target destination (Ptip ). To prevent cybersickness
+caused by excessive speed in the virtual environment (VE), the maximum velocity (Vmax ) is
+set to 0.597 m/s [29], and the final velocity is determined by multiplying Vmax by a distance
+coefficient (σ). The coefficient σ is a normalized value of the distance between the HMD
+and the destination within a predefined range (dmin , dmax ). Specifically, dmin is set to 0.2 m
+as the recognition threshold of the VR interface, and dmax is set to 0.5 m, corresponding to
+the average arm length of an adult female, to allow for maximum speed within a natural
+
+182
+183
+184
+185
+186
+187
+188
+189
+190
+
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+7 of 15
+
+reaching range. Consequently, the system enables rapid movement for distant targets while
+providing progressive deceleration upon approach, ensuring precise transitions and a
+stable working environment.
+Steering control is designed to progressively align the virtual camera’s forward vector
+with the tangent direction of the generated path. The rotational speed is calculated based
+on the orientation error between the current forward vector (dˆcurr ) and the target forward
+vector (dˆtarget ) derived from the Bezier curve. The angular error (θ) is defined using the dot
+product of the two vectors, where dˆtarget represents the normalized tangent direction at the
+current point of the curve. The rotation axis (⃗a) is computed through the cross product of
+these forward vectors. To suppress unintended rotations caused by sensor noise or hand
+tremors, a deadzone of 0.087 rad is applied to the angular error θ. If θ is within the deadzone,
+the rotational speed is set to zero, effectively filtering high-frequency oscillations during
+linear movement. Ultimately, the rotational speed ω is defined as a proportional function
+of the angular error.
+The process of converting the calculated vlin and ω into physical movement within
+the VE is performed through per-frame numerical integration and the composition of
+homogeneous transformation matrices. First, ω is integrated over the control period ∆t
+to obtain a differential rotation angle ∆θ, which is combined with the axis ⃗a to compute
+the local rotational change. During this update, a constraint is applied to the rotation
+matrix to exclude the roll component and maintain a horizontal posture, thereby ensuring
+visual stability and preventing cybersickness to determine Rnext
+hmd . Simultaneously, the HMD
+next via linear integration based on the target tangent direction
+position Phmd is updated to Phmd
+(dˆtarget ) and vlin . Finally, the relative transformation matrix between the current HMD pose
+(t) and the subsequent pose (t + 1) is derived and multiplied by the player’s pose matrix
+t
+in the global frame, Tplayer
+. This process ensures physical consistency, allowing not only
+the camera viewpoint but the user’s entire virtual presence to move organically along the
+intended trajectory. The comprehensive update logic is detailed in Algorithm 2.
+Algorithm 2 Multi-axis Velocity Vector Mapping
+Input: B(t), Phmd , Ptip , Rhmd , ∆t, Tplayer
+next
+Output: Tplayer
+
+
+−dmin
+dcurr = ∥ Ptip − Phmd ∥ σ = Clamp ddcurr
+,
+0,
+1
+vlin = Vmax · σ
+max − dmin
+
+
+d
+dˆtarget = Normalize dt
+B ( t ) t ≈0
+ˆ
+dcurr = ForwardVector( Rhmd )
+θ = arccos(dˆcurr · dˆtarget )
+⃗a = Normalize(dˆcurr × dˆtarget )
+if θ ≤ θdz then
+ω=0
+else
+ω = Kω · θ
+end
+∆θ = ω · ∆t ;
+Rnext
+hmd = LockRoll( R hmd · Rot(⃗a, ∆θ ), 0) ;
+next = P
+ˆ
+Phmd
+hmd + dtarget · vlin · ∆t ;
+next
+next
+Tplayer = Thmd · ( Thmd )−1 · Tplayer ;
+next
+return Tplayer
+
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+8 of 15
+
+2.4. VR Interface of Proposed System
+
+230
+
+To enhance user intuitiveness and convey the system’s control state in real time, visual
+feedback elements were implemented. Through visual guides, the system supports users in
+predicting the movement trajectory and maintaining stable gesture input, and the overall
+configuration is illustrated in Figure 3. At the center of the user’s field of view, a gaze center
+dot is displayed to indicate the viewing direction. This marker visualizes the endpoint of
+the gaze vector, which serves as the geometric basis for computing the intermediate control
+point P1 defined in Section 2.2. Through this center dot, the operator can observe in real
+time how their gaze direction contributes to steering along the generated trajectory and
+can use it as an aiming reference for viewpoint navigation. To ensure continuity of hand
+tracking, an interaction box that visualizes the recommended manipulation region is also
+provided. This guide box is designed based on the tracking system’s effective sensing range
+and encourages the user to keep the non-dominant hand within the detectable region. As a
+result, interruptions in gesture recognition caused by the hand leaving the field of view
+during locomotion control are effectively prevented.
+The curved trajectory is rendered in real time in the virtual environment as a spline.
+This spline provides feedback not only on the intended movement direction but also on the
+geometric path determined by the relative relationship between the gaze direction and the
+index fingertip position P2 . The user can actively modulate the curvature of the trajectory
+by adjusting the hand position laterally while keeping the head fixed, or by moving the
+gaze while keeping the hand stationary. The visualized spline continuously reflects the
+resulting coordination, allowing the user to intuitively anticipate the required maneuvering
+effort when navigating around obstacles or approaching a target from a specific angle.
+Finally, a velocity arrow is displayed to visualize the motion command determined by the
+proposed locomotion method. This arrow represents the final velocity vector computed
+from the generated trajectory, encoding both its direction and magnitude. By providing
+immediate visual feedback on the resulting velocity, the velocity arrow enables the user to
+understand how their pointing gesture and gaze input are translated into actual motion,
+thereby improving controllability and predictability of viewpoint navigation.
+
+Interaction box
+
+Curved trajectory
+Gaze center dot
+
+Velocity arrow
+
+Figure 3. VR interface including gaze center dot, interaction box, curved trajectory and velocity arrow
+
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+9 of 15
+
+3. Experiments
+
+259
+
+3.1. Control Isotropy Identification via Circular-path Tracking
+
+260
+
+The primary objective of this experiment is to evaluate the control isotropy of the proposed fingertip-based method in comparison to the fist-based method. Control isotropy was
+assessed by comparing the geometric fidelity of trajectories generated on the HFP, in which
+users were tasked with executing a perfectly circular path of constant curvature. While
+the fist-based method uses wrist angles for directional control, it is fundamentally limited
+by the wrist’s anatomical range of motion, resulting in a non-uniform control workspace.
+Specifically, when the back of the hand faces the 9 o’clock direction, the trajectory exhibits
+significant skewness or anatomical singularities in the 4–7 o’clock sector. Because this
+restricted zone shifts dynamically with the initial posture, the fist-based method fails to
+provide a consistent steering response across a full 360◦ range.
+Conversely, the proposed fingertip-based method defines the navigation vector as a
+pointing direction from the fingertip relative to the HMD frame origin. By decoupling the
+control input from the hand or wrist’s physical orientation, the system achieves postureinvariant isotropy. Figure 4 and Table 3 illustrate the comparative results between the two
+methods.
+
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+
+Figure 4. Circular trajectory tracking results using fingertip-based and fist-based control method: (a)
+Projected trajectories compared against the reference circle; (b) Distance error over time, including
+RMSE and maximum deviation.
+Table 3. Quantitative and Qualitative Comparison of Control Isotropy
+Metric
+Trajectory RMSE
+Maximum Trajectory Error
+Isotropy Consistency
+Skewed Sectors
+Qualitative Result
+
+Fist-based Method
+
+Proposed Method
+
+37.965 mm
+121.623 mm
+Low (Posture-dependent)
+4–7 o’clock (Variable)
+Anisotropic (Skewed)
+
+31.147 mm
+79.047 mm
+High (Posture-invariant)
+N/A
+Isotropic
+
+As predicted, the fist-based method exhibited significant geometric distortion, recording a maximum trajectory error of 121.623 mm due to the aforementioned joint constraints.
+In contrast, the proposed fingertip-based method maintained high geometric fidelity across
+
+276
+277
+278
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+10 of 15
+
+the entire 360◦ range, achieving a Root-Mean-Square Error (RMSE) of 31.147 mm. Here,
+the RMSE measures the error between the circular reference trajectory to be tracked and
+the trajectories actually followed by the user under each method. These results indicate
+that the RMSE and maximum trajectory error of the conventional fist-based method are
+approximately 21.89% and 53.86% higher, respectively, than those of the proposed approach.
+By defining the navigation vector relative to the HMD frame origin, our method empirically
+demonstrates uniform steering capability regardless of the initial reference frame, thereby
+eliminating the need for repetitive gesture resets.
+3.2. Isotropic Maneuverability Assessment via Radial Waypoint Targeting
+While the previous circular path-tracking experiment assessed the geometric fidelity
+of control inputs, the Isotropic Maneuverability Assessment aims to evaluate the functional
+impact of these characteristics on task execution. This experiment systematically tests
+the directional reachability and manipulability of each method by arranging multiple
+waypoints at equal angular intervals along a circular perimeter and requiring repetitive
+departures from the central origin. The core significance of this test lies in its ability to
+expose how control isotropy affects the operator’s capacity to navigate toward specific
+sectors in space.
+
+279
+280
+281
+282
+283
+284
+285
+286
+
+287
+288
+289
+290
+291
+292
+293
+294
+295
+
+Center of Waypoints
+α=45◦
+D=2.86m
+
+(a)
+
+(b)
+
+Figure 5. Isotropic maneuverability assessment experiment; (a) Experimental setup in the Unity
+environment. The player starts from the origin, and eight waypoints are uniformly distributed at a
+distance of 2.86 m with an angular separation of 45◦ ; (b) Trajectories toward the waypoints for each
+method, illustrating the path taken to reach each target.
+
+The functional impact was quantified using Task Completion Time (TCT) across all
+angular sectors. As shown in Table 4, the fist-based method exhibited a high variance in
+performance, evidenced by a standard deviation of 1.488 s. While TCT remained relatively
+low in anatomically comfortable sectors, the lack of control isotropy in restricted sectors
+forced users to perform repetitive gesture resets, resulting in an average TCT of 6.335 s.
+This highlights the operational burden caused by posture-dependent constraints in wristangle-based systems.
+In contrast, the proposed method demonstrated superior consistency, achieving an
+average TCT of 7.208 s and a significantly lower standard deviation of 0.866 s, representing
+a 77.45% reduction compared to the fist-based method. This stability indicates much higher
+
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+11 of 15
+
+Table 4. Performance Metrics for Isotropic Maneuverability Assessment
+Metric
+Avg. TCT (sec)
+Std. TCT (sec)
+Targeting Success Rate (%)
+
+Fist-based Method
+
+Fingertip-based Method
+
+Proposed Method
+
+6.335
+1.488
+100
+
+7.358
+1.352
+100
+
+7.208
+0.866
+100
+
+operational reliability regardless of the target’s spatial orientation. Furthermore, within the
+fingertip-based category, the proposed method outperformed the conventional scheme[24]
+with a 2.08% reduction in average TCT. Furthermore, as shown in Figure 5, the proposed
+method advances towards each point of entry along a smooth, continuous path, while
+comparative methods exhibit oscillatory motions that deviate from the ideal path. These
+results suggest that integrating simultaneous 6-DOF control with continuous velocity
+modulation provides a more uniform and efficient navigation experience by eliminating
+the performance degradation typically observed in anisotropic or gaze-coupled systems.
+3.3. Sequential Viewpoint Navigation under Isotropic Edge-Cases and Ergonomic Constraints
+The Sequential Viewpoint Navigation experiment evaluates the comprehensive operational efficiency of the proposed method within a realistic, large-scale logistics environment.
+By requiring users to traverse a series of waypoints along a continuous path as shown in
+Figure 6 (a), this test assesses the seamlessness and fluidity of control over long-distance
+maneuvers. A critical aspect of this experiment is the inclusion of edge-case scenarios
+designed to force continuous steering into sectors where the fist-based method exhibits
+skewed isotropy. Furthermore, the trajectory incorporates abrupt transitions to downward
+or backward orientations to evaluate the seated-position full-accessibility of the proposed
+decoupled 6-DOF control.
+
+Figure 6. Comprehensive evaluation of the proposed navigation framework: (a) 3D trajectories in the
+sequential navigation task for validating control isotropy; (b) Comparison of navigation performance
+in seated-position accessibility experiments.
+
+306
+307
+308
+309
+310
+311
+312
+313
+
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+12 of 15
+
+The trajectory RMSE analysis of the navigation results revealed significant differences
+in trajectory tracking capability. The trajectory RMSE represents the error between the
+optimal reference trajectory, generated by spline interpolation of predefined waypoints,
+and the actual trajectory executed by the user during the experimental trials. As shown
+in Table 5, the fist-based method recorded a remarkably high RMSE of 0.2, indicating a
+substantial failure to follow the target trajectory smoothly. In contrast, the proposed method
+achieved a significantly lower RMSE of 0.18, demonstrating superior precision on complex
+3D paths designed to address various operational edge cases. As illustrated by the 3D
+trajectory comparison in Figure 6 (b), the fist-based method exhibited unstable zigzag-like
+movements due to unintended wrist tremors and anatomical constraints during longdistance navigation; in contrast, the proposed method maintained a stable and intentional
+trajectory by effectively decoupling the navigation vector from the user’s wrist posture.
+
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+
+Table 5. Performance Evaluations for Sequential Navigation under Ergonomic Constraint
+Metric
+Avg. TCT (sec)
+Std. TCT (sec)
+Avg. Lin Acc (m/sec2 )
+Avg. Ang Acc (rad/sec2 )
+Trajectory RMSE
+Targeting Success Rate (%)
+
+Fist-based
+
+Fingertip-based
+
+Proposed
+
+56.99
+8.74
+0.79
+0.23
+0.20
+100
+
+70.00
+34.73
+0.59
+0.0
+0.74
+40
+
+57.94
+3.72
+0.63
+0.25
+0.18
+93
+
+Seated accessibility was further evaluated through extreme viewpoint rotations. The
+gaze-coupled fingertip method failed in all trials, as users were unable to perform rearviewing motions while seated. Conversely, the proposed method achieved a 93% success
+rate, confirming that decoupled control provides high accessibility from a static posture.
+Although the fist-based method reached all targets (100% success), it required significant
+physical strain, leading to the erratic navigation performance observed in the RMSE results.
+These findings demonstrate that the proposed method ensures both reachability and control
+fluidity, making it highly efficient for stable industrial teleoperation.
+
+336
+337
+338
+339
+340
+341
+342
+343
+
+4. Results and Discussion
+
+344
+
+4.1. Integrated Discussion: Control Stability in Edge Cases and Strategic Advantages
+
+345
+
+Synthesizing the findings across the evaluation stages, the proposed fingertip-based
+6-DOF control framework demonstrates significant potential in addressing operational
+edge cases where conventional methods often face technical or ergonomic constraints.
+The decision to implement a seated experimental condition was primarily driven by the
+practical requirements of logistics environments, where operators must perform long-term
+teleoperation of multiple agents. In such contexts, requiring an operator to constantly stand
+and rotate their torso is detrimental to both user experience and health due to cumulative
+physical fatigue. Furthermore, gaze-coupled methods are considered unfavorable from a
+UX perspective for sustained industrial tasks, as they require operators to continuously tilt
+their heads to maintain downward gaze, resulting in significant postural strain on the neck
+and shoulders.
+In contrast, the proposed decoupled method allows the user to navigate through subtle
+finger pointing rather than physical head or body movement, thereby minimizing physical
+tension while maintaining precise control. Our findings clarify that while gaze-coupled
+methods might track trajectories effectively in unconstrained environments, they face inherent limitations under the seated constraints essential for long-term operation. Specifically,
+Experiment 2 revealed that gaze-coupled systems are unable to facilitate viewpoint control
+toward directions outside the current line of sight particularly rearward maneuvers while
+
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+13 of 15
+
+the operator remains seated. By decoupling the navigation vector from head gaze, the
+proposed system achieved a 93% success rate in tasks including rearward maneuvers, providing greater accessibility than gaze-coupled methods, which faced significant ergonomic
+constraints.
+Additionally, the proposed method maintains consistent control isotropy even at extreme operational angles. Unlike fist-based interfaces, which suffer from posture-dependent
+skewness in specific sectors (particularly 4–7 o’clock) due to anatomical wrist limits, the
+proposed method ensures uniform sensitivity across the entire range. Quantitative results
+show a 21.89% reduction in RMSE and a 53.86% reduction in maximum trajectory error
+compared to the fist-based method in circular path evaluations. This technical consistency
+was further evidenced in complex sequential navigation tasks, where the system recorded a
+highly precise Trajectory RMSE of 0.18. These improvements resulted in a 77.45% reduction
+in TCT variance, confirming that the interface provides consistent control regardless of the
+target’s spatial orientation. As a result, the proposed system leverages the HMD’s native
+sensors to flexibly overcome physical and spatial constraints that conventional interfaces
+have historically found difficult to address. It serves as a practical alternative that reduces
+operator fatigue and maximizes operational efficiency in industrial environments where
+precise, omnidirectional viewpoint transitions are essential, such as high-density logistics.
+4.2. Limitations and Future Works
+Despite the improved stability, the proposed framework faces inherent physical limitations under the seated condition. In a seated posture, immediate rearward rotation is
+physically constrained, requiring a minimum turning radius to complete such maneuvers.
+This kinematic characteristic acts as a limiting factor for ultra-precise navigation within
+confined virtual environments.
+Future Works will explore the generation of 3D spline paths from the current viewpoint
+to a target destination. Specifically, we plan to systematically investigate the correlation
+between the geometric parameters of the 3D spline and the user’s controllability. This
+research direction aims to achieve UX-centered performance improvements by identifying
+how precisely and intuitively operators can navigate according to their specific intentions.
+4.3. Concluding Remarks
+In summary, this study presented a flight-like VR locomotion framework utilizing
+MLP-based fingertip gesture recognition and decoupled 6-DOF velocity mapping. By
+effectively balancing control range and ergonomic stability, the proposed system provides
+a robust solution for complex viewpoint control in specialized industrial teleoperation.
+The experimental results demonstrated that the proposed method addresses postural
+skewness and achieves a 10% reduction in Trajectory RMSE compared to the conventional fist-based method, thereby enhancing stability during complex navigation tasks.
+Furthermore, the decoupled control scheme facilitated high accessibility in scenarios requiring extreme viewing angles from a seated position, where gaze-coupled methods faced
+ergonomic constraints. These findings suggest that decoupled fingertip-pointing is an
+efficient and ergonomic modality for omnidirectional maneuvering in high-density virtual
+environments.
+Author Contributions: Conceptualization, J.J., H.C., H.J. and D.L.; methodology, J.J., H.C., H.J. and
+D.L.; software, H.C., H.J., D.M. and J.J.; validation, H.C., H.J., D.M. and J.J.; formal analysis, H.C.,
+H.J. and D.L.; investigation, H.C., H.J., J.J. and D.L.; resources, D.L.; data curation, D.M. and J.J.;
+writing—original draft preparation, J.J., H.C., H.J., and D.L..; writing—review and editing, H.C.,
+H.J. and D.L.; visualization, J.J. and D.L.; supervision, D.L.; project administration, D.L.; funding
+acquisition, D.L. All authors have read and agreed to the published version of the manuscript.
+
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+
+406
+407
+408
+409
+410
+411
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+14 of 15
+
+Funding: This work was supported by the National Research Foundation of Korea (NRF) grant
+funded by the Korea government (MSIT)(RS-2025-00563228); the Institute of Information & Communications Technology Planning & Evaluation(IITP)-Innovative Human Resource Development
+for Local Intellectualization program grant funded by the Korea government(MSIT)(IITP-2026-RS2022-00156360); Korea institute for Advancement of Technology(KIAT) grant funded by the Korean
+Government (MOTIE) (P0017123, HRD Program for Industrial Innovation).
+
+412
+413
+414
+415
+416
+417
+
+Institutional Review Board Statement: Not applicable.
+
+418
+
+Informed Consent Statement: Informed consent was obtained from all subjects involved in the study.
+
+419
+
+Data Availability Statement: Not applicable.
+
+420
+
+Conflicts of Interest: The authors declare no conflicts of interest.
+
+421
+
+Abbreviations
+
+422
+
+The following abbreviations are used in this manuscript:
+
+423
+424
+
+DOF
+HFP
+HMD
+LoS
+MLP
+RMSE
+SDK
+TCT
+VR
+VE
+{O}
+{W}
+{M}
+
+Degrees of Freedom
+Head-Forward Plane
+Head-Mounted Display
+Line of Sight
+Multi-Layer Perceptron
+Root Mean Square Error
+Software Development Kit
+Task Completion Time
+Virtual Reality
+Virtual Environment
+Operator Reference Frame
+Wrist Reference Frame
+Virtual Space Reference Frame
+
+References
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+10.
+11.
+
+Lyu, Z., Lin, P., Guo, D., & Huang, G. Q. (2020). Towards zero-warehousing smart manufacturing from zero-inventory just-in-time
+production. Robotics and Computer-Integrated Manufacturing, 64, 101932.
+Barari, A., de Sales Guerra Tsuzuki, M., Cohen, Y., & Macchi, M. (2021). Intelligent manufacturing systems towards industry 4.0
+era. Journal of Intelligent Manufacturing, 32(7), 1793-1796.
+Zheng, P., Wang, H., Sang, Z., Zhong, R. Y., Liu, Y., Liu, C., ... & Xu, X. (2018). Smart manufacturing systems for Industry 4.0:
+Conceptual framework, scenarios, and future perspectives. Frontiers of Mechanical Engineering, 13(2), 137-150.
+Singh, A., Madaan, G., Hr, S., & Kumar, A. (2023). Smart manufacturing systems: a futuristics roadmap towards application of
+industry 4.0 technologies. International Journal of Computer Integrated Manufacturing, 36(3), 411-428.
+Jiang, P., Oaki, J., Ishihara, Y., Ooga, J., Han, H., Sugahara, A., ... & Ogawa, A. (2022). Learning suction graspability considering
+grasp quality and robot reachability for bin-picking. Frontiers in Neurorobotics, 16, 806898.
+Rakita, D., Mutlu, B., & Gleicher, M. (2019). Remote telemanipulation with adapting viewpoints in visually complex environments.
+Robotics: Science and Systems XV.
+Zhu, F., Wang, L., Wen, Y., Yang, L., Pan, J., Wang, Z., & Wang, W. (2021). Failure handling of robotic pick and place tasks with
+multimodal cues under partial object occlusion. Frontiers in Neurorobotics, 15, 570507.
+Montazer Zohour, H., Belzile, B., Gomes Braga, R., & St-Onge, D. (2022). Minimize tracking occlusion in collaborative pick-andplace tasks: An analytical approach for non-wrist-partitioned manipulators. Sensors, 22(17), 6430.
+Yuan, F., Tian, L., Xu, H., Fu, Z., Wu, W., Xie, Z., ... & Wen, L. (2025). A Sensorized Mechanically Self-Guided Suction Cup for
+Improved Adhesion in Complex Environments. Soft Robotics.
+Jia, R., Yang, L., Cao, Y., Kalun Or, C., Wang, W., & Pan, J. (2024). Learning Autonomous Viewpoint Adjustment from Human
+Demonstrations for Telemanipulation. ACM Transactions on Human-Robot Interaction, 13(3), 1-23.
+Boletsis, C., & Chasanidou, D. (2022). A typology of virtual reality locomotion techniques. Multimodal Technologies and
+Interaction, 6(9), 72.
+
+425
+
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+
+Version February 18, 2026 submitted to Journal Not Specified
+
+12.
+
+13.
+14.
+15.
+16.
+
+17.
+18.
+19.
+20.
+
+21.
+
+22.
+23.
+24.
+25.
+
+26.
+27.
+28.
+29.
+
+15 of 15
+
+Williams, B., Narasimham, G., Rump, B., McNamara, T. P., Carr, T. H., Rieser, J., & Bodenheimer, B. (2007, July). Exploring large
+virtual environments with an HMD when physical space is limited. In Proceedings of the 4th symposium on Applied perception
+in graphics and visualization (pp. 41-48).
+Bozgeyikli, E., Raij, A., Katkoori, S., & Dubey, R. (2019). Locomotion in virtual reality for room scale tracked areas. International
+Journal of Human-Computer Studies, 122, 38-49.
+Bhandari, J., MacNeilage, P. R., & Folmer, E. (2018, May). Teleportation without Spatial Disorientation Using Optical Flow Cues.
+In Graphics interface (pp. 162-167).
+Cherep, L. A., Lim, A. F., Kelly, J. W., Acharya, D., Velasco, A., Bustamante, E., ... & Gilbert, S. B. (2020). Spatial cognitive
+implications of teleporting through virtual environments. Journal of Experimental Psychology: Applied, 26(3), 480.
+Yao, Q., Zhao, Y., Creem-Regehr, S. H., Stefanucci, J. K., & Bodenheimer, B. (2023, October). Does teleporting length affect spatial
+awareness?. In 2023 IEEE International Symposium on Mixed and Augmented Reality Adjunct (ISMAR-Adjunct) (pp. 126-130).
+IEEE.
+Prithul, A., Adhanom, I. B., & Folmer, E. (2021). Teleportation in virtual reality; a mini-review. Frontiers in Virtual Reality, 2,
+730792.
+Hetrick, R., Amerson, N., Kim, B., Rosen, E., de Visser, E. J., & Phillips, E. (2020, April). Comparing virtual reality interfaces for
+the teleoperation of robots. In 2020 Systems and Information Engineering Design Symposium (SIEDS) (pp. 1-7). IEEE.
+Zhou, C., Wan, Y., Peers, C., Delfaki, A. M., & Kanoulas, D. (2024). Advancing teleoperation for legged manipulation with
+wearable motion capture. Frontiers in Robotics and AI, 11, 1430842.
+Luo, T., Cai, C., Zhao, Y., Fan, Y., Pan, Z., Han, T., & Tian, F. (2023, October). Exploring locomotion methods with upright redirected
+views for vr users in reclining & lying positions. In Proceedings of the 36th Annual ACM Symposium on User Interface Software
+and Technology (pp. 1-16).
+Ribeiro, R. A., Gonçalves, I., Piçarra, M., Seixas Pereira, L., Duarte, C., Rodrigues, A., & Guerreiro, J. (2024, May). Investigating
+virtual reality locomotion techniques with blind people. In Proceedings of the 2024 CHI Conference on Human Factors in
+Computing Systems (pp. 1-17).
+Tomberlin, M., Tahai, L., & Pietroszek, K. (2017, March). Gauntlet: Travel technique for immersive environments using nondominant hand. In 2017 IEEE virtual reality (VR) (pp. 299-300). IEEE.
+Xiao, Y., Liu, T., Han, Y., Yue, K., & Liu, Y. (2022). Investigation of the turning speed for immersive environments using freehandbased technique. Journal of the Society for Information Display, 30(12), 894-904.
+Ganapathi, P., & Sorathia, K. (2023). User elicited gesture-based locomotion techniques for immersive VEs in a seated position: a
+comparative evaluation. Frontiers in Virtual Reality, 4, 1169654.
+Kang, S., Jeong, J., Lee, G. A., Kim, S. H., Yang, H. J., & Kim, S. (2024, May). The rayhand navigation: A virtual navigation method
+with relative position between hand and gaze-ray. In Proceedings of the 2024 CHI Conference on Human Factors in Computing
+Systems (pp. 1-15).
+Meta. Oculus Integration SDK. Available online: https://developers.meta.com/horizon/downloads/package/unityintegration/(accessed on 31 12 2025).
+Zhang, S., Yin, J., Dang, Y., & Fu, J. (2024). SiT-MLP: A simple MLP with point-wise topology feature learning for skeleton-based
+action recognition. IEEE Transactions on Circuits and Systems for Video Technology, 34(9), 8122-8134.
+Wang, H., Zhang, W., Xu, Y., Li, H., & Ren, P. (2025). WaterCycleDiffusion: Visual-textual fusion empowered underwater image
+enhancement. Information Fusion, 103693.
+Kim, J., & Park, T. (2020). The onset threshold of cybersickness in constant and accelerating optical flow. Applied Sciences, 10(21),
+7808.
+
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.
+
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+
+490
+491
+492
+
+
