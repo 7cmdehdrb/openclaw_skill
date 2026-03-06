@@ -80,6 +80,7 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 - Ensure placeholders like `(아래 이미지 삽입)` are removed when images are actually inserted.
 - Ensure nested bullets are real child bullets (never leave raw `- ...` text lines).
 - Place key images near the matching section context (not dumped at page bottom).
+- Any skill update must follow `commit -> push` (both required).
 
 ## Failure Handling
 
