@@ -11,12 +11,15 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 
 1. Read PDF metadata/title (e.g., `pdfinfo`).
 2. Extract text from key sections (abstract/introduction/method/results/conclusion) with local tools (e.g., `pdftotext`).
-3. Write structured markdown summary using schema from `references/prompt.txt`:
+3. Fetch paper metadata (`scripts/paper_metadata.py --title "..."`) and prepare a new section:
+   - `0) 논문 정보` (citation APA/BibTeX in quote blocks, 출간 연도, 출간 저널, citation 수)
+   - If metadata confidence is low, verify via browser flow on Google Scholar.
+4. Write structured markdown summary using schema from `references/prompt.txt`:
    - 문제 상황
    - Proposed method
    - 정량/정성 결과
-4. Preserve useful technical symbols/terms from source.
-5. Create Notion page under:
+5. Preserve useful technical symbols/terms from source.
+6. Create Notion page under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
 6. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
 7. (Optional) Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
@@ -50,6 +53,11 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 ## Failure Handling
 
 - PDF text extraction fails/scanned PDF only → report OCR requirement and pause.
+- Metadata API match confidence low (<0.75) or missing fields → browser fallback:
+  1) Open `https://scholar.google.co.kr/schhp?hl=ko&as_sdt=0,5`
+  2) Search by full paper title
+  3) Pick best match by title+authors+venue
+  4) Read citation count and citation info manually
 - Notion path lookup fails → stop and report which node failed.
 - Duplicate title → append numeric suffix.
 
@@ -62,5 +70,6 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 
 - Summary schema: `references/prompt.txt`
 - Notion markdown conversion helper: `scripts/markdown_to_notion.py`
+- Paper metadata fetcher: `scripts/paper_metadata.py`
 - PDF image extractor: `scripts/extract_pdf_images.py`
 - Workflow checklist (operator): `references/checklist.md`
