@@ -1,0 +1,14 @@
+{
+  "input_title": "Control Strategies for Soft Robotic Manipulators: A Survey",
+  "matched_title": "Control Strategies for Soft Robotic Manipulators: A Survey",
+  "match_confidence": 1.0,
+  "year": 2018,
+  "journal": "Soft Robotics",
+  "citation_count": 610,
+  "doi": "10.1089/soro.2017.0007",
+  "citation": {
+    "apa": "George Thuruthel, T. ; Ansari, Y. ; Falotico, E. ; Laschi, C. (2018). Control Strategies for Soft Robotic Manipulators: A Survey. Soft Robotics. https://doi.org/10.1089/soro.2017.0007",
+    "bibtex": "@article{George_Thuruthel_2018, title={Control Strategies for Soft Robotic Manipulators: A Survey}, volume={5}, ISSN={2169-5180}, url={http://dx.doi.org/10.1089/soro.2017.0007}, DOI={10.1089/soro.2017.0007}, number={2}, journal={Soft Robotics}, publisher={SAGE Publications}, author={George Thuruthel, Thomas and Ansari, Yasmin and Falotico, Egidio and Laschi, Cecilia}, year={2018}, month=apr, pages={149â€“163} }"
+  },
+  "notes": "If confidence is low (<0.75), verify with Google Scholar manually."
+}
