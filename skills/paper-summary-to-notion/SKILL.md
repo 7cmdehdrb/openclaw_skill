@@ -29,6 +29,7 @@ description: Summarize research paper PDFs and upload to Notion with strict form
    - 연도, 저널/학회, citation 수(불명확 시 "본문 확인 필요"), DOI(있으면), APA, BibTeX
 3. `## 초록`은 원문 abstract의 **직역 번역**으로 작성
    - 의역/요약/내용 추가·삭제 금지
+   - 인용(quote) 블록을 사용하지 않고 일반 문단(paragraph)으로 작성
 3. 중복 검사 최우선
    - 동일 논문 페이지가 이미 `논문` 부모 페이지 아래 있으면 **스킵**
    - 판정 기준: `(제목 + 연도)` 또는 `source_fingerprint(sha256)` 일치
@@ -90,7 +91,8 @@ description: Summarize research paper PDFs and upload to Notion with strict form
 13. 락 해제 (성공/실패 모두)
 
 ## Formatting Guard
-- `## 논문 정보`, `## 문제 상황`, `## 제안하는 방법`, `## 결과` 아래는 본문 시작 전 한 줄 공백 유지
+- 각 섹션(`## ...`) 사이에는 빈 문단 1줄을 넣어 시각적으로 구분되게 한다.
+- `## 논문 정보`, `## 초록`, `## 문제 상황`, `## 제안하는 방법`, `## 결과` 아래는 본문 시작 전 한 줄 공백 유지
 - heading 텍스트는 단일 라인만 허용
 
 ## Cron Hardening (품질 편차 방지)
