@@ -23,8 +23,7 @@
 - [ ] 이미지 추출 시 `max(width,height) >= 300` 필터 적용
 - [ ] 필터 통과 이미지 전부 `## 논문 이미지` 섹션에 인라인 삽입
 - [ ] 이미지 순서가 논문 원문 순서(페이지→인덱스)인지 확인
-- [ ] 가능한 이미지에는 Figure caption을 Notion image caption으로 입력
-- [ ] 캡션 매칭 실패 이미지는 빈 caption 또는 `Figure caption not confidently matched` 처리
+- [ ] 이미지 caption은 비워서 삽입(캡션 미사용)
 - [ ] `## 원본 PDF` 섹션에 실제 file block 첨부
 - [ ] `(아래에 ... 첨부)` 같은 지시 문장이 최종 페이지에 남아있지 않은지 확인
 

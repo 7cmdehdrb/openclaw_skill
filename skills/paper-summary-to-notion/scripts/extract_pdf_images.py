@@ -53,16 +53,41 @@ def extract_images_from_pdf(pdf_path_str: str, flatten_alpha: bool = True, min_p
 
     extracted_count = 0
 
-    # 3) PDF 이미지 추출
+    # 3) PDF 이미지 추출 (논문 내 배치 순서 기준)
+    # 순서 정의: page 오름차순 -> 페이지 내 y(top) 오름차순 -> x(left) 오름차순
     try:
         doc = fitz.open(pdf_path)
 
-        for page_num in range(len(doc)):
-            page = doc[page_num]
-            image_list = page.get_images(full=True)
+        for page_idx in range(len(doc)):
+            page = doc[page_idx]
 
-            for img_index, img in enumerate(image_list):
+            # 각 xref 이미지의 실제 배치 rect 수집
+            placements = []
+            for img in page.get_images(full=True):
                 xref = img[0]
+                try:
+                    rects = page.get_image_rects(xref)
+                except Exception:
+                    rects = []
+                if not rects:
+                    # rect를 찾지 못해도 후보로는 남긴다(페이지 하단으로 밀기)
+                    placements.append((xref, float('inf'), float('inf')))
+                else:
+                    for r in rects:
+                        placements.append((xref, float(r.y0), float(r.x0)))
+
+            # 페이지 내 표시 순서로 정렬
+            placements.sort(key=lambda t: (t[1], t[2], t[0]))
+
+            # 동일 xref가 여러 rect로 반복될 수 있으므로, 중복 제거는 (xref,y,x) 단위로 수행
+            seen = set()
+            seq = 0
+            for xref, y0, x0 in placements:
+                key = (xref, round(y0, 3), round(x0, 3))
+                if key in seen:
+                    continue
+                seen.add(key)
+
                 base_image = doc.extract_image(xref)
                 image_bytes = base_image["image"]
                 image_ext = base_image.get("ext", "png")
@@ -73,7 +98,9 @@ def extract_images_from_pdf(pdf_path_str: str, flatten_alpha: bool = True, min_p
                 if not _passes_min_size(image_bytes, min_px):
                     continue
 
-                image_name = f"page_{page_num + 1}_img_{img_index + 1}.{image_ext}"
+                seq += 1
+                # 이름 규칙 개선: 페이지/순번을 0-pad로 저장해 정렬 안정화
+                image_name = f"page_{page_idx + 1:03d}_img_{seq:03d}.{image_ext}"
                 image_filepath = output_dir / image_name
 
                 with open(image_filepath, "wb") as f:
