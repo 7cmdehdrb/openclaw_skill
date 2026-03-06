@@ -1,0 +1,14 @@
+{
+  "input_title": "Predictive Uncertainty Estimation Using Deep Learning for Soft Robot Multimodal Sensing",
+  "matched_title": "Predictive Uncertainty Estimation Using Deep Learning for Soft Robot Multimodal Sensing",
+  "match_confidence": 1.0,
+  "year": 2021,
+  "journal": "IEEE Robotics and Automation Letters",
+  "citation_count": 23,
+  "doi": "10.1109/lra.2021.3056066",
+  "citation": {
+    "apa": "Ding, Z. ; Loo, J. ; Baskaran, V. ; Nurzaman, S. ; Tan, C. (2021). Predictive Uncertainty Estimation Using Deep Learning for Soft Robot Multimodal Sensing. IEEE Robotics and Automation Letters. https://doi.org/10.1109/lra.2021.3056066",
+    "bibtex": "@article{Ding_2021, title={Predictive Uncertainty Estimation Using Deep Learning for Soft Robot Multimodal Sensing}, volume={6}, ISSN={2377-3774}, url={http://dx.doi.org/10.1109/lra.2021.3056066}, DOI={10.1109/lra.2021.3056066}, number={2}, journal={IEEE Robotics and Automation Letters}, publisher={Institute of Electrical and Electronics Engineers (IEEE)}, author={Ding, Ze Yang and Loo, Junn Yong and Baskaran, Vishnu Monn and Nurzaman, Surya Girinatha and Tan, Chee Pin}, year={2021}, month=apr, pages={951â€“957} }"
+  },
+  "notes": "If confidence is low (<0.75), verify with Google Scholar manually."
+}
