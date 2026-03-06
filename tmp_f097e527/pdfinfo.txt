@@ -1,0 +1,22 @@
+Title:           Development and Grasp Stability Estimation of Sensorized Soft Robotic Hand
+Subject:         This paper introduces the development of an anthropomorphic soft robotic hand integrated with multiple flexible force sensors in the fingers.
+Keywords:        machine learning, one shot learning, pneumatic actuators, soft end effector, grasping
+Author:          P. M. Khin and Chen H. Yeow
+Creator:         LaTeX with hyperref package + hypdvips
+Producer:        dvips + MiKTeX GPL Ghostscript  9.0
+CreationDate:    Thu Mar 25 10:59:28 2021 KST
+ModDate:         Thu Mar 25 11:42:24 2021 KST
+Custom Metadata: no
+Metadata Stream: yes
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           12
+Encrypted:       no
+Page size:       595.26 x 779.52 pts
+Page rot:        0
+File size:       2886408 bytes
+Optimized:       no
+PDF version:     1.6

@@ -1,0 +1,14 @@
+{
+  "input_title": "Development and Grasp Stability Estimation of Sensorized Soft Robotic Hand",
+  "matched_title": "Development and Grasp Stability Estimation of Sensorized Soft Robotic Hand",
+  "match_confidence": 1.0,
+  "year": 2021,
+  "journal": "Frontiers in Robotics and AI",
+  "citation_count": 16,
+  "doi": "10.3389/frobt.2021.619390",
+  "citation": {
+    "apa": "Khin, P. ; Low, J. ; Ang, M. ; Yeow, C. (2021). Development and Grasp Stability Estimation of Sensorized Soft Robotic Hand. Frontiers in Robotics and AI. https://doi.org/10.3389/frobt.2021.619390",
+    "bibtex": "@article{Khin_2021, title={Development and Grasp Stability Estimation of Sensorized Soft Robotic Hand}, volume={8}, ISSN={2296-9144}, url={http://dx.doi.org/10.3389/frobt.2021.619390}, DOI={10.3389/frobt.2021.619390}, journal={Frontiers in Robotics and AI}, publisher={Frontiers Media SA}, author={Khin, P. M. and Low, Jin H. and Ang, Marcelo H. and Yeow, Chen H.}, year={2021}, month=mar }"
+  },
+  "notes": "If confidence is low (<0.75), verify with Google Scholar manually."
+}
