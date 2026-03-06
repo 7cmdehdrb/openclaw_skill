@@ -24,15 +24,16 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 5. Preserve useful technical symbols/terms from source.
 6. Create Notion page under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
-6. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
-7. (Optional) Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
+7. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
+8. Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
    - **High-priority mandatory rule**: include framework/architecture-type figures whenever present (e.g., pipeline/system block/architecture diagrams; figure number is irrelevant).
    - Priority order: framework/architecture > real setup/hardware photos > representative method diagrams.
    - De-prioritize pure result-only plots unless they are essential to the core claim.
-8. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
-9. Insert selected key images as **inline image blocks** near relevant paragraphs (not only as file attachments).
-10. Add `### 원본 PDF` section and attach original PDF file.
-11. Report page URL + what was extracted (pages/sections used).
+9. Convert markdown with `scripts/markdown_to_notion.py` and append blocks.
+10. Insert selected key images as **inline image blocks** near relevant paragraphs (not only as file attachments).
+11. Add `### 원본 PDF` section and attach original PDF file.
+12. Run final validation checklist (`references/checklist.md`) before reporting.
+13. Report page URL + what was extracted (pages/sections used).
 
 ## Hard Rules
 
@@ -52,6 +53,14 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 - If robust numeric tables are unavailable, report verified qualitative outcome + explicit caveat.
 - Prefer direct evidence phrasing over speculative wording.
 - Write concise, publication-style summary (no filler, no generic claims).
+
+### Execution Guardrails (must pass before done)
+
+- Do not report completion until all checklist items are verified.
+- Do not skip image extraction when key-image insertion is expected.
+- If extracted image count is 0, explicitly report and continue without image insertion only with clear reason.
+- If inline image insertion fails, retry once; if still failing, report failure explicitly (do not claim success).
+- Ensure placeholders like `(아래 이미지 삽입)` are removed when images are actually inserted.
 
 ## Failure Handling
 
