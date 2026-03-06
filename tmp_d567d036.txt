@@ -1,0 +1,1260 @@
+88
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 24, NO. 1, FEBRUARY 2019
+
+Configuration Estimation for Accurate Position
+Control of Large-Scale Soft Robots
+Phillip Hyatt , Dustan Kraus , Vallan Sherrod, Levi Rupert , Nathan Day, and Marc D. Killpack
+
+Abstract—There is a significant trend in robotics of exploring passively compliant and low inertia systems that
+can safely make contact with the environment. This paper
+defines many of the problems associated with developing
+effective control of soft, pneumatically actuated, inflatable
+robots, and proposes an approach to solving a subset of
+these problems. We show that we can obtain a global measurement of orientation for a given soft-robot link using two
+different types of sensors (not including motion capture).
+Given the orientation measurement, it is possible to estimate relative configurations of the soft actuators and joints.
+In order to validate the ability to control position and orientation at the end effector, we show a new method for calibrating the coordinate frames of two unrelated measurement
+systems. Then, using one of our configuration estimation
+methods, we demonstrate its viability by performing simple
+behaviors with a large-scale (approximately 1.5 m long) softrobot platform attached to the K-Rex rover at NASA Ames in
+an outdoor environment. Our results also show the importance of soft-robot kinematic calibration and the sensitivity
+of a soft robot to simple perturbations in the structure like
+deflation and reinflation. Finally, we show that end effector
+error can be significantly reduced by doing a form of servoing. In summary, our approach and demonstrations show
+effective soft-robot configuration estimation and control for
+large-scale soft robots capable of performing manipulation
+tasks.
+Index Terms—Calibration, motion control, pneumatic actuators, pose estimation, robot kinematics, soft robotics,
+state estimation, visual servoing.
+
+I. INTRODUCTION
+RADITIONAL, rigid robots are very effective in factories
+and in structured settings where the environment is known
+or carefully constrained. However, they fall short in situations
+where a model of the environment is incomplete and contact
+
+T
+
+Manuscript received February 5, 2018; revised June 15, 2018 and
+October 10, 2018; accepted October 17, 2018. Date of publication October 26, 2018; date of current version February 14, 2019. This work
+was supported in part by the NASA Early Career Faculty under Grant
+NNX14A051G, and in part by the NASA Small Business Innovation Research Phase II grant that has made this research possible. (Phillip Hyatt,
+Dustan Kraus, Vallan Sherrod, and Levi Rupert contributed equally to this
+work.) Recommended by Technical Editor K. K. Leang. (Corresponding
+author: Marc Killpack.)
+The authors are with the Mechanical Engineering Department,
+Brigham Young University, Provo, UT 84602 USA (e-mail:, phyatt16@
+gmail.com; dustan.kraus@gmail.com; cbcrider@milemark11.com; levi.
+rupert@gmail.com; nathanday89@gmail.com; marc_killpack@byu.
+edu).
+Color versions of one or more of the figures in this paper are available
+online at http://ieeexplore.ieee.org.
+Digital Object Identifier 10.1109/TMECH.2018.2878228
+
+is unavoidable or even desirable. The ability to work in an
+unpredictable or unmodeled environment safely is becoming
+increasingly important for robots as they are deployed in our
+homes, schools, hospitals, and any area with humans or fragile
+equipment. Soft robots provide a solution to using robots in
+these environments by maintaining safety without increasing
+cost through expensive sensor arrays. Besides incidental contact
+with the environment, soft robots can be used to make intentional
+contact in ways that rigid robots often cannot, such as using a
+hammer or other impact tool. Other advantages of soft robots
+are related to the ease of transport of such systems. An inflatable
+robot, such as the platforms used in this work, can be deflated to
+be transported as a small, lightweight package that can then be
+reinflated at its destination with almost no assembly required.
+This is very convenient in applications such as space exploration
+or search and rescue where volume and weight restrictions are
+stringent.
+Unfortunately, many practical problems still need to be addressed before soft robots can become useful in the applications
+mentioned above. There has recently been significant work in
+the control of soft robots as outlined in Section II. There is,
+however, a need for practical and robust methods of kinematic
+modeling, joint-angle estimation, and end effector servoing to
+enable accurate positioning and eventually trajectory tracking
+at the end effector. While several of the methods that are explained in this paper were developed for traditional robotics, we
+show a novel application of them that enables effective control
+of large-scale soft robots.
+Our specific contributions in this paper include the following.
+1) A method for estimating joint configuration for soft actuators using relative orientation measurements.
+2) A method to determine a useful (albeit approximate) kinematic model for a soft-robot arm.
+3) A task-space control method that enables accurate positioning of the end effector of a large-scale soft-robot
+manipulator.
+4) An algorithm to relate any two pose measurement systems
+attached to a soft robot by collecting data while moving
+the soft-robot arm.
+In this paper, we address multiple aspects of the difficult
+problem of soft-robot configuration estimation and control. We
+first describe related work and the hardware used for demonstrations in Section II. We then describe an algorithm to relate
+two unrelated pose measurement systems (since we use various
+sensors throughout this paper to measure pose) in Section III. In
+Section IV, we explain our methods for estimating approximate
+
+1083-4435 © 2018 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications standards/publications/rights/index.html for more information.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+HYATT et al.: CONFIGURATION ESTIMATION FOR ACCURATE POSITION CONTROL OF LARGE-SCALE SOFT ROBOTS
+
+Fig. 1. Six-DoF soft robot Kaa with HTC Vive trackers attached. The
+frames are assigned at each joint in the zero configuration with red,
+green, and blue (RGB) axes corresponding to the X Y Z axes, respectively.
+
+joint angles using relative orientations for links and show proofof-concept demonstrations with a large soft robot in a real-world
+environment. In Section V, we describe our method for kinematic calibration and show that the method results in 2–3 cm of
+error for end effector estimation by performing this calibration
+for a soft-robot arm that is 1.1 m long. We also demonstrate that
+any kind of kinematic calibration will likely degrade with time
+or system use, requiring additional calibration over time. Our
+calibration method differs from more traditional methods due to
+its recursive dependence of the joint-angle estimation method
+described in Section IV. Finally, in Section VI, we show that by
+introducing a hybrid control method that uses our joint-angle
+estimation coupled with a servoing method wrapped around a
+joint-angle controller from previous work [1], we can reduce end
+effector error by an order of magnitude and control a soft-robot
+end effector to within 3 mm of a desired position.
+II. BACKGROUND
+A. Related Work
+1) Soft-Robot Joint-Angle Estimation: Rigid robots have
+well-defined joint axes about which rotation occurs. Encoders
+or other rotational sensors can therefore be placed to measure
+the rotation of these joints. However, for fabric-based and other
+soft robots, there are no well-defined joint axes, and buckling at
+the joints may happen about any axis depending on configuration and load. Additionally, the task of attaching a sensor to a
+soft robot in a precise and repeatable way is nontrivial.
+Sensors used in configuration estimation of soft robots and
+humans include fiber-optic sensors [2], flexible angular sensors [3], conductive fiber sensors [4], inductance sensors [5],
+and flex-bend sensors [6]. A comprehensive review of low-cost
+sensors used in the similar domain of human configuration estimation can be found in [7]. In our application, we used either
+a motion capture system (MOCAP), inertial measurement units
+(IMUs), or HTC Vive virtual reality trackers to obtain the orientation of each link and then used that information to estimate the
+joint angles of the robot as outlined in Section IV-A. The HTC
+Vive system includes two main base stations that are placed
+at opposite ends of the workspace and used for tracking with
+timed infrared pulses at 60 pulses per second. Trackers attached
+to our robots, weighing a few hundred grams, sense the infrared
+pulses and combine this with data from their on-board IMUs to
+localize and estimate pose. Fig. 1 shows some of these trackers
+attached to one of our soft robots. The authors of [8] compared
+the effectiveness of IMUs and MOCAP systems to estimate the
+
+89
+
+joint angles when performing human gait studies. Also, the authors of [9] use IMUs on a human and robot arm to estimate
+the angles. Their use of the IMUs focuses on integrating the
+dynamics from the IMU data. We use the IMUs (and other measurement systems) to find the orientations of the respective links
+and use those orientations to estimate joint angles as described
+in Section IV. Although much of the math has been used in inverse kinematic (IK) algorithms, to our knowledge, the methods
+described in Section IV have not been used to estimate robot
+joint configurations as described in this paper.
+2) Soft-Robot Kinematics: Kinematics of robots with flexibility in the links and joints is the topic of a large body of
+research. One research focus in this area has been the modeling
+of lightweight or long links that move quickly, causing appreciable bending and torsion in the links. In [10], an extra matrix
+term is appended to each transformation between links that expresses the resistance to bending, compression, and torsion as
+well as the forces and moments in every direction. There has
+also been significant work in the kinematic modeling of flexible
+continuum robots. These types of robots are most often modeled
+as having sections of constant curvature [11]–[13]. In [14], the
+authors develop two kinematic models for a soft robot using
+cables for actuation.
+While the kinematic models obtained by continuum and curvature models may be necessary in cases where the deformation
+of the soft robot joint is not about a single stationary axis, we
+modeled our soft robots using traditional rotary joints and rigid
+links. Although the deformation of fabric-based soft-robot links
+is non-negligible, it is very difficult to predict because of buckling behavior of the fabric. Preliminary tests also showed that
+the specific joint structure and actuation method used in our soft
+robots were modeled just as well by pin joints as by continuous
+curvature joints in terms of kinematic error. The selection of the
+rigid link and rotary pin joint model also allows us to take advantage of the tools and dynamic models already available for
+serial manipulators. These tools, although not specific to soft
+robots, still describe dynamic and kinematic behavior to a reasonable degree of accuracy. Even though our application used a
+rotary joint kinematic parameterization, the methods presented
+in this paper could be extended to any other kinematic model
+that can be described by relative homogeneous transformation
+matrices regardless of the parameterization.
+3) Soft-Robot Control: There has recently been significant
+work in soft-robot control as outlined in the survey paper by
+Thuruthel et al. [15]. Some of the most relevant literature is
+that on task-space control. Largilliere et al. used finite element
+analysis to solve for IK to successfully track a trajectory for a
+small deformable robot made of silicone [16]. Others showed
+promising results in task-space control of continuum arms
+[17]–[21]. Kang et al. performed model-free task-space control
+on their continuum robot arm using an adaptive Kalman filter
+[20]. Melingui et al. used a distal supervised learning scheme
+and an adaptive neural network control strategy for task-space
+control on their continuum arm [21]. Wang et al. used visual
+servoing for end effector position control of a soft robot [22],
+[23]. Their work differs from this paper in that their feedback
+and position control were both in pixel space while our experiments are in task space. Furthermore, the soft robotic platforms
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+90
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 24, NO. 1, FEBRUARY 2019
+
+[1], [26], [27]. King Louie has two four DoF arms, each arm
+measuring 1.1 m in length, and a single DoF hip joint. Kaa is a
+1.5 m long 6 DoF serial manipulator.
+III. SENSOR CORRESPONDENCE OPTIMIZATION
+
+Fig. 2. King Louie with the sensors’ frames shown that were used for
+joint-angle estimation with RGB axes corresponding to the X Y Z axes,
+respectively.
+
+with which we performed our experiments (see Figs. 1 and 2) are
+much larger in scale (serial manipulators over 1 m long) than the
+platforms in [22] and [23], with more significant gravitational
+loads.
+Others have used task-space servoing to reduce the error in
+flexible robotic catheters [24], [25], but again, these are on a
+smaller scale (both in terms of end effector speed and manipulator length) than our robotic platform. Also, the servoing algorithms used are different from ours, as we use a hybrid controller
+combining model predictive control (MPC), IK, and servoing.
+Thuruthel et al. specifically mention that the work in hybrid control approaches, such as doing traditional joint-angle control and
+then servoing as presented in this paper, is an unexplored field
+of research [15].
+There has also been recent successful control of soft, inflatable robots, such as the platform used in this paper, for both
+configuration and stiffness. Best et al. implemented a jointangle MPC for a serial, inflatable arm that treated each joint as
+an individual inverted pendulum enabling the use of MPC by
+reducing the control space and allowing for faster optimization
+speeds [26]. Terry et al. extended this work by finding a tractable
+method to take into account the dynamics of all the links for
+MPC, while still keeping the control of each joint decoupled
+[1]. Gillespie et al. implemented a simultaneous joint-angle and
+stiffness controller on a single degree of freedom (DoF) inflatable robot [27]. The work presented in this paper extends this
+success to accurate end effector position control for these kinds
+of robots.
+B. Hardware Description
+In this paper, we use two soft-robot platforms called Kaa (see
+Fig. 1) and King Louie (see Fig. 2) that were developed and built
+by Pneubotics [28]. These platforms are fabric-based pneumatic
+systems that use antagonistic actuators and are described in
+
+For part of this paper, we used a Motion Analysis MOCAP
+system with eight Kestrel cameras, capable of sub-millimeter
+accuracy, for estimation or ground-truth measurements; however, this limits use of soft robots to within a motion capture
+volume. An alternative approach was to use the Vive that can
+work in outdoor environments. One of the challenges in using
+the Vive is that the coordinate frames of MOCAP and the Vive
+were not co-located to give a fair evaluation of the Vive’s performance. To compare one sensing system to the other required
+that the homogeneous transformation between the two different
+sensing systems be known. We designed a novel sensor correspondence optimization for this task. Others have done similar
+optimizations; however, these optimizations used calibration objects like a printed square [29], a checkerboard [30], or single
+bright spots [31]. Holtz et al. developed a technique to find the
+extrinsic calibration of depth sensors without specific calibration objects [32]. All of these previous techniques are specific to
+cameras/depth sensors. Our optimization is unique in that it is
+general to any pose sensors (measuring orientation and/or position) and requires no special calibration objects. Rather, it uses
+optimization over changes in pose (transformations for the same
+sensors between different time steps) to find the transform between the two measurement systems. This same technique may
+be useful for multisensor registration and fusion for future work
+on soft-robot estimation, since precise computer-aided design
+(CAD) models and sensor mounting points are not available
+for most soft robots. We used King Louie to demonstrate this
+technique.
+A. Methods
+The frames of King Louie were defined using a fixed transformation relative to MOCAP marker set frames, and it is impossible to place the Vive trackers at exactly the same location and
+orientation as these frames. The end effector position used for
+control was measured relative to and in terms of King Louie’s
+base frame (at the abdomen in Fig. 2). So in order to obtain an
+accurate end effector position from the Vive trackers, the transformation between the Vive tracker frames and the MOCAP
+frames was needed.
+For MOCAP, there were infrared markers that defined King
+Louie’s base frame (mb ) as well as his end effector (me ). Using
+these marker sets, the end effector location can be determined
+relative to King Louie’s base frame as shown in (1) (where
+Tmmeb depicts the homogeneous transformation expressing the
+end effector frame in the base frame using the MOCAP marker
+sets, and mw is the MOCAP world frame).
+Tmmeb = Tmmwb Tmmew .
+
+(1)
+
+In order to obtain end effector feedback from the Vive trackers, we placed one Vive tracker (ve ) on the end effector (near
+the MOCAP end effector marker set) and the other (vb ) on King
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+HYATT et al.: CONFIGURATION ESTIMATION FOR ACCURATE POSITION CONTROL OF LARGE-SCALE SOFT ROBOTS
+
+Algorithm 1: Sensor Correspondence Optimization.
+1: procedure SETUP
+2:
+Attach a Vive tracker to a link with a MOCAP
+frame.
+3: procedure DATA COLLECTION
+4:
+for i = 1 to num. of data points desired (n) do
+5:
+Simultaneously collect Tvvew( i ) and Tmmew( i ) (where i
+is the time step)
+6:
+Store the upper left 3 × 3 elements of Tvvew( i ) and
+mw
+Tmmew( i ) as Rvv ew( i ) and Rm
+e (i)
+7:
+Physically cause the robot link to rotate and
+translate.
+8: procedure CALCULATE DELTA TRANSFORMATIONS
+9:
+for i = 2 to n do
+v
+v
+10:
+Tv ee((ii)−1) = Tv we ( i −1) Tvvew( i )
+m
+
+Fig. 3. Cartesian end effector position reported by the Vive and our
+Cortex MOCAP system.
+
+m
+
+Tm ee((ii)−1) = Tm we ( i −1) Tmmew( i )
+
+11:
+12:
+13:
+14:
+15:
+16:
+17:
+
+91
+
+v
+Append Tv ee((ii)−1) to a list of delta transforms Tv
+m
+Append Tm ee((ii)−1) to a list of delta transforms Tm
+v
+Append Rv ee (( ii )−1) to a list of delta rotations Rv
+m
+Append Rm ee (( ii )−1) to a list of delta rotations Rm
+procedure FIND Rvme e
+
+Use the objective in (3) and an optimization library
+to compute Rvme e . We used a gradient-based
+Broyden-Fletcher-Goldfarb-Shanno (BFGS)
+algorithm (see [33], [34]) and ran the optimization
+50 times with random initial conditions to reduce the
+likelihood of finding a local minimum.
+18: procedure FIND Tvme e
+19:
+Use the objective function in (4), Rvme e , and an
+optimization library to compute Tvme e (we used the
+same optimizer and technique as procedure 16).
+20: procedure REPEAT TO COMPUTE Tmv bb
+21:
+Repeat steps 1–19, but using MOCAP markers and
+Vive trackers on the base rather than the end effector.
+
+Fig. 4. X Y Z Euler angles reported by the Vive and our Cortex MOCAP
+system.
+
+minimize
+x,y ,z
+
+where
+Louie’s base (near the MOCAP base marker set). Using these
+Vive trackers, the end effector location relative to King Louie’s
+base frame can be determined using only the Vive as shown in
+(2) (where vw is the Vive world frame).
+Tmmeb = Tvmb b Tvvwb Tvvew Tmv ee .
+
+(2)
+
+Because the Vive and MOCAP systems have no common
+coordinate frames, we needed a way to find Tmv ee and Tvmb b . In
+order to find these transformations, we collected data. Then, we
+solved the optimizations as described by (3) and (4) as part of
+Algorithm 1
+minimize
+φ,θ ,ψ
+
+3 
+3
+n −1 
+
+
+ve
+(Rv (i) − Rm
+Rm (i)Rvme e )2j,k
+e
+
+i=1 j =1 k =1
+
+subject to
+
+− π ≤ φ, θ, ψ < π
+
+where
+
+ve
+Rm
+is parameterized by XY Z
+e
+
+Euler angles φ, θ, and, ψ
+
+(3)
+
+3
+n 
+
+
+(Tv (i) − Tmv ee Tm (i)Tvme e )2j,4
+
+i=1 j =1
+
+Tmv ee is structured as follows:
+⎡
+⎤
+x
+ve
+⎢ Rm
+y⎥
+e
+⎢
+⎥
+⎣
+z⎦
+0 0 01
+
+(4)
+
+It should be noted that this optimization is general and can be
+used to relate any two pose measurement systems. For example,
+this same optimization has been used in our lab to relate MOCAP
+and IMU measurement systems for other work.
+B. Experimental Results
+In order to validate our sensor correspondence optimization
+with real hardware, we used the sensor correspondence optimization in Algorithm 1 to find the transformations between
+the Vive trackers and MOCAP marker sets on King Louie
+(Tmv ee and Tvmb b ). We then collected data while moving the arm
+around to compare the end effector position reported by MOCAP in (1) and the Vive in (2). As shown in Figs. 3 and 4,
+the end effector position and orientation reported by the Vive
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+92
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 24, NO. 1, FEBRUARY 2019
+
+Fig. 5 helps to visualize the rotations assigned for joint configuration estimation. We denote the kinematic model frame for
+link i as Li and the kth sensor frame as Sk . From sensor data,
+we obtain the rotation from the sensor’s world frame to the Sk
+frame located on link i. This is expressed as the rotation matrix
+. This rotation is depicted in green in Fig. 5. The rotation
+RSWorld
+k
+between frame Sk and the frame Li is a fixed rotation since both
+frames are on the same link. This rotation (RLS ki ) is either known
+from the construction of the robot or can be approximated by a
+kinematic calibration. It is shown in black in Fig. 5. Combining
+these rotations yields
+RLWorld
+= RSWorld
+RLS ki
+i
+k
+Fig. 5. Visualization of the rotations used to calculate the joint configuration. The red rotation is the rotation of interest. The black rotations
+are known rotations from the approximate geometry of the robot. The
+green rotations are those available from sensors. The blue rotations are
+calculated from known rotations and sensor data.
+
+(shown in blue in Fig. 5). Similarly, we can find the rotation
+from the world frame to the link i + j frame. Combining these
+rotations, we can obtain the rotation from the link i frame to the
+link i + j frame, RLL ii + j .
+)T RLWorld
+RLL ii + j = (RLWorld
+i
+i+ j
+
+and MOCAP systems are nearly identical. The average Cartesian discrepancy between these two measurement systems was
+0.82 cm and the average Euler angle discrepancy between these
+two measurement systems was 0.56◦ . This discrepancy cannot
+be equated directly with error, but comes from the fact that the
+sensors from the two systems (both at the end effector and at
+the base of the robot) were not rigidly attached to each other
+and could shift relative to each other during the data collection
+process. However, these results gave us enough confidence in
+the data from the Vive to treat data and experiments from Vive
+and MOCAP as equivalent.
+IV. JOINT CONFIGURATION ESTIMATION
+In this section, we develop a general method for rotational
+joint configuration estimation using rigid robot kinematic models and orientation sensors. We show examples of analytical
+joint-angle estimation for two different kinematic parameterizations and sensor configurations. We implement this method on
+a Baxter robot and perform experiments to compare our estimation method to ground-truth measurements from joint encoders.
+Finally, we explain the application of our method to two different soft-robot platforms. We show throughout the rest of this
+paper that the application of this joint configuration estimation
+enables task-space control of soft robots.
+A. Method
+Given frames at each link, the rotation from the ith link to
+the (i + j)th link is a function of the kinematic model parameters and the joint configurations between the links. Thus, by
+measuring the relative rotation between the ith and (i + j)th
+links from orientation sensors, the joint configurations can be
+found using either analytic or numerical IK methods. While IK
+is a well-studied problem, the contribution in this section is a
+method to apply IK to the problem of real-time joint configuration estimation. It is important to note that the limitations of
+nominal IK methods apply to the estimation methods described.
+
+(5)
+
+(6)
+
+(shown in red in Fig. 5).
+Since the form of this rotation is known from the kinematic
+model, it is possible to solve for the joint configuration variables
+using IK methods.
+Below are two examples of solving for joint configurations
+analytically using two different kinematic parameterizations.
+The first details the solution in the case of one joint between
+sensors and the Denavit-Hartenburg (DH) parameterization. The
+second case describes the solution for the case of two joints
+between sensors and a different kinematic parameterization.
+For the case of three joints between sensors, we use numerical
+instead of analytical IK methods.
+1) Case 1. One Joint Between Sensors—DH Parameterization: If a DH parametrization is used for the kinematic model,
+
+then the rotation between frames is defined as a function of two
+fixed parameters (α and θ) and the joint angle (q).
+The DH parameterization provides the following equations
+for entries of RLL ii + 1 where this matrix is defined as in (7).
+⎡
+⎤
+a b c
+⎢
+⎥
+RLL ii + 1 = ⎣ d e f ⎦
+(7)
+g h i
+a = cos (θ + q)
+
+(8)
+
+b = − sin (θ + q) cos (α)
+
+(9)
+
+c = sin (θ + q) sin (α)
+
+(10)
+
+d = sin (θ + q)
+
+(11)
+
+e = cos (θ + q) cos (α)
+
+(12)
+
+f = − cos (θ + q) sin (α)
+
+(13)
+
+There are several ways that q can be calculated from the
+relations found in (8)–(13). For example
+q = tan−1
+
+d
+a
+
+− θ.
+
+(14)
+
+Indices b and e as well as c and f could be used similarly.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+HYATT et al.: CONFIGURATION ESTIMATION FOR ACCURATE POSITION CONTROL OF LARGE-SCALE SOFT ROBOTS
+
+93
+
+2) Case 2. Two Joints Between Sensors—Alternate Parameterization: Let the unknown joint variables between sensors be
+
+qi and qj , where i < j. It is possible to solve for these joint variables analytically if the parameterized rotation matrix satisfies
+the following criteria:
+1) At least one term of RLL ji is expressed as a function of
+only one of the joint variables (qi , qj ).
+2) At least one term of RLL ji is expressed as a function of the
+other joint variable OR both joint variables (qi , qj ).
+3) Two terms of RLL ji have one term that can cancel when
+one entry is divided by another.
+The parameterization chosen for this example requires that
+all frames are in the same orientation when all joint variables
+are zero and that the Z axes are oriented down the link. RLL ii + 2
+is defined by the axis the particular joint rotates about. A visual
+example of this parameterization can be seen on the soft-robot
+Kaa in Fig. 1.
+For example, to estimate the first two joints angles of Kaa
+RLL ii + 2 = Ry Rx where
+⎤
+⎡
+1
+0
+0
+⎥
+⎢
+Rx = ⎣ 0 ci si ⎦
+(15)
+0 −si ci
+⎤
+⎡
+cj 0 −sj
+⎥
+⎢
+0 ⎦
+Ry = ⎣ 0 1
+(16)
+sj 0 cj
+and so
+
+⎡
+
+cj
+⎢
+RLL ii + 1 = ⎣ 0
+sj
+
+sj si
+ci
+−cj si
+
+⎤
+−sj ci
+⎥
+si ⎦
+cj ci
+
+(17)
+
+where si and ci are sin (qi ) and cos (qi ), respectively. Because
+(17) satisfies the criteria described above, it is possible to solve
+for q1 and q2
+si
+qi = tan−1
+(18)
+ci
+sj
+(19)
+qj = tan−1 .
+cj
+If the criteria cannot be met for two joint variables between
+sensors or if there are three joint variables between sensors, an
+analytic solution may not be available. The problem of solving for joint variables given a rotation is an IK problem, so a
+numerical IK solver can be used for these cases.
+B. Experiments
+In order to validate our joint configuration estimation method,
+we implemented the method on a rigid Baxter robot that has joint
+encoders and for which we have kinematic model parameters
+specified by the manufacturer. We compared our joint-angle estimation to joint encoder measurements to establish the accuracy
+and reliability of our method.
+For the first experiment, we placed Vive sensors on Baxter’s base and first link to estimate the first joint angle through
+
+Fig. 6. Joint estimates from encoders and from the method described
+in this paper using HTC Vive for Baxter’s first three joints on his right arm
+(q1 , q2 , and q3 ).
+
+some simple motions. Joint-angle estimation was done analytically using the method described in Section IV-A1. The rootmean-square error (RMSE) for our joint configuration estimation, moving the joint through its entire workspace was 0.62◦
+RMSE error with a standard deviation of 0.61◦ .
+The second experiment was to place Vive sensors on Baxter’s
+base and third link to estimate the first three joint angles while
+performing some simple motions. Joint-angle estimation was
+done numerically using a fast IK library called TRAC-IK [35].
+The RMSE of all three joints (moved through their entire ranges
+of motion) was 0.87◦ with a standard deviation of 0.87◦ . Results
+from this experiment can be seen in Fig. 6.
+While this experiment was performed with Vive sensors, it
+validates the joint configuration estimation method and could
+be implemented using any orientation sensor. The accuracy of
+the joint estimation would be affected by the accuracy of the
+orientation data of the given sensor.
+C. Application to Soft Robots
+The above method was used to estimate joint angles for both
+King Louie and Kaa; however, ground-truth data (such as data
+from encoders) was obviously not available. For King Louie, we
+made use of the DH method described above in Section IV-A1
+for when there was one joint between sensors and the TRACIK library to solve for the joint angles for two and three joints
+between sensors.
+The inputs into the IK algorithm are the rotation matrix RLL ii + j
+and the DH parameterization for the specific rotations through
+that rotation matrix. The output is the set of joint angles that
+would achieve the given orientation from the rotation matrix.
+Because of the possibility of multiple answers for a given rotation matrix, the solver was warm started with the previous
+estimated joint angles, and bounds were enforced that did not
+allow solutions to deviate too far from the previous estimated
+joint angles.
+While implementing joint-angle estimation for King Louie,
+we found that there was significant twisting and buckling between the two joints in the shoulder. We modeled this as a third
+passive joint between the two controllable joints and then estimated this passive joint angle. This greatly improved the quality
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+94
+
+Fig. 7.
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 24, NO. 1, FEBRUARY 2019
+
+Kaa demonstrating a pick-and-place task.
+
+of our joint-angle solutions and lowered forward-kinematics error. The same approach was taken at the wrist joint. Therefore,
+each arm was modeled with six joints (four active, two passive),
+and one joint was modeled at the hip, which was located 15 cm
+above the abdomen frame shown in Fig. 2.
+In order to show that our method generalizes to multiple
+robot platforms and can work in real-world environments, we
+implemented the joint configuration estimation on the robot Kaa
+and used it for teleoperation tasks. For Kaa, we used only Vive
+sensors as we needed to operate outside and with greater accuracy than was possible with the on-board IMUs. We chose to
+place Vive sensors on every second link and to use the analytical IK method with the alternate parameterization as described
+in Section IV-A2. The buckling in this robot’s joints did not
+warrant modeling with a passive joint. The joint-angle estimation method outlined above allowed us to effectively perform
+closed-loop joint-angle control (using a PI joint-level controller)
+on Kaa while mounted to the K-Rex rover at NASA Ames. We
+performed the tasks of bracing, sweeping, safe human–robot
+collaboration, pick and place, and purposeful impact. The video
+found at https://youtu.be/JwBjxMAzqXw shows Kaa performing these tasks.
+Specifically, we show Kaa performing a pick and place task
+during which Kaa picks up a stone from a stone pile and drops it
+in a box. This is also shown in Fig. 7. In the video, we were also
+able to show bracing, where Kaa was commanded to extend
+fully and lift using the second joint. Kaa was unable to lift the
+stone while extended without bracing. Next Kaa lifts the stone
+while bracing against the ground using the third and sixth joint
+that shows the utility of a soft robot being able to brace. We also
+show Kaa sweeping across the ground and knocking over a stone
+pile, showing that it is robust to several unmodeled simultaneous
+contacts and that Kaa could be used to make intentional fullarm contact. Kaa was able to drag a board over to a person and
+safely make contact for safe human–robot collaboration, while
+the person was able to safely pick up the board and work with it.
+Finally, in the video, we also show Kaa perform large impacts
+and still remain functional.
+Our soft robots have no means of providing a ground-truth
+measurement of joint angle unlike the Baxter robot, which has
+joint encoders that provide a ground-truth measurement of joint
+configuration. The most direct way of measuring the accuracy
+of our joint-angle estimation on our soft robots, is to use it
+in calculating the pose of the end effector of our robot and
+compare that calculated pose with a measured pose given by
+
+either Vive or MOCAP. However, this combines the errors in
+joint-angle estimation and the kinematic model. Moreover, it is
+clear that errors in the kinematic model lead to worse joint-angle
+estimation. For this reason, joint-angle estimation and kinematic
+calibration are very closely related tasks.
+V. KINEMATIC CALIBRATION
+The joint-angle estimation method described in Section IV-A
+requires a kinematic model of the robot. Because most soft
+robots do not have well-defined joint axes or link lengths, we
+can perform a kinematic calibration to find suitable values for
+the parameters of a particular kinematic model. In the case of our
+inflatable robots, this calibration is useful in the case of slight
+changes in robot geometry due to deflation and reinflation. As
+with all robotics, small errors in the kinematic modeling of the
+proximal joints can lead to larger errors in pose estimation of the
+more distal links. The novel part of this kinematic calibration
+is that changing the kinematic model changes the joint-angle
+estimation as well. This leads to an optimization that is recursive
+in nature as discussed below.
+A. Methods
+Kinematic calibration for robotic manipulators is a wellexplored field as can be seen in the Springer Handbook of
+Robotics [10]. Kinematic calibration methods can be classified
+as either open-loop, closed-loop, or screw-axis measurement
+methods [36], where both closed-loop and screw-axis methods
+require knowledge of joint angles to complete the calibration.
+Because of the lack of ground-truth joint-angle sensing in our
+soft robots, we opted to perform an open-loop calibration using a MOCAP system to measure the pose of the end effector
+relative to the robot base.
+The kinematic calibration begins by moving the end effector to several points in the workspace (we used approximately
+50 points) and recording the link orientations and end effector
+poses. After this data was collected, we used a sequential least
+squares optimization (scipy SLSQP) to minimize the RMSE
+for the end effector pose by changing the kinematic model parameters. We bounded the optimization to +/−30 degrees and
++/−10 cm relative to our initial guesses for angular and length
+parameters, respectively. It is important to note here that by
+changing kinematic parameters, both the forward kinematics
+calculations and the joint-angle estimation are affected. This
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+HYATT et al.: CONFIGURATION ESTIMATION FOR ACCURATE POSITION CONTROL OF LARGE-SCALE SOFT ROBOTS
+
+consideration is what differentiates this kinematic calibration
+from those done in traditional rigid robotics.
+Our objective function used the sensor data collected over the
+workspace, the kinematic model parameters, and the joint-angle
+estimation algorithm outlined in Section IV-A to calculate joint
+angles for each data point. Using these joint angles and the kinematic model parameters, the end effector pose was calculated.
+Error at the end effector was divided into two parts that were
+weighted separately: position error and orientation error.
+Position error of the end effector was defined as the Euclidean
+distance between the measured position and position estimated
+from the forward kinematics. The orientation error of the end
+effector was defined as
+measured
+Orientation Error = q̃forward
+kinematics − q̃identity 
+
+95
+
+TABLE I
+MEAN END EFFECTOR ERROR FOR MOCAP AND IMUS BEFORE AND
+AFTER OPTIMIZATION OF DH PARAMETERS
+
+(20)
+
+measured
+where q̃forward
+kinematics is the rotation represented as a quaternion from the measured orientation to the orientation estimated
+using forward kinematics and q̃identity is the identity quaternion.
+The weighting factors applied to position and orientation error
+were 15 and 1, respectively. This was done because the Euclidean distance was expressed in meters, while the difference
+of a norm of two quaternions is always a number between 0 and
+2. These weights were chosen in order to scale the optimization
+space more evenly, but they could also be used to place higher
+relative importance on either one or the other if desired for a
+given application.
+
+B. Experimental Results
+We performed several experiments to test the validity of our
+kinematic calibration and joint estimation methods as well as to
+quantify the end effector pose error over the whole workspace of
+the right arm of King Louie. Specifically, experiments were done
+to show the effects of sensor accuracy (IMUs versus MOCAP),
+reinflation, and kinematic calibration on end effector pose error
+in different parts of the workspace. Experiments were done on
+King Louie using a DH parameterization.
+1) MOCAP versus IMUs: Two of the sensors we used for
+joint estimation were MOCAP and IMUs. We quantified the
+difference in forward-kinematic error using these two sensors
+that represent the most accurate and least accurate sensors, respectively, with which we have worked. Data were collected
+over the entire workspace using both of these sensors. Experiments were run for each sensor using both the DH parameters
+measured by hand measurement and those obtained by running
+our kinematic calibration. Due to the nature of our soft robots,
+no CAD models exist, and hand measurements were obtained
+by inflating the robot, putting the arm in the zero configuration,
+and measuring the distance between the approximate mid-points
+of each joint with a tape measure (assuming orthogonal joints).
+The results for the average end effector pose error can be seen in
+Table I, and heatmaps based on the end effector error by location
+in the workspace for the optimized DH parameters can be seen
+in Fig. 8.
+The kinematic calibration optimization for DH parameters
+significantly lowered the mean error in both the case of MOCAP (from 0.1957 m to 0.0278 m) and IMUs (from 0.2648 m
+
+Fig. 8. Heatmaps of end effector position error for optimized DH parameters for MOCAP (on left) and IMUs (on right).
+
+to 0.0984 m). This was 85.79% improvement for MOCAP and
+62.84% improvement for IMUs. This result, coupled with servoing techniques that are explained in Section VI, enable King
+Louie to be accurately controllable in task space.
+The forward-kinematics error while using MOCAP to estimate link orientations is lower than that while using IMUs. This
+is expected because MOCAP provides more accurate orientation data that leads to better joint-angle estimates and, therefore,
+better forward kinematics. Despite having a larger mean error
+over the whole workspace, the IMUs have the advantage over
+MOCAP of being able to work without the need of multiple calibrated cameras. The results in Table I show that it is possible
+to do joint estimation of soft robots using IMUs. This powerful
+result means that soft robots will be able to operate without the
+expensive measurement equipment that may only be available
+in a laboratory.
+Another interesting note is that during quick movements,
+such as ones from the front to the rear of the workspace, the
+IMU error is much larger than during slower movements. While
+the MOCAP system we used can measure orientation at each
+instant, the filter used on the IMUs to obtain orientation data
+[37] has some lag associated with it. This can account for some
+of the very large errors in the IMU estimation case, but it is not
+inherent to all IMUs or orientation estimation approaches with
+IMUs.
+2) Reinflation: Forward-kinematics error was found to increase with deflation and reinflation of the robot because of the
+changes in how components, such as bladders and air hoses
+settled after reinflation. We tested by optimizing geometric parameters for the robot over its entire workspace, deflated the
+robot, and reinflated it. Forward-kinematics error before and after the deflation and reinflation cycle using the same kinematic
+parameters can be seen in Fig. 9.
+As can be seen in the figure, the process of deflating and
+reinflating the robot clearly changes the geometric parameters,
+and in this case, increased the mean and standard deviation of
+the error. Optimizing the geometric parameters after reinflation
+decreased the mean error and standard deviation but not to the
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+96
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 24, NO. 1, FEBRUARY 2019
+
+better than the combination of the calibration over the front and
+the rear of the workspace that had a mean error of 0.0315 m.
+The results from these experiments with kinematic calibrations suggest that to have a calibration that is valid over an entire
+workspace, sample points for the calibration must be taken over
+the entire workspace. This also shows that reasonable results
+can be obtained from relatively few (50) points throughout the
+workspace. This is useful if calibrations are needed frequently
+as in the case of inflatable robots.
+VI. SERVOING
+
+Fig. 9. Histograms of forward-kinematics error over the whole
+workspace before reinflation (red), after reinflation (blue), and after reoptimization (green).
+
+values obtained before reinflation. This suggests that there are
+certain configurations of internal bladders, hoses, etc. that result
+in a better fit to a rigid body and rotary link model than other
+configurations.
+3) Calibration Over Different Parts of the Workspace: Due to
+our platform’s nonrigid nature and the likelihood that sensors or
+joints will change slightly over time, as seen in Section V-B2, it is
+important to have a fast method for kinematic calibration to find
+geometric parameters of the robot. As explained in Section V,
+this calibration includes moving the arm to several points in
+the workspace and then minimizing forward-kinematics end
+effector pose error at those points. To quantify the effect of arm
+positions for the calibration on forward-kinematics error, we
+optimized parameters with positions from different parts of the
+workspace.
+The effects of performing kinematic calibrations in different parts of the workspace can be seen in Fig. 10(a)–(d). Each
+figure represents the forward-kinematics error over the whole
+workspace using a specific set of geometric parameters. For
+Fig. 10(a), we used parameters from a calibration performed in
+the front of the workspace; for Fig. 10(b), we used parameters
+from a calibration performed in the rear of the workspace; for
+Fig. 10(c), we used parameters from a calibration performed
+over the whole workspace; and for Fig. 10(d), we used parameters from a calibration in the front of the workspace when the
+end effector was in the front and used parameters from a calibration in the rear of the workspace when the end effector was
+in the rear. As one may suspect, the calibrations done over the
+front and rear lowered the error in the region over which they
+were calibrated, but at the expense of the other region. The lowest mean error over the whole workspace was with the whole
+workspace calibration. While the figures shown were compiled
+with data from MOCAP, the trends are consistent with those
+found in the IMU data.
+The mean and median errors for each test can also be seen in
+Table II. The calibration over the whole workspace performed
+the best with a mean error of 0.0278 m. This actually performed
+
+Accurate end effector control in task space using large-scale
+soft robotics was the overarching goal of the work in this paper.
+Given a desired position in task space, IK can be used along
+with the optimized kinematic model presented in this paper
+to determine the joint angles that should result in the desired
+end effector position. However, this still results in some taskspace position error at the end effector due to imperfections in
+the kinematic model. A common technique used in robotics to
+eliminate end effector error is visual servoing. This is typically
+done in pixel space; however, for this paper, we servo directly
+in task space as task-space accuracy was our objective. We used
+King Louie with Vive trackers as feedback.
+A. Methods
+Algorithm 2 shows the servoing algorithm we developed
+(with end effector pose feedback from the Vive). This algorithm
+is represented in the block diagram in Fig. 11. It is possible
+to servo the whole distance to the desired position; however, a
+quicker response is achievable by using a kinematic model to
+find initial joint angles to command using IK (TRAC-IK) for the
+whole arm and sending these initial joint angles to a joint-angle
+controller (the model predictive controller from [1] in this case).
+This speed increase is due to the fact that the joint-space control
+response is quicker than the task-space servoing response. Once
+the joint angles are within an error tolerance of the commanded
+joint angles (the check steady state block in Fig. 11), the actual end effector position is measured and delta joint angles
+are calculated and added to the previous joint-angle command.
+These new angles are sent to the same joint-angle controller.
+This servoing approach plays the role of a task-space integrator
+because delta joint angles are continuously being added to the
+commanded joint angles when there is task-space error.
+B. Experimental Results
+In order to validate our servoing algorithm on real hardware,
+we chose several reachable positions in King Louie’s workspace
+and implemented Algorithm 2. The time response for one
+of the positions is shown in Fig. 12. Using this servoing
+method, we were able to drive the Cartesian error between the
+desired and actual end effector position to 2.2 mm. Results
+for the other positions were comparable as demonstrated in
+https://youtu.be/BTCRr63bpeM, where we control to multiple
+positions set by a Vive tracker held by the user. The overshoot
+for the example shown was 19.4%, 16.5%, and 2.5% for x, y,
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+HYATT et al.: CONFIGURATION ESTIMATION FOR ACCURATE POSITION CONTROL OF LARGE-SCALE SOFT ROBOTS
+
+97
+
+Fig. 10. Forward-kinematics error over the whole workspace using MOCAP for joint-angle estimation and ground-truth position and orientation
+of the end effector. The geometric parameters used for forward kinematics were obtained from a kinematic calibration over (a) the front of the
+workspace, (b) the rear of the workspace, (c) the whole workspace, and (d) both the front and rear of the workspace.
+TABLE II
+MEAN AND MEDIAN END EFFECTOR ERROR FOR VARIOUS KINEMATIC
+CALIBRATIONS
+
+Algorithm 2: Vive Servoing.
+1: procedure CHOOSE REACHABLE DESIRED POSITION
+(xdes )
+2: procedure CALCULATE THE JOINT ANGLES (qdes ) THAT
+MAP TO xdes USING TRAC-IK [35]
+3: procedure SERVO TO ELIMINATE REMAINING TASK-SPACE
+ERROR Δx
+4:
+Store qdes as qcmd
+5:
+Send qcmd to a joint-space controller
+6:
+Wait for the joint angles to be within a desired error
+tolerance of qcmd
+7:
+for Δx < error tolerance do
+8:
+Send qcmd to a joint-space controller
+9:
+Pull actual end effector position xact from Vive
+10:
+Calculate Δx = xdes − xact
+11:
+Calculate the Jacobian (JA ) using sympybotics
+(a python robotics library) [38]
+12:
+Calculate a small joint-angle movement in the
+correct direction (Δq) using a numerical IK
+approximation
+Δq = Kq [(JA )T Kp Δx − (JA )T Kd Δẋ]
+where Kp and Kd are diagonal 3 × 3 gain
+matrices that determine Δq and Kq is a 4 × 4
+diagonal matrix that determines the weight on
+each joint
+13:
+Calculate a new commanded joint angle to send
+to the joint-space controller qcmd (tk +1 ) =
+qcmd (tk ) + Δq
+
+and z, respectively. The x, y, and z 95% settling times were 4.90,
+10.71, and 9.37 s, respectively. The overshoot is largely affected
+by the accuracy of the kinematic model and is hardly affected
+by tuning the servoing controller, since the initial response is
+the joint-angle controller response where initial joint angles are
+calculated using IK. The settling time was reduced by tuning
+
+Fig. 11.
+
+Control block diagram for servoing.
+
+Fig. 12. Response of King Louie’s end effector to a desired position (xd , y d , zd ) with IK and a joint-angle controller (x, y, z) and using
+Algorithm 2 (xs , y s , zs ).
+
+Kp and Kd until the system was close to critically damped. The
+steady-state Cartesian error using only joint-angle control (no
+servoing) with joint angles obtained from IK using our kinematic
+model was 6.7 cm. These results show that high task-space
+accuracy is achievable with large-scale soft robots by using
+servo-based control in combination with joint-level estimation
+and control.
+VII. CONCLUSION AND FUTURE DIRECTIONS
+Although we have shown progress in end effector control for
+a multi-DoF soft robot, it is clear that there are still open questions. Future work should include the development of additional
+sensors that may replace or augment the methods presented here.
+In addition, although the current kinematic parameterization described in the paper was effective, it was obviously not accurate
+in some cases and configurations of the arm. A large payload
+in the arm would further exacerbate the errors that were already
+observed (see examples of disturbance loading [39] or pick and
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+98
+
+IEEE/ASME TRANSACTIONS ON MECHATRONICS, VOL. 24, NO. 1, FEBRUARY 2019
+
+place error due to unknown loads [40]). The fact that soft-robot
+kinematics can be load dependent is a persistent problem. However, this could be addressed by using existing and simplified
+kinematic models and then combining that approach with machine learning to compensate for the nonlinear and difficult to
+model discrepancies. We have also shown in past work that given
+robots with antagonistic soft joints, it is possible to vary joint
+stiffness to mitigate some deflection [39] and that it is possible
+to use adaptive control to improve performance for unknown
+payloads [40].
+The work presented in this paper on soft-robot joint estimation, kinematic calibration, and visual servoing allows improved
+kinematic control for platforms whose forward kinematics may
+be uncertain or may change regularly. Although we expect that
+there are other sensors, estimation algorithms, and kinematic
+representations that may continue to improve performance for
+soft robots, we have shown methods that make large-scale softrobot manipulation feasible. More importantly, we expect that
+specific themes from our approach (such as relative link orientation sensing, and needing to relearn or adapt kinematic parameters over time) will be especially useful to further improve
+performance of soft robots.
+ACKNOWLEDGMENT
+The authors would like to thank Pneubotics and the NASA
+Intelligent Robotics Group for collaboration in regards to results
+with the soft robot platform Kaa.
+REFERENCES
+[1] J. S. Terry, L. Rupert, and M. D. Killpack, “Comparison of linearized
+dynamic robot manipulator models for model predictive control,” in Proc.
+IEEE-RAS 17th Int. Conf. Humanoid Robot., 2017, pp. 205–212.
+[2] M. Donno, E. Palange, F. Di Nicola, G. Bucci, and F. Ciancetta, “A
+new flexible optical fiber goniometer for dynamic angular measurements:
+Application to human joint movement monitoring,” IEEE Trans. Instrum.
+Meas., vol. 57, no. 8, pp. 1614–1620, Aug. 2008.
+[3] R. Roduit, P.-A. Besse, and J.-P. Micallef, “Flexible angular sensor [and
+biomechanical application],” IEEE Trans. Instrum. Meas., vol. 47, no. 4,
+pp. 1020–1022, Aug. 1998.
+[4] P. T. Gibbs and H. H. Asada, “Wearable conductive fiber sensors for multiaxis human joint angle measurements,” J. NeuroEng. Rehab., vol. 2, no. 1,
+2005, Art. no. 7.
+[5] W. Felt, M. Suen, and C. D. Remy, “Sensing the motion of bellows through
+changes in mutual inductance,” in Proc. IEEE/RSJ Int. Conf. Intell. Robots
+Syst., Oct. 2016, pp. 5252–5257.
+[6] G. Gerboni, A. Diodato, G. Ciuti, M. Cianchetti, and A. Menciassi,
+“Feedback control of soft robot actuators via commercial flex bend sensors,” IEEE/ASME Trans. Mechatron., vol. 22, no. 4, pp. 1881–1888,
+Aug. 2017.
+[7] E. Szelitzky, J. Kuklyte, D. Mândru, and N. O. Connor, “Low cost angular displacement sensors for biomechanical applications—a review,” J.
+Biomed. Eng. Technol., vol. 2, no. 2, pp. 21–28, 2014.
+[8] T. Seel, J. Raisch, and T. Schauer, “IMU-based joint angle measurement
+for gait analysis,” Sensors, vol. 14, no. 4, pp. 6891–6909, 2014.
+[9] M. El-Gohary and J. McNames, “Human joint angle estimation with inertial sensors and validation with a robot arm,” IEEE Trans. Biomed. Eng.,
+vol. 62, no. 7, pp. 1759–1767, Jul. 2015.
+[10] B. Siciliano and O. Khatib, Springer Handbook of Robotics. New York,
+NY, USA: Springer, 2016.
+[11] T. George Thuruthel, Y. Ansari, E. Falotico, and C. Laschi, “Control
+strategies for soft robotic manipulators: A survey,” Soft Robot., vol. 5,
+no. 2, pp. 149–163, 2018.
+[12] B. A. Jones and I. D. Walker, “Kinematics for multisection continuum
+robots,” IEEE Trans. Robot., vol. 22, no. 1, pp. 43–55, Feb. 2006.
+
+[13] R. J. Webster and B. A. Jones, “Design and kinematic modeling of constant
+curvature continuum robots: A review,” Int. J. Robot. Res., vol. 29, no. 13,
+pp. 1661–1683, 2010.
+[14] R. Qi, A. Khajepour, W. W. Melek, T. L. Lam, and Y. Xu, “Design,
+kinematics, and control of a multijoint soft inflatable arm for human-safe
+interaction,” IEEE Trans. Robot., vol. 33, no. 3, pp. 594–609, Jun. 2017.
+[15] T. George Thuruthel, Y. Ansari, E. Falotico, and C. Laschi, “Control
+strategies for soft robotic manipulators: A survey,” Soft Robot., vol. 5,
+no. 2, pp. 149–163, 2018.
+[16] F. Largilliere, V. Verona, E. Coevoet, M. Sanz-Lopez, J. Dequidt, and C.
+Duriez, “Real-time control of soft-robots using asynchronous finite element modeling,” in Proc. IEEE Int. Conf. Robot. Autom., 2015, pp. 2550–
+2555.
+[17] A. D. Kapadia, K. E. Fry, and I. D. Walker, “Empirical investigation
+of closed-loop control of extensible continuum manipulators,” in Proc.
+IEEE/RSJ Int. Conf. Intell. Robots Syst., 2014, pp. 329–335.
+[18] A. Bajo, R. E. Goldman, and N. Simaan, “Configuration and joint feedback
+for enhanced performance of multi-segment continuum robots,” in Proc.
+IEEE Int. Conf. Robot. Autom., 2011, pp. 2905–2912.
+[19] M. C. Yip and D. B. Camarillo, “Model-less feedback control of continuum
+manipulators in constrained environments,” IEEE Trans. Robot., vol. 30,
+no. 4, pp. 880–889, Aug. 2014.
+[20] M. Li, R. Kang, D. T. Branson, and J. S. Dai, “Model-free control for
+continuum robots based on an adaptive kalman filter,” IEEE/ASME Trans.
+Mechatron., vol. 23, no. 1, pp. 286–297, Feb. 2018.
+[21] A. Melingui, O. Lakhal, B. Daachi, J. B. Mbede, and R. Merzouki,
+“Adaptive neural network control of a compact bionic handling arm,”
+IEEE/ASME Trans. Mechatron., vol. 20, no. 6, pp. 2862–2875, Dec. 2015.
+[22] H. Wang, B. Yang, Y. Liu, W. Chen, X. Liang, and R. Pfeifer, “Visual servoing of soft robot manipulator in constrained environments with an adaptive
+controller,” IEEE/ASME Trans. Mechatron., vol. 22, no. 1, pp. 41–50, Feb.
+2017.
+[23] H. Wang, W. Chen, X. Yu, T. Deng, X. Wang, and R. Pfeifer, “Visual servo
+control of cable-driven soft robotic manipulator,” in Proc. IEEE/RSJ Int.
+Conf. Intell. Robots Syst., 2013, pp. 57–62.
+[24] R. S. Penning, J. Jung, N. J. Ferrier, and M. R. Zinn, “An evaluation of
+closed-loop control options for continuum manipulators,” in Proc. IEEE
+Int. Conf. Robot. Autom., 2012, pp. 5392–5397.
+[25] D. B. Camarillo, C. R. Carlson, and J. K. Salisbury, “Task-space control
+of continuum manipulators with coupled tendon drive,” in Experimental Robotics. Springer Tracts in Advanced Robotics, vol. 54, O. Khatib,
+V. Kumar, G.J., Pappas, Eds. New York, NY, USA: Springer, 2009,
+pp. 271–280.
+[26] C. M. Best, M. T. Gillespie, P. Hyatt, L. Rupert, V. Sherrod, and M.
+D. Killpack, “Model predictive control for pneumatically actuated soft
+robots,” IEEE Robot. Autom. Mag., vol. 2, no. 9, p. 31, 2016.
+[27] M. T. Gillespie, C. M. Best, and M. D. Killpack, “Simultaneous position
+and stiffness control for an inflatable soft robot,” in Proc. IEEE Int. Conf.
+Robot. Autom., 2016, pp. 1095–1101.
+[28] “Pneubotics
+“soft”
+robots.”
+2017.
+[Online].
+Available:
+http://www.pneubotics.com/
+[29] H. Kato and M. Billinghurst, “Marker tracking and HMD calibration for a
+video-based augmented reality conferencing system,” in Proc. 2nd IEEE
+ACM Int. Workshop Augmented Reality, 1999, pp. 85–94.
+[30] Z. Zhang, “A flexible new technique for camera calibration,” IEEE Trans.
+Pattern Anal. Mach. Intell., vol. 22, no. 11, pp. 1330–1334, Nov. 2000.
+[31] T. Svoboda, D. Martinec, and T. Pajdla, “A convenient multicamera selfcalibration for virtual environments,” Presence: Teleoperators Virtual Environ., vol. 14, no. 4, pp. 407–422, 2005.
+[32] J. Holtz and J. Biswas, “Automatic extrinsic calibration of depth sensors
+with ambiguous environments and restricted motion,” in Proc. IEEE/RSJ
+Int. Conf. Intell. Robots Syst., 2017, pp. 2235–2240.
+[33] E. Jones, T. Oliphant, P. Peterson et al., “SciPy: Open source scientific
+tools for Python,” 2001, [Online]. Available: http://www.scipy.org/
+[34] J. Nocedal and S. J. Wright, Numerical Optimization. New York, NY,
+USA: Springer-Verlag, 2006.
+[35] P. Beeson and B. Ames, “TRAC-IK: An open-source library for improved
+solving of generic inverse kinematics,” in Proc. IEEE-RAS Int. Conf.
+Humanoid Robots, 2015, vol. 2015, pp. 928–935.
+[36] J. M. Hollerbach and C. W. Wampler, “The calibration index and taxonomy
+for robot kinematic calibration methods,” Int. J. Robot. Res., vol. 15, no. 6,
+pp. 573–591, 1996.
+[37] S. O. Madgwick, A. J. Harrison, and R. Vaidyanathan, “Estimation of
+IMU and MARG orientation using a gradient descent algorithm,” in IEEE
+Int. Conf. Rehab. Robot., 2011, pp. 1–7.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+HYATT et al.: CONFIGURATION ESTIMATION FOR ACCURATE POSITION CONTROL OF LARGE-SCALE SOFT ROBOTS
+
+[38] C. A. D. Sousa, “Dynamic model identification of robot manipulators: Solving the physical feasibility problem,” Ph.D. dissertation, Dept.
+Physics, Univ. Coimbra, Sep. 2014.
+[39] C. M. Best, “Position and stiffness control of inflatable robotic links
+using rotary pneumatic actuation,” M.S. thesis, Mech. Eng., Ira A. Fulton
+College Eng. Technol., Provo, UT, USA, 2016.
+[40] J. S. Terry, “Adaptive control for inflatable soft robotic manipulators with
+unknown payloads,” M.S. thesis, Mech. Eng., Ira A. Fulton College Eng.
+Technol., Provo, UT, USA, 2018.
+
+99
+
+Levi Rupert received the B.S. degree in mechanical engineering from Brigham Young University, Provo, UT, USA, in 2013, where he is
+currently working toward the Ph.D. degree in
+mechanical engineering at the Robotics and Dynamics Lab.
+Much of his work has been developing dynamic models and controls for soft pneumatic
+robots. He is currently developing soft robotic
+metrics to enable effective evaluation, design,
+and development of soft robots.
+
+Phillip Hyatt received the B.S. degree in mechanical engineering in 2016 from Brigham
+Young University, Provo, UT, USA, where is currently working toward the Ph.D. degree in mechanical engineering.
+He has authored/coauthored several papers
+on low-level compliant robot control.
+
+Dustan Kraus received the B.S. degree in
+mechanical engineering in 2016 from Brigham
+Young University, Provo, UT, USA, where he is
+currently working toward the M.S. degree in mechanical engineering on multi-arm manipulation
+using soft robots at the Robotics and Dynamics
+Lab.
+
+Vallan Sherrod received the B.S. degree in
+mechanical engineering in 2016 from Brigham
+Young University, Provo, UT, USA, where he is
+currently working toward the M.S. degree in mechanical engineering at the Robotics and Dynamics Lab.
+His current research focuses on developing
+design metrics for soft quadruped robots.
+
+Nathan Day received the B.S. degree in mechanical engineering from Brigham Young University, Provo, UT, USA, in 2016.
+His current work is focuses on effective sensing methods for soft robotic applications, including tactile sensing, and joint-angle estimation.
+
+Marc D. Killpack received the B.S. degree in
+mechanical engineering from Brigham Young
+University (BYU), Provo, UT, USA, in 2007, the
+M.S. degree in mechanical engineering from
+Georgia Tech Lorraine, Metz, France, in 2008,
+the Master Pro degree from ENSAM, Metz,
+France, in 2008, and the Ph.D. degree in robotics
+from Georgia Tech, in 2013.
+He is currently an Assistant Professor with the
+Department of Mechanical Engineering, BYU.
+He founded the Robotics and Dynamics Lab in
+2014 (http://radlab.byu.edu).
+Dr. Killpack was a recipient of the NASA Early Career Faculty Award
+which enabled research on control of soft robots.
+
+Authorized licensed use limited to: Soongsil University. Downloaded on March 05,2026 at 11:58:33 UTC from IEEE Xplore. Restrictions apply.
+
+
