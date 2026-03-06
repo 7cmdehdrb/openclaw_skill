@@ -26,3 +26,29 @@ gmail-calendar-scheduler 일정 제목 생성 품질을 한 단계 더 개선할
 - Last-Seen: 2026-02-25
 
 ---
+
+## [LRN-20260306-001] correction
+
+**Logged**: 2026-03-06T10:32:00Z
+**Priority**: high
+**Status**: pending
+**Area**: docs
+
+### Summary
+PDF→Notion 스킬 실행 시 일부 케이스에서 중복 페이지와 불완전 페이지가 발생했다.
+
+### Details
+사용자 피드백: (1) 핵심 이미지 누락, (2) 원본 PDF가 로컬 경로 텍스트만 남고 Notion 실제 첨부가 누락, (3) 재실행/스케줄 겹침 시 동일 논문 2개 생성.
+
+### Suggested Action
+- source fingerprint 기반 idempotent upsert 강제
+- per-fingerprint run lock 추가
+- 이미지 인라인/원본 첨부 실업로드 확인 전 완료 보고 금지
+- 체크리스트에 실패 재시도 및 완료 금지 규칙 명시
+
+### Metadata
+- Source: user_feedback
+- Related Files: skills/chatgpt-pdf-to-notion-temporary/SKILL.md, skills/chatgpt-pdf-to-notion-temporary/references/checklist.md
+- Tags: pdf-notion, idempotency, qa
+
+---

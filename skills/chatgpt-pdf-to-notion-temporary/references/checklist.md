@@ -3,6 +3,7 @@
 ## A. 입력/메타데이터
 - [ ] 입력 카디널리티 확인: 사용자 입력 기준 canonical PDF 1개만 선택
 - [ ] 내부 중복 파일(tmp copy/분할본/이름만 다른 동일본) 제거 후 canonical 경로 고정
+- [ ] source fingerprint 계산/기록 (prefer SHA256)
 - [ ] PDF title/metadata 확인 (`pdfinfo` 등)
 - [ ] 논문 메타데이터 조회 (`scripts/paper_metadata.py`) 및 `0) 논문 정보` 섹션 작성
 - [ ] citation 형식 확인: `APA`/`BibTeX` 라벨은 heading/bold, citation 본문만 quote
@@ -19,8 +20,9 @@
 
 ## C. 노션 반영
 - [ ] Notion path resolved: IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문
-- [ ] Page created with paper title (중복 시 suffix)
-- [ ] 출력 카디널리티 확인: canonical PDF 1개당 Notion page 1개만 생성
+- [ ] 기존 페이지 탐색: title/fingerprint 기준으로 upsert 대상 1개 확정
+- [ ] 신규 생성 시 fingerprint marker 즉시 기록
+- [ ] 출력 카디널리티 확인: canonical PDF 1개당 Notion page 1개만 유지(중복 생성 금지)
 - [ ] Notion formatting rule applied (`#`/`##`/`###`, nested bullets, table bold)
 
 ## D. 핵심 이미지(누락 방지)
@@ -34,8 +36,10 @@
 
 ## E. 마감
 - [ ] `### 원본 PDF` 섹션 + 원본 PDF 첨부
+- [ ] 원본 PDF 첨부는 로컬 경로 텍스트가 아닌 실제 Notion file block 업로드인지 확인
 - [ ] 불릿 QA: 중첩 항목이 raw `-` 텍스트가 아닌 실제 자식 불릿인지 확인
 - [ ] 이미지 QA: 핵심 이미지가 관련 섹션 근처에 인라인 삽입되었는지 확인
+- [ ] 이미지/첨부 업로드 실패 시 재시도 결과 기록(실패면 완료 보고 금지)
 - [ ] 임시 파일 등록: source PDF + extracted image dir 를 `--ttl-hours 6`로 등록
 - [ ] 최종 URL/핵심 추출 근거 보고
 - [ ] 위 체크리스트 미완료 항목 0개 확인 후에만 "완료" 보고

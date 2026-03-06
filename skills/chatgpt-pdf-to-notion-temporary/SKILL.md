@@ -16,6 +16,8 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 ## Fixed Workflow
 
 0. Enforce **single-input invariant** before anything else.
+   - Compute and persist a stable source fingerprint for the canonical PDF (prefer SHA256 of file bytes; fallback: title+first-page DOI+page count).
+   - Use this fingerprint as run key to prevent duplicate page creation.
    - Treat one user-provided paper PDF as exactly one job unit.
    - If multiple PDF candidates appear internally (tmp copies, chunked exports, duplicate names), dedupe and select only one canonical source by this order:
      1) exact path explicitly provided by the user
@@ -36,10 +38,17 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
    - Proposed method
    - 정량/정성 결과
 5. Preserve useful technical symbols/terms from source.
-6. Create Notion page under:
+6. Resolve Notion target under:
    - `IROL / 민동규 - (가제)Soft Robotics Sim To Real Transfer / 논문`
-7. Page title = paper title (dedupe with ` (2)`, ` (3)` as needed).
-8. Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
+7. **Idempotent page upsert (mandatory)**
+   - First, search existing child pages under the target parent by either:
+     - exact title match, and/or
+     - a marker block/property containing the source fingerprint (`source_fingerprint: <sha256>`)
+   - If an existing page is found for the same fingerprint, **update that page** (do not create a new page).
+   - Create a new page only when no matching page exists.
+   - When newly creating, write fingerprint marker immediately near top of page.
+8. Page title = paper title (use suffix only when genuinely different paper with same title).
+9. Extract PDF images with `scripts/extract_pdf_images.py` and select key figures.
    - **High-priority mandatory rule**: include framework/architecture-type figures whenever present (e.g., pipeline/system block/architecture diagrams; figure number is irrelevant).
    - Priority order: framework/architecture > real setup/hardware photos > representative method diagrams.
    - De-prioritize pure result-only plots unless they are essential to the core claim.
@@ -88,13 +97,16 @@ Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automati
 
 - Do not report completion until all checklist items are verified.
 - Input cardinality QA: exactly 1 canonical PDF selected for the run.
-- Output cardinality QA: exactly 1 Notion page created for that canonical PDF.
+- Output cardinality QA: exactly 1 Notion page per canonical PDF (upsert target must be unique by fingerprint).
+- Acquire a per-fingerprint run lock before page mutation; if lock exists, wait/retry or abort with clear report (never run two writers for one PDF).
 - Do not skip image extraction when key-image insertion is expected.
 - If extracted image count is 0, explicitly report and continue without image insertion only with clear reason.
-- If inline image insertion fails, retry once; if still failing, report failure explicitly (do not claim success).
+- If inline image insertion fails, retry once; if still failing, mark run as failed (do not claim success).
+- If original PDF attachment fails, retry once; if still failing, mark run as failed (do not claim success).
 - Ensure placeholders like `(아래 이미지 삽입)` are removed when images are actually inserted.
 - Ensure nested bullets are real child bullets (never leave raw `- ...` text lines).
 - Place key images near the matching section context (not dumped at page bottom).
+- Incomplete pages from prior runs should not be auto-deleted unless explicitly requested by user.
 - Any skill update must follow `commit -> push` (both required).
 
 ## Failure Handling
