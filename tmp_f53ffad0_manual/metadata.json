@@ -1,0 +1,14 @@
+{
+  "input_title": "H-infinity based Extended Kalman Filter for State Estimation in Highly Non-linear Soft Robotic System",
+  "matched_title": "H-infinity based Extended Kalman Filter for State Estimation in Highly Non-linear Soft Robotic System",
+  "match_confidence": 1.0,
+  "year": 2019,
+  "journal": "2019 American Control Conference (ACC)",
+  "citation_count": 23,
+  "doi": "10.23919/acc.2019.8814869",
+  "citation": {
+    "apa": "Loo, J. ; Tan, C. ; Nurzaman, S. (2019). H-infinity based Extended Kalman Filter for State Estimation in Highly Non-linear Soft Robotic System. 2019 American Control Conference (ACC). https://doi.org/10.23919/acc.2019.8814869",
+    "bibtex": "@inproceedings{Loo_2019, title={H-infinity based Extended Kalman Filter for State Estimation in Highly Non-linear Soft Robotic System}, url={http://dx.doi.org/10.23919/acc.2019.8814869}, DOI={10.23919/acc.2019.8814869}, booktitle={2019 American Control Conference (ACC)}, publisher={IEEE}, author={Loo, Junn Yong and Tan, Chee Pin and Nurzaman, Surya Girinatha}, year={2019}, month=jul, pages={5154â€“5160} }"
+  },
+  "notes": "If confidence is low (<0.75), verify with Google Scholar manually."
+}

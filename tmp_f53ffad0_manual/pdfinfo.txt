@@ -1,0 +1,20 @@
+Title:           H-infinity based Extended Kalman Filter for State Estimation in Highly Non-linear Soft Robotic System
+Subject:         2019 American Control Conference (ACC);2019; ; ; 
+Creator:         PaperPlaza: The IEEE Control Systems Society Conference, Journals, Award Management System
+Producer:        PDFlib+PDI 8.0.1p8 (Perl 5.10.0/Linux-x86_64); modified using iText® 7.1.1 ©2000-2018 iText Group NV (AGPL-version)
+CreationDate:    Wed Jul 31 16:09:27 2019 KST
+ModDate:         Tue Aug 27 00:30:00 2019 KST
+Custom Metadata: yes
+Metadata Stream: yes
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           7
+Encrypted:       no
+Page size:       612 x 792 pts (letter)
+Page rot:        0
+File size:       1113278 bytes
+Optimized:       no
+PDF version:     1.6
