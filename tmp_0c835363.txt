@@ -1,0 +1,834 @@
+SOFT ROBOTICS
+Volume 11, Number 4, 2024
+ª Mary Ann Liebert, Inc.
+DOI: 10.1089/soro.2023.0049
+
+Open camera or QR reader and
+scan code to access this article
+and other resources online.
+
+ORIGINAL ARTICLE
+
+Toward Onboard Proportional Control
+of Multi-Chamber Soft Pneumatic Robots:
+A Magnetorheological Elastomer Valve Array
+Sihan Wang,1,* Peizhi Zhang,2,* Liang He,1 and Perla Maiolino1,3
+
+Abstract
+
+Soft pneumatic actuators (SPAs) are commonly used in various applications because of their structural compliance, low cost, ease of manufacture, high adaptability, and safe human–robot interaction. The traditional
+approach for achieving proportional control of soft pneumatic robots requires the use of industrial proportional
+valves or syringe drivers, which are not only rigid and bulky but also hard to be integrated into the body of soft
+robots. In our previous research, we developed a Magnetorheological elastomer (MRE)-based soft valve that
+showed advantages for controlling SPAs due to its compliance, compactness, robustness, and compatibility for
+continuous pressure modulation. Modern soft robots with multiple chambers require more MRE valves onboard for
+their control. However, merely packing more MRE valves for soft robots can cause problems like magnetic
+interference, flow rate deviation, and overheating. Therefore, in this study, we proposed a two-dimensional MRE
+valve array design to solve issues of magnetic interference and overheating when expanding from a single MRE
+proportional valve into an integrated array. The magnetic interference and the overheating problem were investigated through multiphysics simulation, bringing the optimal choice of valve spacing (1.2 times the single valve
+diameter), magnetic coil pole arrangement (same pole), and the cooling system design (internal cooling chamber
+with flowing water). Physical experiments showed that our MRE valve array maintained its original flowrate
+performance with low magnetic interference (0.89 mT) and low coil temperature (under 73.9C for 5 min).
+Keywords: magnetorheological elastomer, proportional valve, cooling system, soft robotics
+Introduction
+
+S
+
+oft pneumatic robots typically rely on the interaction
+between highly compliant elastomeric materials and
+regulated air to achieve desired functions.1 Thanks to their
+easy fabrication, low cost, safe human–robot interaction, and
+
+high adaptability in dynamic and unstructured environments,
+an increasing number of researchers find pneumatic soft robots to be of interest. However, the precise control of the
+pressure inside a soft pneumatic robot remains challenging
+from the hardware perspective. Traditionally, this requires
+a pneumatic system consisting of displacement pumps,
+
+1
+
+Department of Engineering Science, University of Oxford, Oxford, United Kingdom.
+Department of Modern Mechanical Engineering, Graduate Program for Embodiment Informatics for Leading Graduate Schools,
+Waseda University, Shinjuku, Japan.
+3
+Department of Mechanics and Machine Design, University of Genova, Genova, Italy.
+*Both these authors contributed equally to this work.
+2
+
+617
+
+618
+
+solenoid valves, syringe drivers, and electronic controllers.2,3
+The cost and weight of such a pneumatic control system are
+often much higher than the soft robot itself. Moreover, these
+bulky and rigid devices can hardly be integrated into the soft
+robots, making them usually tethered and lacking mobility.
+Integrating pneumatic control systems into the soft robots
+will be essential to develop the next generation of untethered
+autonomous soft robots.
+Various integrable devices for controlling soft pneumatic
+robots have been developed in recent years to achieve onboard control for soft pneumatic robots.4 Pneumatically driven soft valves can perform computation and control for soft
+robots without using electric elements. A significant work in
+this direction is the silicone bistable valve, which exploits the
+structural instability to regulate air channels in a digital
+manner.5 The concept of the bistable membrane is then applied in many later works to achieve more advanced functions such as digital logic, memory, oscillators, and
+pneumatic feedback regulators.6–9 These devices are used in
+diverse robotic applications such as locomotion, programmable grasping, teleoperation, and so on.6,9–11
+There are also works that exploit the actuator mechanics
+and fluid viscosity to achieve the intelligent pressure distribution between multiple air chambers.12–14 In these works,
+multiple actuators are connected to the same pressure supply,
+and their actuation sequence is programmed through the interaction between the actuator body and flow viscosity. This
+method does not require any active or passive valves, significantly reducing the system’s complexity. A limitation of
+the approach is that it requires a precise model to predict and
+program the exact behavior of the system. Apart from the
+pneumatically driven devices, electrostatically and dielectrically driven pneumatic regulators use electric signals to
+control soft robots, achieving a much faster response time of
+<0.1 s.15,16 They require an operating voltage of over 500 V.
+Another solution is using thermally-driven smart materials.17,18 As the environmental temperature changes, the soft
+robot can passively adjust its behavior to adapt to the variation. One should note that these devices have a response time
+of 25 min, making them hardly capable of active control.
+The vast majority of the devices listed above work in a
+digital ON/OFF manner. However, recent applications of soft
+robots require not only binary ON/OFF control. The ability to
+continuously alter the pressure or flow rate in an analog manner
+provides advantages in various applications, including human–
+robot interaction,19 adaptive grasping,20 soft pneumatic arm
+control,21 and so on. A recent work introduces a pneumaticallydriven valve handcrafted by everyday objects that is capable of
+analog pressure regulation.9 The valve controls the pressure
+inside a soft actuator based on its input pneumatic pressure.
+Other works focus on achieving proportional control based
+on the interaction between magnetic fields and Magnetorheological (MR) fluids. By applying magnetic fields to the
+MR fluids, the magnetic particles inside the MR fluids align
+into chains, therefore increasing the local fluidic resistance.
+The mechanism was initially used to achieve digital ON/OFF
+control of soft actuators.22,23 In more recent work, the concept was proved to be capable of proportional control.24 By
+controlling the magnetization of electro-permanent magnets
+(EPMs), the researchers were able to precisely control the
+pressure within various soft actuators. A limitation of this
+approach is that using MR fluids as the actuation medium
+
+WANG ET AL.
+
+makes the system highly sensitive to any leakage and increases the overall weight of the system. The choice of materials used by the soft actuators is also limited.
+Our previous work introduced a magnetorheological
+elastomer (MRE) based proportional valve.25 MRE is a
+family of smart materials first developed in the 1990s.26 They
+are composite materials comprising magnetic particles dispersed in an elastomeric matrix. These magnetic particles,
+typically micron-sized iron particles or magnetite, interact
+with an external magnetic field, leading to a rearrangement of
+the particles within the elastomer matrix. As a result, the
+material’s mechanical properties can be altered in real time,
+providing tunable and controllable behavior.27 One of the
+initially exploited properties of MRE is its ability to change
+stiffness when exposed to a magnetic flux. When a magnetic
+field is applied, the magnetic particles within the elastomer
+align themselves with the field lines, resulting in a significant
+increase in the shear modulus. This percentage increase in
+stiffness exceeds 100% under a magnetic field of no more than
+0.5 T.28 Another important property of MRE that is highly
+useful when developing valves or other pneumatic devices is its
+magnetic-induced deformation. Due to the magnetization of the
+particles inside the matrix and the compliant nature of the
+elastomer that constitutes it, the MRE deforms along the exposed magnetic field with a response time in the order of a few
+milliseconds.29 Moreover, the deformation increases relatively
+linearly with the magnetic field strength.
+Based on this property, researchers developed a rigid valve
+exploiting MRE as the core actuator,30 achieving secure
+regulation of airflow. Although this valve design is still bulky
+and rigid, it shows that MRE has great potential to be used for
+developing integrable proportional valves used by soft robots. Various other soft robotic devices have also been developed based on this characteristic such as microfluidic
+pumps, soft actuators, and object grasping.31–33 Our previous
+work on MRE-based valves uses this characteristic to regulate the pressure and flow rate of soft robots proportionally
+and rapidly. Specifically, the air channel of the valve is enclosed between an MRE membrane and an electromagnet.
+The deformation of the MRE membrane, which restricts the
+airflow within the channel, can be controlled by adjusting the
+magnetic field strength produced by the electromagnet.
+The MRE-based proportional valve in our previous work
+comes with a single channel, meaning that it is only capable of
+controlling one pneumatic chamber. However, recently developed soft robots usually come with more complex structures
+and multiple pneumatic chambers to achieve their tasks like
+object manipulation or locomotion.34,35 This raises the number
+of valves required. Simply packing multiple MRE valves in a
+confined space may bring several problems. One crucial
+problem is magnetic field interference between each coil,
+which is commonly encountered when designing devices with
+multiple magnetic field generators.36,37 The magnetic interference can not only disrupt the functioning of MRE valves
+themselves but also affect nearby equipment.38 One typical
+approach to solve the problem is magnetic shielding.39,40
+However, the introduction of magnetic shields brings system
+complexity and is challenging to be embedded into soft robots.
+Another effective method is by increasing the coil spacing.41
+Overheating of the coils is another common issue. Since
+multiple coils are integrated into the soft robots, the accumulated heat will be more difficult to be dissipated, which
+
+619
+
+MRE VALVE ARRAY WITH A COOLING SYSTEM
+
+prevents the long-term operation of the valves and brings
+safety concerns. The predominant method used for dissipating heat from electromagnetic coils is fluidic cooling.42 There
+is a broad range of coolants to choose from, including air,
+water, and helium.42–44 The efficiency of such systems depends on the pumping power, the coolant type, the coolant
+flow rate, and channel geometry.
+In this work, we designed and developed an MRE array
+that ensures each valve unit can work independently and
+steadily in limited spaces. To address the magnetic interference problem, multiphysics finite-element simulations were
+implemented to investigate the magnetic interference between valve units under different (1) valve spacing and (2)
+pole arrangements. This provides the optimal array layout
+which ensures sufficiently low magnetic interference. To
+address the heat dissipation problem, the heat dissipation
+efficiency of air cooling and fluid cooling was compared by
+simulation and experiment. An embedded fluid cooling system was developed. As a result, the magnetic flux density
+between two MRE valves in the array was 0.89 mT. The flow
+rate characteristics of the MRE valves in the array remain
+consistent with that of a single MRE valve without magnetic
+interference, with a Root Mean Squared Error (RMSE) of
+9.73 mL/min. The cooling system is capable of lowering the
+coil temperature from 98.6C to 73.9C during operation.
+Finally, a demonstration of the MRE valve array when controlling a soft robot with four soft pneumatic actuators (SPAs)
+was implemented.
+Methodology
+MRE valve unit and its scaling up
+
+Our previous work25 presents the design of an MRE-based
+proportional valve for controlling pneumatic robots. An
+electromagnet embedded in silicone is used to generate
+magnetic fields while ensuring structural compliance. The
+valve’s gate is created by enclosing a pressurized cavity between the MRE membrane and the electromagnet. The valve
+operates in a ‘‘normally-open’’ mode. When no current flows
+through the coil, there is no force applied by the MRE, allowing air to move freely through the air channel. However,
+when an electric current flows through the coil, it generates a
+magnetic field. This magnetic field magnetizes the MRE,
+causing it to be drawn toward the concentration of the mag-
+
+netic flux and therefore restricting the valve’s gate. As the
+electric current increases, this ‘‘restriction’’ effect gradually
+intensifies, eventually resulting in the complete cessation of
+airflow. Figure 1 shows the structure of the MRE valve single
+unit while the detailed dimensions and materials of the MRE
+valve are included in the Supplementary Information S1 in
+the Supplementary Data.
+One should note that each MRE valve unit is only capable
+of controlling one independent pneumatic chamber. To perform more advanced tasks such as object manipulation34 and
+locomotion,35 more MRE valve units are required to simultaneously control multiple pneumatic actuators. This raises
+the need for a compact MRE array structure enabling each
+valve unit to work steadily and accurately. However, merely
+packing MRE valves into a limited space without investigation may cause magnetic interference and overheating
+problems.
+Magnetic interference
+
+The magnetic interference problem of the MRE valve array involves two aspects: (1) the interference between the
+MRE valve array and its surrounding environment and (2) the
+interference between neighboring valve units within the array. The MRE valve array as a whole should have the least
+amount of magnetic flux leaked to the environment so that it
+won’t affect the operation of external sensors or actuators.
+Meanwhile, the characteristics of every single valve unit
+should stay unaffected by the operation of its neighboring
+units, so that each MRE valve unit can be controlled independently and accurately.
+By investigating the magnetic interference with different
+valve spacing and magnetic pole arrangement, one can find
+the optimal array layout which keeps sufficiently low magnetic interference while minimizing the size of the array. As
+the valve spacing gets sparser, the magnetic interference is
+suppressed significantly, but the overall size of the array also
+increases. The magnetic pole arrangement is also an important factor to be investigated. When the magnetic poles
+for neighboring coils are opposite, the magnetic interference
+can be strengthened due to the formation of a closed magnetic loop.
+COMSOL Multiphysics was used to simulate and analyze magnetic field interference. The magnetic interference
+with different MRE valve spacing and pole arrangement was
+
+FIG. 1. MRE valve single unit structure. (A) Shows the photo of a single MRE-based proportional valve. An MRE
+membrane is located on top of an electromagnet embedded in silicone. The controlled air channel is located between the coil
+and the MRE membrane. (B) Shows the cross-section view of the MRE valve. By applying an electric current to the
+electromagnet, a magnetic field whose strength is controllable can be generated. This magnetic field deforms the MRE
+membrane, therefore achieving a continuous flow rate or pressure modulation in the controlled air channel. MRE, magnetorheological elastomer.
+
+620
+
+WANG ET AL.
+
+FIG. 2. Simulation results of the magnetic field with different magnetic pole arrangements and MRE valve spacing.
+(A) Shows the magnetic field distribution at the plane of the air channel with different valve spacing and pole arrangements.
+(B) Shows the magnetic flux density along the air channel of the valve when the neighboring unit has the same pole
+arrangement. (C) Shows the magnetic flux density along the air channel of the valve when the neighboring unit has the
+opposite pole arrangement. The benchmark (magnetic flux density of a single valve without interference) is shown in both
+(B, C) for ease of comparison. The enlargement views of the curve peaks are also given for clarity.
+investigated. Since the coil diameter is 18 mm, the valve
+spacing investigated in the simulation ranged from 18 to
+38 mm. For each valve spacing, both the ‘‘same’’ and ‘‘opposite’’ pole arrangements were considered. An electric
+current of 2 A was engaged in a pair of neighboring valves,
+and the resultant magnetic field was simulated. The detailed
+settings of the simulation can be found in Supplementary
+Information S2 in the Supplementary Data. By comparing the
+simulated magnetic field within the neighboring valves in the
+array against the original magnetic field within a single MRE
+valve, the intensity of magnetic interference was obtained.
+The magnetic field distribution with different valve spacing and pole arrangements is presented in Figure 2A. Compared with the same pole arrangement, the opposite pole
+arrangement brings a generally stronger magnetic field, especially at the region between the two valves. This indicates
+an undesirably strong magnetic interference with the surrounding environment.
+The magnetic flux density along the valve channel in the
+MRE valve array with the same and opposite pole arrangement is presented in Figure 2B and C. The magnetic flux
+density of a single MRE valve with no interference is considered the benchmark for comparison. To minimize the
+characteristics change when the valve is placed in an array, it
+
+is desirable to have a magnetic flux density curve that resembles the benchmark. With a similar magnetic flux distribution along the valve channel, a single MRE valve design
+can be easily adapted into an array without recharacterization.
+It can be observed that the opposite magnetic pole arrangement
+brings a much stronger magnetic flux density along the air
+channel than the benchmark. The peak value observed along
+the air channel is 0.71 T, 22% higher than the benchmark. In
+contrast, the magnetic flux density in the same pole arrangement was much closer to the benchmark. The peak value observed is 0.6 T, only 3% higher than the benchmark. Therefore,
+the same magnetic pole arrangement can bring the least change
+in valve characteristics.
+By comparing the magnetic flux density under different
+valve spacing, one can observe a marginal utility in relation to
+the increased valve spacing and its impact on magnetic interference suppression. The peak magnetic interference does decrease with a larger valve spacing, but converges when the
+valve spacing exceeds 30 mm. Further enlarging the valve
+spacing over 30 mm results in an increase in system bulkiness
+without yielding significant benefits. Therefore, we confirmed
+that the MRE valve array with the same pole arrangement and a
+valve spacing of 30 mm (1.2 times the diameter of a single
+valve unit) could satisfy our requirements.
+
+621
+
+MRE VALVE ARRAY WITH A COOLING SYSTEM
+Heat dissipation
+
+For a single MRE valve unit, the raise in temperature with
+different amounts of electric current has been measured and
+presented in Figure 3A. It took 348, 130, and 62 s for the
+MRE valve to reach 70C with a continuous current of 1 A,
+1.75 A, and 2.5 A, respectively. When multiple coils are
+densely packed in a confined space in an MRE valve array,
+the issue of overheating becomes severe. The rapid temperature rise during operation imposes several constraints on the
+MRE valve array, such as reduced life span, unpredictable
+characteristics, and safety concerns. The entire heat dissipation process of the MRE array can be described as follows.
+First, the coil generated heat which can be described with
+Joule’s law of heating. The heat travels through the silicone
+housing and MRE membrane through thermal conduction.
+Finally, the heat is released into the surrounding air by
+thermal convection. Heat conduction can be described by
+Fourier’s Law as below:
+
+Qc ¼  kAc
+
+dT
+dX
+
+(1)
+
+where Qc is the heat dissipation rate required by the valve
+unit, Ac is the cross-sectional area through which conduction
+occurs (i.e., the surface area of the coil), k is the thermal
+conductivity of the material (i.e., silicone), dT is the change in
+temperature, and dX is the change in distance.
+The heat convection, that is, heat transfer between the
+valve unit and surrounding environment, can be described as
+Newton’s Law of Cooling as below:
+Qv ¼ hAv ðTs  T1 Þ
+
+(2)
+
+where Qv is the heat dissipation rate required by the valve unit,
+A is the cross-sectional area through which conduction occurs
+(i.e., the surface area of the valve), h is the heat transfer coefficient, Ts is the surface temperature of the valve, and TN is
+
+FIG. 3. Thermal analysis on the MRE valve array. (A) Shows the measured and simulated temperature curve of a single
+MRE valve under different amounts of electric current. The measured data were obtained by attaching a temperature sensor
+to the surface of a single MRE valve, while the simulated data were obtained when the convective heat transfer coefficient
+was set to 9.2 W/m2$K. (B) Shows the simulated temperature distribution of the MRE valve array without a cooling system
+over a period of 1500 s. (C) Presents the simulated temperature-time curve at the center of the MRE valve units when the
+array is without a cooling system. (D) Shows the simulated temperature distribution of the MRE valve array with a cooling
+system over a period of 1500 s. (E) Presents the simulated temperature-time curve at the center of the MRE valve units when
+the array comes with the proposed cooling system.
+
+622
+
+WANG ET AL.
+
+the temperature of the cooling materials. T1 is set to the ambient temperature (25C). Since the copper coil we used can
+sustain a maximum temperature of 155C, we set Ts to 155C
+also as the maximum operating temperature. And Qv is equal to
+Qc for sustainable heat dissipation, which can be described as:
+Qv ¼ Qc ¼ I 2 R:
+
+(3)
+
+where I is the applied current, and R is the resistance of the
+coil. By substituting all known values into Equations (1–3),
+the required value of h that keeps the coil temperature under
+155C can be obtained. h should be over 1000 W/m2$K to
+ensure sustainable heat dissipation of the valve. In contrast,
+by matching the measured temperature increase curve of the
+MRE valve unit with the results obtained from the simulation
+(Fig. 3A), it can be found that the actual convective heat
+transfer coefficient between the MRE valve and the air under
+free convection h is only 9 W/m2$K. This actual h value is
+significantly lower than the required value for sustainable
+heat dissipation. Only the forced convection in liquids can
+provide a convective heat transfer coefficient larger than
+1000 W/m2$K.45 Therefore, a cooling system with flowing
+liquid is necessary.
+Simulations were constructed to compare the difference in
+heat dissipation with and without a cooling system. For the
+cooling system simulation, we applied an S-shape cooling belt
+design, where water flows within the belt surrounding each
+valve unit. The detailed geometry of the cooling belt can be
+found in Design and Fabrication of MRE Valve Array section.
+For the system without cooling, the MRE valves were directly
+embedded into the silicone. The heat transfer coefficient between the MRE array and the surrounding air h was set to 9.2
+W/m2$K, as investigated before. The water flow in the cooling
+belt is set as a laminar flow with a flow rate of 0.36 L/min. The
+electric current through all electromagnets is set to 1.5 A.
+A time-dependent study was implemented, whose detailed
+settings can be found in Supplementary Information S3 in the
+Supplementary Data. The temperature increase of the MRE
+valve array center was recorded from 0 to 1500 s, while the
+thermal images of the MRE valve array were recorded every
+150 s. The results are shown in Figure 3B–E.
+Figure 3C shows that the temperature of the MRE valve
+array increased continuously until 400C without a cooling
+system. With the cooling system, the temperature converged
+at 140C after 600 s (Fig. 3E). The simulation results showed
+that such a water cooling system is capable to keep the coil
+temperature below 155C, ensuring that MRE valves in the
+array work continuously and safely. In the following section,
+we focused on the design and fabrication to achieve such a
+cooling system in practice.
+Design and fabrication of MRE valve array
+
+To conduct cooling fluid into the valve array, a cooling
+chamber that tightly wounds the valves in an S shape is introduced, as shown in Figure 4B. The layout of the cooling
+channel is designed in this particular way to achieve both efficient cooling by maximizing contact area with the valves and
+ease of manufacture by having only one single cooling channel
+without any forks. The cooling chamber has a rectangular
+cross-section of 8 · 2 mm. Water is filled into the chamber and
+driven by a micro pump to ensure sufficient flow rate.
+
+A cooling device was used to cool down the fluid after the
+heat was exchanged with the coils. As presented in
+Figure 4A, the cooling device consists of a tank, two Peltier
+plates, a radiator, and a cooling fan. The tank, Peltier plates,
+radiator, and cooling fan had the same contact area of
+40 · 40 mm for seamless matching. Thermal conductive
+double-sided adhesive tape is used to attach them together.
+Silicone tubes were used to connect the pump, cooling device, and MRE valve array together into a loop.
+The fabrication procedure of the MRE valve array is shown
+in Figure 4C–E. First, a silicone cooling belt with an internal
+chamber was fabricated. Four coils and the prefabricated
+cooling belt were then placed together in a rectangular mold.
+Uncured silicone is then poured inside for casting the base
+layer of the MRE valve. After fabricating the base layer, we
+fabricated the MRE layer directly on top of the base layer as
+four independent circular pieces. The method of making the air
+channels between the base layer and the MRE layer was the
+same as our previous work when fabricating a single MRE
+valve unit.25 Mylar strips (2 mm width, 0.075 mm thickness)
+were placed between the electromagnets and the MRE membrane before curing and later removed to create an air channel.
+The overall size of the MRE valve array is 60 · 60 · 15 mm.
+Results
+
+To prove the validity of the proposed design, the fabricated
+MRE valve array (30 mm valve spacing, same pole arrangement, cooling system engaged) was tested in terms of
+both magnetic interference and heat dissipation. Finally, the
+fabricated MRE valve array was used to control the actuation
+of a multichamber soft pneumatic robot.
+Magnetic interference
+
+To investigate the amount of magnetic flux leaked to the
+surrounding environment, a hall sensor (SS490; Honeywell)
+was perpendicularly placed between two adjacent valve units
+on top of the MRE membrane to measure the magnetic flux
+density. The current was then applied to the two valves from 0
+to 3 A with 0.5 A steps. Both the ‘‘same’’ and ‘‘opposite’’ pole
+arrangements were tested by changing the current direction,
+and the corresponding results are presented in Figure 5A.
+As shown in Figure 5A, the measured magnetic flux density increases linearly as the electric current increases. When
+applying the same pole arrangement, the magnetic field is
+significantly less than the opposite pole arrangement. This is
+consistent with the simulation results presented in Figure 2.
+The maximum magnetic field for the ‘‘opposite’’ and
+‘‘same’’ pole arrangements is 24.0 and 0.89 mT, respectively.
+Our findings in Figure 5A confirm that the magnetic interference between the MRE valve array and its environment
+can be sufficiently suppressed when the same magnetic polarity is applied with a valve spacing of 30 mm.
+The second aspect investigated in terms of magnetic interference is whether the flow rate characteristics of a particular
+MRE valve in the array are affected by the operation of its
+neighboring valves. In this evaluation, we measured the flow rate
+characteristics of a random MRE valve unit in the array while its
+neighboring valves were operating with either the same or the
+opposite polarity. The measured flow rate characteristics were
+then compared with the flow rate characteristics of a single MRE
+valve as the benchmark. The upstream pressure applied to the
+
+MRE VALVE ARRAY WITH A COOLING SYSTEM
+
+623
+
+FIG. 4. Design and fabrication of the MRE valve array and its cooling system.
+(A) Shows a photo of the
+MRE valve array and its
+cooling system. The yellow
+block shows the MRE valve
+array consisting of four MRE
+valve units. The cooling
+chamber of the MRE valve
+array is connected in a loop
+with a micropump and a
+cooling device (a fan, a radiator, two Peltier plates, and
+a water tank). Cooling water
+is driven by the micropump,
+bringing the heat generated
+by the MRE valve array to
+the cooling device, so that it
+maintains the valve array at a
+safe temperature. (B) Shows
+the top and cross-sectional
+view of the MRE valve array.
+(C–E) Shows the fabrication
+process of the MRE valve
+array. First, a cooling belt
+with a rectangular internal
+chamber was fabricated. It
+was then placed together
+with four coils into a mold as
+shown in (C). Next, the silicone is poured into the mold
+and covers the coils and the
+cooling belt, as shown in
+(D). Finally, the MRE membrane is fabricated on top,
+and silicone tubes are attached, as shown in (E).
+valve channel was kept at 15 kPa, while the downstream was
+directly connected to the atmosphere. The electric current applied to the tested MRE valve ranged from 0.5 to 3 A with 0.5 A
+steps. The result is represented in Figure 5B.
+As shown in Figure 5B, the flow rate decreases as the current increases since the MRE membrane is attracted closer to
+the electromagnet under the larger magnetic field. The opposite pole arrangement brings a lower flow rate profile compared with the benchmark, with a RMSE of 27.9 mL/min. This
+
+matches our simulation results (Fig. 2) which tell that the
+magnetic flux density along the air channel is larger with opposite pole arrangement. In contrast, the measured flow rate
+profile with the same pole arrangement is desirably closer to
+the benchmark, with an RMSE of only 9.73 mL/min. This
+indicates that, with the same pole arrangement, the magnetic
+interference is negligible so that the behavior of each MRE
+valve unit in the array stays the same as a single MRE valve.
+Our previous work has shown that an MRE valve with such a
+
+FIG. 5. Experimental results about the magnetic interference of the MRE valve
+array. (A) Shows the measured magnetic flux density in
+the middle of two MRE valve
+units under different amounts
+of electric current and different pole arrangements. The
+magnetic field shows good
+linearity along with the current. (B) Shows the measured
+flow rate through the valve
+channel
+under
+different
+amounts of electric current
+and pole arrangement.
+
+624
+
+flow rate-current profile can be used as a proportional valve to
+achieve precise flow rate and pressure regulation.25 This
+means that the proposed MRE valve array is capable of
+achieving simultaneous, proportional control over multiple
+pneumatic actuators.
+Heat dissipation
+
+In the heat dissipation evaluation, we measured the temperature response of the MRE array with and without the
+cooling system. A thermal camera (Fluke Ti100) was used to
+capture thermal images. The initial temperature was set to the
+ambient temperature of 25C. Two phases were investigated
+during the tests, a working phase and a cooling phase. During
+
+WANG ET AL.
+
+the working phase, all four MRE units in the array were
+supplied with an electric current of 2 A. During the cooling
+phase, the current in the valves was shut down. The working
+and cooling phases lasted 5 and 10 min, respectively. Thermal images were recorded in the working and cooling states
+every 10 and 60 s, respectively.
+The captured thermal images are shown in Figure 6. The
+temperatures on two particular points are stated, one is at the
+center of the MRE valve array, while the other is at the center
+of a single MRE valve unit. After the entire working phase,
+the temperature at the center of the MRE valve unit increases
+from 25.8C to 73.9C with the cooling system and from
+25.0C to 98.6C without the cooling system, respectively.
+The temperature at the array center increases from 24.4C to
+
+FIG. 6. Experimental results about the heat dissipation of the MRE valve array with and without a cooling system. (A) Shows
+the temperature distribution of the MRE array with a cooling system every 10 s during the working phase. (B) Shows the
+temperature distribution of the MRE array without the cooling system every 10 s during the working phase. (C) Shows
+the temperature distribution of the MRE array with a cooling system every 60 s during the cooling phase. (D) Shows the
+temperature distribution of the MRE array without the cooling system every 60 s during the cooling phase.
+
+625
+
+MRE VALVE ARRAY WITH A COOLING SYSTEM
+
+34.9C with the cooling system and from 24.3C to 48.4C
+without the cooling system, respectively. The temperature of
+the MRE array using a cooling system is much lower than that
+without a cooling system, and the difference is up to 25C in
+the center of the coil. The lowered temperature guarantees the
+long working life of the MRE valves and the safety of the
+surrounding environment.
+In the cooling phase, we can observe that with the cooling
+system, the temperature decreases from 37.0C to 28.7C at the
+MRE valve center and from 76.2C to 30.9C at the center of the
+coil. However, without the cooling system, the whole structure
+becomes uniformly hot due to the thermal conduction and the
+temperature is around 53C at the end of the cooling phase,
+which is the same as the simulation results indicate (Fig. 3). The
+effect of the cooling belt is verified by the improved heat dis-
+
+sipation during both the working and cooling phases, which
+insists with the evaluation results and meets our goal.
+Demonstration
+
+The proposed MRE valve array design minimizes the effect of magnetic interference and overheating, ensuring that
+the MRE valves in the array work steadily, independently,
+and safely. To illustrate its application, a soft pneumatic robot
+with four independent PneuNet actuators (silicone-casted
+bending actuators46) was fabricated and controlled by the
+MRE valve array. Each actuator was connected to an MRE
+valve in the array. The specific schematics can be found in
+Figure 7B. The valve array operated continuously and controlled the robot through different configurations for around
+
+FIG. 7. A four-chamber soft robot controlled by the MRE valve array. The structure of the robot is shown in (A). It
+consists of four silicone-made PneuNet soft actuators. Each actuator is connected to an MRE valve unit in the array as
+shown in (B). By activating and deactivating the valves, the soft robot exhibits different configurations. (C–J) Shows the
+different configurations of the soft robot controlled by the MRE valve array, together with the pressure within each
+pneumatic actuator.
+
+626
+
+2 min. First, the limbs were straightened sequentially. Next,
+the limbs were straightened in pairs. Finally, all the limbs
+were straightened together twice. The different configurations of the soft robot controlled by the MRE valve array are
+presented in Figure 7C–J. The demonstration (shown in
+Supplementary Video S1) illustrates that the proposed MRE
+valve array is able to control multichamber soft robots
+through various configurations.
+Conclusion
+
+In this study, we proposed an MRE valve array design that
+enables each valve unit to work independently and steadily over
+long-term operation. Through investigating the magnetic interference and overheating problem, we designed the distance
+between each MRE valve unit (30 mm), the magnetic pole arrangement (same polarity), and the cooling system (S-shape
+cooling chamber with forced liquid). The physical experiments
+verified that the proposed MRE valve array ensures that each
+valve unit inside stays unaffected by magnetic interference and
+therefore has the same characteristics as a single MRE valve.
+This means that the MRE valve array can be used for proportional control over multiple SPAs. Results also showed that the
+cooling system efficiently dissipates the heat generated from the
+coils and maintains the temperature at a lower level. Finally, a
+demonstration was presented to illustrate the applications of the
+MRE valve array when controlling multichamber soft robots.
+The proposed MRE array system comes with unique advantages when controlling soft pneumatic robots when controlling multiple actuators. Unlike industrial proportional
+valves, the silicone nature of the MRE valve array ensures its
+seamless integration with soft robots without sacrificing their
+structural compliance. The total cost of the valve array (below
+$5 per unit) is also much lower than its industrial counterparts.
+Due to the compact arrangement of coils, the size of each valve
+unit in the array is 30 · 30 · 17 mm. This is smaller than the
+existing soft proportional valves such as the programmable soft
+valves made with everyday objects (15 · 15 · 80 mm).9 Another advantage of the MRE valve array is its fast response. Our
+previous work has shown that the valve can be placed in a
+proportional-integral-differential control loop with a control
+frequency over 50 Hz, much faster than the other works with a
+response time of over 1 s.5,24 Finally, the MRE valve array does
+not require specific types of fluid to be used by the soft robots,
+significantly broadening its application.23
+Despite these capabilities, the MRE valve array system still
+presents several directions for future work. With the increase of
+degree-of-freedom of soft robots, the number of valves also
+needs to be increased. The 30 mm restriction in horizontal valve
+spacing inevitably makes the valve array flat and huge. This
+restriction could be reduced using smaller electromagnetic
+coils. A three-dimensional MRE valve matrix could also solve
+the problem. An investigation of the vertical arrangement of
+valves will be performed. Moreover, the current cooling system
+introduces an additional fluidic input into the MRE valve array.
+This not only raises the system’s complexity and cost but also
+limits its application in those challenging scenarios when
+there’s only limited space onboard for soft robots or when the
+usage of water brings safety concerns. The limitation can be
+addressed in the future by (1) integrating the water pump and
+radiators into the valve array for a more compact system or (2)
+replacing the coils with EPMs for reduced heat generation.
+
+WANG ET AL.
+Authors’ Contributions
+
+S.W.: methodology (lead), validation (equal), visualization (lead), writing—original draft preparation (equal),
+writing—reviewing and editing (lead). P.Z.: methodology
+(lead), software (lead), validation (equal), writing—original
+draft (equal), writing—review and editing (supporting). L.H.:
+conceptualization (lead), methodology (supporting), writing—
+review and editing (supporting), supervision (lead). P.M.:
+conceptualization (lead), methodology (supporting), writing—
+review and editing (lead), supervision (lead), project administration (lead), funding acquisition (lead).
+Author Disclosure Statement
+
+No competing financial interests exist.
+Funding Information
+
+This work was supported by the Engineering and Physical
+Sciences Research Council (EPSRC) ‘‘From Sensing to
+Collaboration’’ (EP/V000748/1). S.W. was supported by the
+CSC-PAG Oxford Scholarship for his DPhil study; P.Z. was
+supported by JSPS KAKENHI Grant number 21J13536 and
+Leading Program of Waseda University.
+Supplementary Material
+
+Supplementary Data
+Supplementary Video S1
+References
+
+1. Rus D, Tolley MT. Design, fabrication and control of soft
+robots. Nature 2015;521(7553):467–475.
+2. Wijnen B, Hunt EJ, Anzalone GC, et al. Open-source syringe pump library. PLoS One 2014;9(9):e107216.
+3. Zhang B, Chen J, Ma X, et al. Pneumatic system capable of
+supplying programmable pressure states for soft robots.
+Soft Robot 2022;9(5):1001–1013.
+4. McDonald K, Ranzani T. Hardware methods for onboard
+control of fluidically actuated soft robots. Front Robot AI
+2021:8:720702.
+5. Rothemund P, Ainla A, Belding L, et al. A soft, bistable
+valve for autonomous control of soft actuators. Sci Robot
+2018;3(16):eaar7986.
+6. Preston DJ, Rothemund P, Jiang HJ, et al. Digital logic for soft
+devices. Proc Natl Acad Sci U S A 2019;116(16):7750–7759.
+7. Wang S, He L, Maiolino P. A modular approach to design
+multi-channel bistable valves for integrated pneumaticallydriven soft robots via 3D-printing. IEEE Robot Autom Lett
+2022;7(2):3412–3418.
+8. Nemitz MP, Abrahamsson CK, Wille L, et al. Soft NonVolatile Memory for Non-Electronic Information Storage
+in Soft Robots. In: 2020 3rd IEEE International Conference
+on Soft Robotics (RoboSoft). IEEE, New Haven, Connecticut, USA; 2020; pp. 7–12.
+9. Decker CJ, Jiang HJ, Nemitz MP, et al. Programmable soft
+valves for digital and analog control. Proc Natl Acad Sci U
+S A 2022;119(40):e2205922119.
+10. Hubbard JD, Acevedo R, Edwards KM, et al. Fully 3Dprinted soft robots with integrated fluidic circuitry. Sci Adv
+2021;7(29):eabe5257.
+11. Jin L, Forte AE, Bertoldi K. Mechanical valves for onboard flow control of inflatable robots. Adv Sci 2021;8(21):
+2101941.
+
+MRE VALVE ARRAY WITH A COOLING SYSTEM
+
+12. Gorissen B, Milana E, Baeyens A, et al. Hardware sequencing of inflatable nonlinear actuators for autonomous
+soft robots. Adv Mater 2019;31(3):1804598.
+13. Matia Y, Kaiser GH, Shepherd RF, et al. Harnessing nonuniform pressure distributions in soft robotic actuators. Adv
+Intell Syst 2023;5(2):2200330.
+14. Ben-Haim E, Salem L, Or Y, et al. Single-input control of
+multiple fluid-driven elastic actuators via interaction between
+bistability and viscosity. Soft Robot 2020;7(2):259–265.
+15. Diteesawat R, Helps T, Taghavi M, et al. Electropneumatic pumps for soft robotics. Sci Robot 2021;6(51):
+eabc3721.
+16. Xu S, Chen Y, Nak-Seung PH, et al. A dynamic electrically
+driven soft valve for control of soft hydraulic actuators.
+Proc Natl Acad Sci U S A 2021;118(34):e2103198118.
+17. Kalairaj MS, Banerjee H, Kumar KS, et al. Thermoresponsive hydrogel-based soft valves with annular actuation
+calibration and circumferential gripping. Bioengineering
+2021;8(9):127.
+18. Liu RH, Bonanno J, Yang J, et al. Single-use, thermally
+actuated paraffin valves for microfluidic applications. Sens
+Actuators B Chem 2004;98(2–3):328–336.
+19. Polygerinos P, Correll N, Morin SA, et al. Soft robotics: Review of fluid-driven intrinsically soft devices; manufacturing,
+sensing, control, and applications in human-robot interaction.
+Adv Eng Mater 2017;19(12):1700016.
+20. Subad RASI, Cross LB, Park K. Soft robotic hands and
+tactile sensors for underwater robotics. Appl Mech 2021;
+2(2):356–382.
+21. George Thuruthel T, Ansari Y, Falotico E, et al. Control
+strategies for soft robotic manipulators: A survey. Soft
+Robot 2018;5(2):149–163.
+22. Balak R, Mazumdar YC. Bistable valves for MR fluidbased soft robotic actuation systems. IEEE Robot Autom
+Lett 2021;6(4):8285–8292.
+23. McDonald K, Rendos A, Woodman S, et al. Magnetorheological fluid-based flow control for soft robots. Adv
+Intell Syst 2020;2(11):2000139.
+24. McDonald KJ, Kinnicutt L, Moran AM, et al. Modulation
+of magnetorheological fluid flow in soft robots using
+electropermanent magnets. IEEE Robot Automat Lett
+2022;7(2):3914–3921.
+25. Wang S, He L, Albini A, et al. A magnetorheological
+elastomer-based proportional valve for soft pneumatic actuators. Adv Intell Syst 2023;5:2200238.
+26. Ginder JM, Nichols ME, Elie LD, et al. Magnetorheological Elastomers: Properties and Applications. In: Smart
+Structures and Materials 1999: Smart Materials Technologies. Vol. 3675, SPIE, Newport Beach, CA, United States;
+1999; pp. 131–138.
+27. Li Y, Li J, Li W, et al. A state-of-the-art review on magnetorheological elastomer devices. Smart Mater Struct
+2014;23(12):123001.
+28. Liu T, Xu Y. Magnetorheological Elastomers: Materials and
+Applications. In: Smart and Functional Soft Materials.
+IntechOpen: London, UK; 2019; p. 5.
+29. Vatandoost H, Hemmatian M, Sedaghati R, et al. Dynamic
+characterization of isotropic and anisotropic magnetorheological elastomers in the oscillatory squeeze mode superimposed on large static pre-strain. Compos Part B Eng
+2020;182:107648.
+30. Böse H, Rabindranath R, Ehrlich J. Soft magnetorheological elastomers as new actuators for valves. J Intell Mater
+Syst Struct 2012;23(9):989–994.
+
+627
+
+31. Tang SY, Zhang X, Sun S, et al. Versatile microfluidic
+platforms enabled by novel magnetorheological elastomer
+microactuators. Adv Funct Mater 2018;28(8):1705484.
+32. Kashima S, Miyasaka F, Hirata K. Novel soft actuator using magnetorheological elastomer. IEEE Trans Magnet
+2012;48(4):1649–1652.
+33. Zhang P, Kamezaki M, He Z, et al. EPM–MRE: Electropermanent magnet–magnetorheological elastomer for soft
+actuation system and its application to robotic grasping.
+IEEE Robot Autom Lett 2021;6(4):8181–8188.
+34. Elfferich JF, Dodou D, Della Santina C. Soft robotic
+grippers for crop handling or harvesting: A review. IEEE
+Access 2022;10:75428–75443.
+35. Yin A, Lin HC, Thelen J, et al. Combining locomotion and
+grasping functionalities in soft robots. Adv Intell Syst 2019;
+1(8):1900089.
+36. Kong S, Bae B, Jung DH, et al. An investigation of
+electromagnetic radiated emission and interference from
+multi-coil wireless power transfer systems using resonant
+magnetic field coupling. IEEE Trans Microw Theory Tech
+2015;63(3):833–846.
+37. Spiezia G, Losito R, Martino M, et al. Automatic test bench
+for measurement of magnetic interference on LVDTs. IEEE
+Trans Instrum Meas 2011;60(5):1802–1810.
+38. Fu J, Ning Z, Chang Y. Active compensation method for
+strong magnetic interference of MEMS electronic compass.
+IEEE Access 2021;9:48860–48872.
+39. Man J, Ding F, Li Q, et al. Novel high-speed electromagnetic
+actuator with permanent-magnet shielding for high-pressure
+applications. IEEE Trans Magnet 2010;46(12):4030–4033.
+40. Kim H, Song C, Kim J, et al. Design of Magnetic Shielding for
+Reduction of Magnetic near Field from Wireless Power
+Transfer System for Electric Vehicle. In: 2014 International
+Symposium on Electromagnetic Compatibility. IEEE, Tokyo,
+Japan; 2014; pp. 53–58.
+41. Raaijmakers A, Ipek O, Klomp D, et al. Design of a radiative
+surface coil array element at 7 T: The single-side adapted
+dipole antenna. Magn Reson Med 2011;66(5):1488–1497.
+42. Lampasi A, Coletti A, Novello L, et al. Final design of the
+switching network units for the JT-60SA central solenoid.
+Fusion Eng Des 2014;89(4):342–348.
+43. Azarkish H, Barrau J, Coudrain P, et al. Self-Adaptive
+Microvalve Array for Energy Efficient Fluidic Cooling in
+Microelectronic Systems. In: 2017 16th IEEE Intersociety
+Conference on Thermal and Thermomechanical Phenomena in Electronic Systems (ITherm). IEEE, Florida, USA;
+2017; pp. 522–529.
+44. Wang L, Wu H, Li L, et al. The helium cooling system and
+cold mass support system for the MICE coupling solenoid.
+IEEE Trans Appl Superconduct 2008;18(2):941–944.
+45. Kurganov V. Heat Transfer Coefficient. In: Thermopedia.
+Begel House, Inc., 2011.
+46. Mosadegh B, Polygerinos P, Keplinger C, et al. Pneumatic
+networks for soft robotics that actuate rapidly. Adv Funct
+Mater 2014;24(15):2163–2170.
+
+Address correspondence to:
+Sihan Wang
+Department of Engineering Science
+University of Oxford
+Oxford OX1 2JD
+United Kingdom
+E-mail: sihan.wang@eng.ox.ac.uk
+
+
