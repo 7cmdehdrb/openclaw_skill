@@ -1,0 +1,2210 @@
+Int. J. Human–Computer Studies 158 (2022) 102730
+
+Contents lists available at ScienceDirect
+
+International Journal of Human - Computer Studies
+journal homepage: www.elsevier.com/locate/ijhcs
+
+How Linguistic Framing Affects Factory Workers’ Initial Trust in
+Collaborative Robots: The Interplay Between Anthropomorphism and
+Technological Replacement
+Tobias Kopp *, Marco Baumgartner, Steffen Kinkel
+Institute for Learning and Innovation in Networks (ILIN), Karlsruhe University of Applied Sciences, Moltkestr. 30, 76133 Karlsruhe, Germany
+
+A R T I C L E I N F O
+
+A B S T R A C T
+
+Keywords:
+Trust
+Anthropomorphism
+Linguistic framing
+Technological replacement
+Industrial human-robot interaction
+Collaborative robots
+
+An appropriate level of human-robot trust is considered a necessary precondition for successful human-robot
+interaction (HRI). With collaborative robots (cobots) entering production sites and allowing factory workers
+to operate interactively, issues of human-robot trust at the workplace are gaining relevance and complexity. It is
+widely believed that trust is promoted by anthropomorphisation, that is, the application of human-like mental
+models to technical devices. Anthropomorphisation can be triggered by altering either the characteristics of the
+robot or the mental models of the human interaction partner, for example by providing linguistically framed
+descriptions of the robot. However, the research base on linguistic framing effects on anthropomorphisation and
+on human-robot trust in industrial environments is scarce. This article aims to close this research gap by
+investigating changes in inexperienced factory workers’ initial trust induced by linguistic framing in the run-up
+to an interaction. Besides the human-likeness of the robot, the framing also addresses the human-robot relation in
+order to take into account the special circumstances of cobot use in the industrial workplace. In this usage
+context, cobots frequently provoke ambivalent attitudes amongst employees, who see themselves in a cooper­
+ative or in a competitive relationship to the robot, depending on whether they consider the latter as com­
+plementing or substituting their jobs.
+The results of the pre-post online experiment presented in this article highlight the effectiveness of framing
+and reveal a significant interaction effect between perceived human-likeness and cooperativeness. In particular,
+human-like framing of the cobot significantly increases an employee’s trust in the cobot only when the humancobot relation is perceived as cooperative. This can be explained by different psychological reactions on the
+anticipated technological replacement by either man or machine. This finding suggests that the way employees
+relate to cobots represents a relevant contextual factor in the industrial workplace that moderates the effect of
+anthropomorphisation on human-robot trust. Furthermore, providing information about the cobot generally
+seems to foster trust, possibly resulting from an effect of imagined contact with the cobot.
+
+1. Introduction
+Whilst research in the field of human-robot interaction (HRI) has
+predominantly focussed on technical aspects (Vincent et al., 2015, p. 2),
+a greater emphasis has been put on human factors such as humans’
+expectations towards robots and their trust in robots in the past years
+(Mutlu et al., 2016, p. 1908; Xing and Marwala 2018, p. 7).
+Human-robot trust is considered a key prerequisite for successful HRI
+(Broadbent 2017; Charalambous et al., 2013; You and Robert 2019),
+which needs to be calibrated appropriately (Parasuraman and Riley
+1997). Initial trust prior to an interaction is based on humans’ mental
+
+models of the robot (Hoff and Bashir 2015), which serve as an internal
+representation of the robot’s characteristics and capabilities. Whenever
+detailed and reliable information about the robot is lacking, people tend
+to apply readily available and detailed mental models of human beings.
+This phenomenon is called anthropomorphisation, that is, the attribu­
+tion of human characteristics to non-human entities (Epley et al., 2007).
+In order to analyse the determinants of anthropomorphisation of robots
+most studies experimentally manipulate features of the robot, such as its
+appearance or style of movement (Smith and Wiese 2016). Hence, those
+studies focus on bottom-up processes, that is, on the influence of the
+actual perception of the robot on higher-order cognitive abilities like
+
+* Corresponding author.
+E-mail addresses: tobias.kopp@h-ka.de (T. Kopp), marco.baumgartner@h-ka.de (M. Baumgartner), steffen.kinkel@h-ka.de (S. Kinkel).
+https://doi.org/10.1016/j.ijhcs.2021.102730
+Received 11 September 2020; Received in revised form 30 April 2021; Accepted 13 October 2021
+Available online 9 November 2021
+1071-5819/© 2021 Elsevier Ltd. All rights reserved.
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+thinking of, speaking about and acting towards it. On the contrary, ef­
+fects of top-down processes, such as the impact of people’s apparent
+mental models on their perception of the robot are much less researched
+(Coeckelbergh 2017; Groom et al., 2011; Stenzel et al., 2012a; Weis and
+Wiese 2020). Linguistic framing serves as a means to activate and
+modulate mental models and to induce anthropomorphisation based on
+provided information about a robot within certain “structures of ex­
+pectations” (Groom et al., 2011, p. 195). However, the few available
+studies on linguistic framing of robots have been predominantly con­
+ducted in the field of social robotics or in atypical application scenarios
+(Onnasch and Roesler 2019).
+In the domain of industrial HRI (iHRI), human-related factors like
+trust, anthropomorphism and linguistic framing have only been treated
+subordinately so far (Charalambous et al., 2016b; Müller et al., 2017;
+Sheridan 2016), although some field studies underpin the relevance of
+social processes at the industrial workplace (Elprama et al., 2016; Lee
+et al., 2012; Obrist et al., 2011; Sauppé and Mutlu 2015). This results in
+a lack of solid empirical findings within an application domain that is
+gaining relevance due to the increasing commercial availability of
+collaborative robots (cobots) as a special type of mostly lightweight
+industrial robots. By definition, cobots are equipped with dedicated
+security features that allow direct interaction and physical contact with
+humans (e.g. hand-overs of work pieces or hand-guiding) without the
+need for physical separation e.g. by security fences (Murashov et al.,
+2016). In contrast to conventional automation, they are intended to
+support instead of substitute workers (Grahn et al., 2018), e.g. by taking
+over mentally or physically strenuous tasks resulting in increased job
+attractiveness (cf. Kopp et al., 2021). While previously machines were
+merely considered as simple tools, cobots have begun to cross the line
+between machines and interactive colleagues from a phenomenological
+viewpoint (Oliveira et al., 2018; Weiss et al., 2016). Despite being used
+in industrial settings and predominantly being designed in a
+non-anthropomorphic way, cobots possess some essential design fea­
+tures that can easily make them appear human-like. These features
+include their small size, their often human-like morphology with
+rounded joints, the ability to interact physically, and their fluid,
+human-like movements (Bartneck et al., 2005; Ferrari and Eyssel 2016;
+Marquardt 2017, p. 30; Remmers 2020; Złotowski et al., 2014). These
+subtle cues can be sufficient to trigger anthropomorphisation, not to
+mention the available cobot models that possess anthropomorphic
+design features, such as the cobots Baxter and Sawyer from manufacturer
+Rethink Robotics, which are even equipped with a visual display simu­
+lating a pair of eyes (Fitzpatrick et al., 2016, p. 1790; Sheridan 2016)
+In this sense, cobots can be seen as hybrid robots, which are indeed
+intended for flexible use in industrial application scenarios, but never­
+theless might appear as “quasi-others” and “more-than-things” to
+workers from a phenomenological viewpoint (Coeckelbergh 2018,
+2011, 2010). In addition, employees often have ambivalent attitudes
+towards cobots, as they switch between two common conflicting nar­
+ratives regarding the relation to the cobot, namely the cooperative
+narrative of a cobot making people’s work easier and the competitive
+narrative of a cobot threatening peoples’ jobs (Meißner et al., 2020;
+Oliveira et al., 2018). These two opposing depictions guide employees’
+perception of the cobot, which often lies somewhere on the continuum
+between these two extremes and can change rapidly dependent on the
+properties of a certain cobot and on the narratives that are most salient
+at a given point in time. This situation of uncertainty prepares the
+ground for the influence of frames transported by language.
+Employees’ perception of the cobot and their constructed relation to
+the latter have relevant practical implications, particularly because fears
+of being replaced by robotic technology severely impairs acceptance (El
+Makrini et al., 2018; Elprama et al., 2016; Lotz et al., 2019; Maurtua
+et al., 2017). Surprisingly, relational aspects and employees’ psycho­
+logical reactions to the fear of being replaced have rarely been investi­
+gated and incorporated into prior research (Granulo et al., 2019). Hence,
+how and for what reasons employees situate themselves towards cobots
+
+at work in a cooperative or competitive relationship often remains un­
+clear (Oliveira et al., 2018). This study will first examine the effects of
+linguistic framing on perceived human-likeness and cooperativeness of a
+cobot and secondly the effect of these factors on production workers’
+trust in a particular cobot prior to an actual interaction.
+Whilst literature on anthropomorphisation suggests a positive
+impact on trust (Hoff and Bashir 2015; Waytz et al., 2014), a recent
+meta-analysis reveals controversial empirical results (Ötting et al.,
+2020), which might be explained by moderating effects of the
+human-cobot relation. As recent research indicates, emotional reactions
+to technological replacement seem to depend on whether one expects to
+be replaced by a person or a machine (Granulo et al., 2019). More
+specifically, the idea of being replaced by another person poses a greater
+threat to one’s self-worth in comparison to being replaced by a machine.
+Hypothetically, this aversion against being replaced by a human could
+transfer to the replacement by a robot that is represented in a
+human-like manner. Hence, this might lead to reverse effects of
+anthropomorphisation on trust, if employees see themselves in compe­
+tition with cobots. Therefore, we assume an interaction effect between
+perceived human-likeness and perceived cooperativeness of a cobot
+with regard to trust changes. More specifically, we hypothesize as
+follows:
+H1: Human-like framing has a more positive impact on trust
+compared to machine-like framing, if the relation to the robot is
+perceived as cooperative.
+H2: Machine-like framing has a more positive impact on trust
+compared to human-like framing, if the relation to the robot is
+perceived as competitive.
+In contrast to similar studies, our sample consists of production
+workers instead of students because the latter are expected to hold
+fundamentally different mental models of robots. This is because stu­
+dents usually have different prior experiences regarding technology
+usage, and are not directly confronted with technological replacement.
+Thereby, we avoid the typical drawback of such convenience samples in
+comparable studies, which limits their external validity (Horstmann
+et al., 2018; Richert et al., 2017).
+The empirical results reveal that the way a cobot is linguistically
+framed influences how workers perceive the cobot’s human-likeness and
+how they relate to it, respectively. Furthermore, the effects of anthro­
+pomorphisation on initial trust in the cobot are moderated by the
+human-cobot relation. Thus, a high degree of perceived human-likeness
+fosters trust only if workers consider their relationship to the cobot as
+cooperative instead of competitive.
+The contribution of this paper is twofold, providing both theoretical
+and practical implications. From a theoretical point of view, the results
+provide insights into the effectiveness of linguistic framing in an iHRI
+context and into the interaction between anthropomorphisation and
+perceived human-cobot relations. Thereby, the study presented in this
+paper is one of the first to account for the iHRI-specific circumstances
+where employees are often afraid of losing their jobs and thus relate in
+different ways to the robot. This might also explain the results from
+previous studies that show mixed effects of anthropomorphism. From a
+practical aspect, linguistic framing could act as a powerful measure for
+internal company communication capable of calibrating employees’
+initial trust and so contribute to overcoming poor market penetration
+due to a lack of employee acceptance (Görke et al., 2017).
+2. Theoretical Background
+2.1. Trust in Robots
+Trust is a multifaceted construct that has been the subject of research
+in many different disciplines. From a sociological perspective, trust can
+be described as a necessary mechanism of complexity reduction to cope
+2
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+such as the technology acceptance model (TAM; Davis 1989) or the trust
+in automation model (Lee and See 2004) rely on the theory of reasoned
+action (TRA; Fishbein and Ajzen 1975). This theory assumes intentions
+and actual behaviours to result from a person’s positive attitude towards
+an action such as machine usage and from this person’s belief that the
+action does not violate behavioural norms (Ajzen and Fishbein 1980, p.
+7). Accordingly, a behavioural definition of trust by Hancock et al.,
+(2011a) stating that trust is “the reliance by an agent that actions prej­
+udicial to their well-being will not be undertaken by influential others”
+stresses that trust is ultimately manifest in the act of reliance on a
+particular system. However, whilst trust is supposed to influence
+use-choice in voluntary usage contexts (Sanders et al., 2019), trust
+cannot be deduced from the actual behaviour in mandatory usage con­
+texts like iHRI (Meißner and Trübswetter 2018b).
+For the study presented in this article, we developed a comprehen­
+sive human-robot trust model, that integrates aspects of the aforemen­
+tioned TRA (Fishbein and Ajzen 1975), the three-factor theory of trust
+(Hancock et al., 2020; Hancock et al., 2011b), the trust in automation
+model (Lee and See 2004), the three-layer model of trust (Hoff and
+Bashir 2015) as well as considerations on disuse and misuse (e.g. Par­
+asuraman and Riley 1997). Fig. 1 visualizes the model representing the
+interdependencies of different antecedents, dimensions, and conse­
+quences of trust, which will be further explicated in the following.
+The trust model we developed builds upon the conceptualisation of
+trust presented in the comprehensive and widely used (French et al.,
+2018) three-layered trust in automation model by Hoff and Bashir
+(2015). According to this model, trust can be broken down into dispo­
+sitional, situational, and learned trust. Dispositional trust originates
+from time-invariant personality traits and situational trust from the
+given work-context such as system complexity, task difficulty or subject
+matter expertise. Learned trust, however, is strongly determined by an
+employee’s mental model of the robot. Mental models are dynamic in­
+ternal representations of an entity’s characteristics which are continu­
+ously modified by experiences and serve as a basis for actual
+expectations regarding the behaviour of the represented robot (de Visser
+et al., 2019; Phillips et al., 2011). Trust can be further divided into an
+initial component existing prior to HRI and a dynamic component
+changing with the experience accumulated in the course of a HRI (Hoff
+and Bashir 2015). While initial trust stems from cognitive reasoning
+based on mental models (cognitive trust), affective trust components
+
+with the environment’s overcomplexity (Luhmann 1968/2014). Despite
+the variety of definitions and conceptualisations, three characteristics of
+trust seem to form common ground (French et al., 2018, p. 19): First,
+trust becomes relevant in situations of uncertainty and vulnerability,
+which one can tackle by either controlling the actions of another party
+by the involvement of high cognitive load or by trusting the other party,
+which releases cognitive capacity. If someone decides to trust another
+party, this person will tend to relinquish control by relying on the other
+party (Lee and See 2004). This makes sense if one considers the other
+party to be trustworthy, that is, one does not expect the other party to
+exploit one’s own vulnerability. Second, as the aforementioned example
+illustrates, trust always involves (at least) two parties. In contrast to
+interpersonal trust, which is characterised by both parties being
+humans, trust in technology involves a human as a trustor and a tech­
+nological system as a trustee, making trust an unidirectional process
+(Hancock et al., 2020). Third, trust serves as a decision heuristic
+involving uncertain expectations regarding future events. If one believes
+that an agent will react in a certain way and evaluates this reaction
+positively, this will lead to an attitude of trust, as seen in probably the
+most widespread definition of trust in the context of automation: “the
+attitude that an agent will help achieve an individual’s goals in a situ­
+ation characterized by uncertainty and vulnerability” (Lee and See 2004,
+p. 51). According to meta-analyses, this attitude of trust is influenced by
+three general types of factors. Human-related factors refer to
+time-invariant personality traits as well as situational abilities of a
+person, environmental factors to the specifics of the interaction context,
+and robot-related factors to the robot configuration, functionality and
+design (Hancock et al., 2020; Hancock et al., 2011a). However, whilst
+this basic differentiation is commonly used, Hancock et al., (2020, p. 18)
+mention that the assignment of factors to one unique category is chal­
+lenging, because many factors possess interactive dependencies with
+others. For example, a person’s satisfaction with the robot depends on
+this person’s expectations on the human-side as well as on the robot’s
+performance on the robot-side. For the sake of disambiguation, we
+consider human-related factors as rather persistent characteristics and
+abilities, e.g. constituting one’s disposition to trust, while referring to
+situationally valid mental models in order to explain the actual
+perception and interpretation of a robot’s appearance and behaviour as
+well as strongly experience-based proportions of trust.
+Many models of acceptance and trust in the context of technology
+
+Fig. 1. Comprehensive model of trust in robots based on previous theories and models concerning trust in automation.
+3
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+originate from spontaneous, often subconscious reactions when exposed
+to a device (Bernotat et al., 2019; Gompei and Umemuro 2018) and thus,
+are especially important during interaction. Before an interaction and
+especially in the absence of applicable practical experiences, people tend
+to base their initial trust judgements on their vague and sometimes
+ill-informed mental models of robots and their expectations regarding
+the robot’s capabilities and future actions (Lee et al., 2005). Those
+mental models are frequently influenced by depictions in the media, by
+available knowledge about humans (cf. ch. 2.2) and by information from
+others, which shape the perceived trustworthiness of the robot partic­
+ularly within an organizational context (Charalambous et al., 2016b;
+Lee and See 2004; Wurhofer et al., 2015).
+Initial trust levels determine employees’ willingness to work with a
+robot and the way they interact. While disuse describes the situation, in
+which people refuse to use a robot, misuse refers to the over- or un­
+derestimation of the robot’s capabilities and accordingly to an inap­
+propriate use of the robot, either by relying too much on it and thereby
+overlooking failures (over-reliance), or by relying too little (under-reli­
+ance) on it and thereby unnecessarily wasting mental capacity control­
+ling the robot’s actions (Billings et al., 2012; Hancock et al., 2020; Lee
+and See 2004; Lewis et al., 2018; Parasuraman and Riley 1997).
+Adequate initial trust levels are crucial for enabling positive initial usage
+experiences during the early interaction period, in which trust is espe­
+cially vulnerable. Typically, trust develops in a non-linear way and can
+be easily destroyed by negative events, which can only be compensated
+for after many positive experiences (Desai et al., 2013; Flook et al.,
+2019). Additionally, initial expectations also influence dynamic learned
+trust, which depends on the robot’s (perceived) reliability, that is, a
+congruency between an employee’s expectations and perception (Lewis
+et al., 2018). In conclusion, these interdependences stress the relevance
+of initial trust as a necessary yet not sufficient prerequisite for successful
+HRI (Broadbent 2017; Lotz et al., 2019; Phillips et al., 2011), which
+needs to be calibrated appropriately to guarantee realistic expectations
+regarding the robot’s capabilities (Charalambous et al., 2016a, p. 198;
+Powell and Michael 2019). Therefore, we focus on initial trust and its
+influenceability by framing.
+
+(Richert et al., 2017, p. 73).
+Anthropomorphisation is essentially a psychological process that
+should not be confused with anthropomorphic design, which refers to
+equipping a robot with human-like features or design properties
+(Lemaignan et al., 2014). However, anthropomorphic design can also
+trigger the anthropomorphisation of the designed entity. Even if robots
+are not intentionally designed in an anthropomorphic way, they are
+prone to trigger anthropomorphisation especially due to their embodi­
+ment, their human-like movements and their appearance (Bartneck
+et al., 2005), so that they can be seen as an ideal object of anthro­
+pomorphisation (Marquardt 2017).
+One of the most influential theories explaining the determinants of
+anthropomorphisation is the three-factor theory (Epley et al., 2007),
+which has also been applied to robots (Złotowski et al., 2015), although
+it does not explicitly consider specific robot characteristics like physical
+movement (Złotowski et al., 2014). Epley et al., (2007) and Epley et al.,
+(2008) define one cognitive and two motivational factors which induce
+anthropomorphisation. The first determinant called elicited agent
+knowledge refers to the availability and accessibility of knowledge about
+humans, who know nothing better than themselves and have no
+phenomenological knowledge about other entities (Wiese et al., 2017).
+Since humans possess detailed and frequently applied mental models
+about humans, their activation imposes a comparably low cognitive
+load. Hence, anthropomorphism is grounded on egocentric simulation
+inducing low cognitive load compared to the activation of seldomly
+applied and less detailed mental models about machines in general or
+robots in particular. The more people become familiar with robots, the
+more easily this knowledge is available, which diminishes the compar­
+ative advantage of low cognitive load and, thus, decreases the strength
+of this trigger for anthropomorphisation (Epley et al., 2007).
+However, this cognitive factor on its own fails to explain why
+humans should be motivated to consider the future actions of their
+interaction partners. Therefore, Epley et al., (2007) define two addi­
+tional motivational factors, namely effectance motivation and sociality
+motivation. The former refers to humans’ general motivation to perceive
+themselves as efficacious agents. This in turn requires them to be able to
+predict and master their environment, that is, to understand and explain
+the behaviour of interaction partners like robots. In such cases, inductive
+inferences based on the mental models of humans can help to gain “a
+sense of predictability and controllability when reasoning about
+nonhuman agents” (Epley et al., 2007, p. 872) and thereby satisfy
+effectance motivation. Thirdly, the sociality motivation describes
+humans’ basic desire to (have opportunities to) interact socially with
+others (Epley et al., 2007). Although anthropomorphism seems to be
+inherent in every human being, the intensity of this tendency varies from
+person to person (Letheren et al., 2016; Waytz et al., 2010).
+At first glance, it might seem counterintuitive to consider anthro­
+pomorphisation processes in a highly functional manufacturing context
+(Onnasch and Roesler 2019). However, some practical experiences and
+exploratory studies suggest that anthropomorphisation also takes place
+in factory environments (Lee et al., 2012; Oistad et al., 2016; Sauppé and
+Mutlu 2015). Additionally, the scarce evidence should not be mis­
+interpreted as a proof for the absence of anthropomorphism; the lack of
+evidence could be due to people’s reluctance to admit that they attribute
+human-like characteristics to robots, or due to the unconscious nature of
+the anthropomorphisation processes (Złotowski et al., 2018).
+Furthermore, the described triggers from the three-factor theory can
+well be applied to a factory context. First, for factory workers who are
+inexperienced with interactive robots (Baumgartner et al., 2020)
+applying agent knowledge about humans should be highly advanta­
+geous in terms of reducing cognitive load and freeing capacity for
+manual work (Epley et al., 2007). Second, it can be assumed that they
+are highly motivated to understand and make sense of the cobot’s
+functional principles in order to judge and compare its capabilities with
+their own, as exploratory research suggests (Wurhofer et al., 2015).
+Furthermore, the motivation is expected to be triggered by this
+
+2.2. Anthropomorphism
+The term anthropomorphism refers to the human tendency to
+anthropomorphise inanimate entities such as robots, that is, to ascribe
+human characteristics to them in order to rationalise and interpret their
+actions (Duffy 2003; Epley et al., 2007). In this sense, anthro­
+pomorphisation is an example of an inductive reasoning process pro­
+jecting the representation of the self on other entities (Airenti 2015;
+Epley et al., 2008). Unsurprisingly, anthropomorphism has been subject
+to much philosophical debate, since an analysis of this universal human
+tendency addresses fundamental questions about the conditio humana
+(Zawieska et al., 2012).
+Research on anthropomorphism goes back to the seminal work of
+Reeves and Nass (1998) who replicated experiments from social psy­
+chology replacing one human interaction partner with some media de­
+vice. Their findings resulted in the media equation theory and the
+computers-are-social-actors paradigm (CASA), claiming that “people’s
+responses to media are fundamentally social and natural” (Reeves and
+Nass 1998, p. 251), although they do not explicitly claim that an object
+has human characteristics or deserves human-like status. This weak
+anthropomorphism refers to the tendency to speak about and to behave
+towards an inanimate agent as if it had human characteristics whilst
+explicitly refusing that it actually has. In contrast, strong anthropo­
+morphism implies that people state that an entity has human charac­
+teristics. However, even metaphorical anthropomorphised speech
+significantly influences one’s behaviour since it evokes cognitive scripts
+(Epley et al., 2007). In everyday situations, it becomes apparent when
+human give their machine names as a result of emotional attachment
+(Darling et al., 2015) or when people start talking to their devices
+4
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+technology’s novelty and the diversity of possible interactions which
+potentially threatens their physical integrity if used inappropriately.
+Third, the need for social interaction is also apparent in factories,
+especially since the degree of (perceived) social isolation increases due
+to more automatization and the absence of human colleagues (Elprama
+et al., 2017; Weiss and Huber 2016)
+It is widely acknowledged that anthropomorphism has a significantly
+positive influence on trust (Hoff and Bashir 2015; Waytz et al., 2014)
+and several studies assume that humans prefer human-like robots
+(Onnasch and Roesler 2019; Phillips et al., 2011). Steil and Maier (2017,
+p. 417) conclude that anthropomorphisation could be deliberately used
+to increase employees’ trust and reduce uncertainty during robot
+introduction processes in companies. However, within the research
+community, there is no consensus on whether anthropomorphised ro­
+bots are ultimately beneficial. While some case studies suggest that
+factory workers prefer working with robots equipped with social cues
+because they evoke a feeling of being buddies (El Makrini et al., 2018;
+Elprama et al., 2016; Sauppé and Mutlu 2015; Stadler et al., 2013),
+others found a preference for robots that look mechanical (Müller et al.,
+2017) and a more positive impact on collaborative performance
+(Broadbent et al., 2011). Additionally, Onnasch and Roesler (2019)
+argue that anthropomorphism could undermine the robot’s functional
+value and thereby raise concerns about their usefulness amongst em­
+ployees. In conclusion, anthropomorphisation might only be beneficial
+under specific circumstances and in some respects (Darling 2017; Hinds
+et al., 2004; Ötting et al., 2020).
+
+(observer perspective). In the observer perspective, employees prefer
+their colleague to be replaced by a new human employee due to pro­
+social feelings. However, when their own job is threatened, employees
+prefer to be replaced by a technology due to social comparison processes
+outweighing prosocial feelings. The replacement by a technology
+threatens their own self-esteem less than the replacement by another
+human being because their own abilities seem incommensurable to
+those of a machine. From a long-term perspective, the perceived eco­
+nomic threat of replacement by technology is higher in this case, since
+the possibility that one’s own skills could in principle be replaced by
+technology threatens the prospect of employment elsewhere. This is
+without prejudice to the fact that replacement by technology is preferred
+from a short-term perspective (Granulo et al., 2019), which might lead
+to a preference for machine-like robots over human-like robots if they
+are perceived as competing for the job. This would contradict usually
+assumed positive anthropomorphisation effects on human-robot trust. In
+this sense, recent findings on the psychology of technological replace­
+ment are crucial with regard to formulating our research hypothesis.
+Additionally, the ambiguous depiction of cobots as either job killers or
+supporting devices in common narratives prepares the ground for the
+effectiveness of linguistic framing.
+2.4. Linguistic Framing
+Language plays an important role in interpreting and constituting
+human-robot relations (Coeckelbergh 2011). Robots capable of speaking
+in natural language foster anthropomorphisation (Schröder and Epley
+2016), especially if they refer to themselves by using the first-person
+pronoun I (Nass and Brave 2007). The utterances of people speaking
+with or about robots provide a rich source of data from which insights
+into a person’s mental model of the robot and its relation to it can be
+derived (Fischer et al., 2012; Fischer 2011). For example, if one directly
+addresses the robot with second personal pronoun you and refers to it
+with personal pronouns he/she instead of it, this can be interpreted as the
+person constituting the robot as a quasi-other (Coeckelbergh 2011).
+Linguistic framing becomes relevant whenever one person tells another
+person something about a robot on the course of a person-to-person
+dialogue. The information provided by the speaker activates or shapes
+the listener’s mental models making them interpret information within a
+certain structure of expectations (Groom et al., 2011; Kory and Klein­
+berger 2014). As studies outside the field of HRI demonstrate, compar­
+atively small changes in word usage describing the robot can lead to
+relevant changes in the mental model and in turn the actual behaviour
+(Brandstetter 2017). In that sense, framing is very much related to the
+evolution of expectations with regard to a forthcoming or present HRI
+and unfolds its impact within top-down processes on perception
+(Edwards et al., 2019; Edwards et al., 2016). Although, framing was
+found to be influential in some studies, such top-down processes are
+underrepresented in scientific studies (Klapper et al., 2014; Nijssen
+et al., 2019; Stenzel et al., 2012b), which more frequently rely on the
+manipulation of robot design features instead of contextual factors like
+mental models (Coeckelbergh 2011; Groom et al., 2011). In the
+following, we present some of the few studies on linguistic framing of
+robots.
+Nijssen et al., (2019) revealed that framing a robot anthropomor­
+phically leads to special consideration in a moral dilemma, that is, it
+lowers the robot’s probability of being sacrificed. Darling et al., (2015)
+and Darling (2017) demonstrated that people hesitate significantly
+longer to destroy insect-like robots (“hexbugs”), when they have been
+provided with a background story about these robots. However, the
+effects of a personified and a neutral background story only differed
+marginally. Similarly, in a virtual game context, subjects put an
+anthropomorphically framed robot with the human name Kim, which
+was said to have saved the participant’s life in a prior mission, signifi­
+cantly less frequently in danger of being damaged than a technically
+described robot (Wen et al., 2018). Additionally, Stenzel et al., (2012a)
+
+2.3. Technological Replacement
+It is essential to differentiate between trust in technologies in the
+context of private use and in (more or less) mandatory use at the
+workplace, at which technological devices can also be (perceived as)
+threats to the current occupation (Meißner and Trübswetter 2018a;
+Turja and Oksanen 2019). Usually, there is only a thin line between
+perceiving a cobot as some kind of supporting colleague or as an un­
+pleasant rival (Weiss et al., 2016). Such categorial uncertainties are
+supposed to trigger cognitive conflicts (Wiese and Weis 2020), which are
+also associated with the uncanny valley effect (Mori 1970). Ambivalent
+attitudes also become apparent in large-scale studies. For instance, 70%
+of EU citizens regard robots as job-killers, whilst 85% see them also as a
+necessary support for heavy-duty work and 72% as beneficial for society
+(European Commission 2015). Such ambiguities in conjunction with an
+anthropocentric fear of technological replacement were historically also
+prevalent in earlier adoption processes of industrial automation tech­
+nologies (Heßler 2019, p. 52). Additionally, public media also refers
+mainly to three distinct narratives of robots as either a human’s slave,
+which starts to rebel, an obedient servant, or some kind of child or pet
+that seeks love from its owner, which demonstrates shifts between
+ontological categories (Mabry 2016). Consequently, an employee’s
+tendency to trust a robot in an industrial setting is always contingent on
+whether this employee believes that he/she will not be replaced or
+degraded by this technology.
+Currently, the psychological consequences of technological
+replacement are under-researched (Granulo et al., 2019), although
+ambivalent attitudes towards robots and the prevalent fear of being
+replaced were found among factory workers in case studies (El Makrini
+et al., 2018; Elprama et al., 2017; Lotz et al., 2019; Maurtua et al., 2017;
+Wurhofer et al., 2015; You and Robert 2018). These concerns are
+considered as a main barrier to cobot acceptance (Salvini et al., 2010)
+and are likely to increase with robots becoming more capable and
+autonomous (Złotowski et al., 2017). In a series of eleven experiments
+with different samples including factory workers, Granulo et al., (2019)
+investigated how employees react emotionally to being replaced either
+by a new technology or by another human employee. They found this
+reaction to be dependent on whose job was at risk of being replaced,
+namely either their own (employee perspective) or a colleague’s job
+5
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+demonstrated that humans unconsciously co-represent actions of a ro­
+botic interaction partner only when the latter is described in a
+human-like manner.
+Within the context of social robotics, several studies investigated
+children’s reactions on differently framed social robots. When an
+experimenter spoke directly with the robot (you) instead of speaking
+about the robot (it) whilst introducing it to a child, the latter spoke
+significantly more with the robot during the experiment and showed
+more signs of social interaction (Kory and Kleinberger 2014). Addi­
+tionally, further studies with children revealed subtle differences in gaze
+behaviour and shyness dependent on whether a robot was framed as a
+social or a machine-like agent (Kory Westlund et al., 2016). In similar
+experiments, researchers found that children were able to recall more
+details of stories told by a robot, when its utterances were expressive
+with different intonations (Kory Westlund et al., 2017). In a further
+study, the addition of a background story turned out to increase the
+enjoyment during the interaction, to reinforce the perception of a rela­
+tionship and to improve the ability to retell a story (Kory Westlund and
+Breazeal 2019).
+In other studies, researchers refer to framing in a very wide sense by
+varying the actual information rather than the way the information is
+formulated in their stimuli (Groom et al., 2011; Paepcke and Takayama
+2010; Rueben et al., 2017). However, in the context of the present work,
+we refer to framing in a narrower sense as a process of communicating
+the same information with different wording (Stocké 2002, p. 23),
+evoking different frames for understanding and activating different
+mental models.
+All of the aforementioned studies share a limited generalisability to
+the context of industrial HRI, because they rely on atypical robot types
+such as insect-like robots or operate in unrealistic interaction scenarios
+like in a fight against aliens together with a robot (Onnasch and Roesler
+2019). In order to address these shortcomings, Onnasch and Roesler
+(2019) aimed at investigating framing effects in a more realistic sce­
+nario. In their study, students had to build the Tower of Hanoi based on
+instructions by the humanoid robot Nao, which was framed to be either
+human- or machine-like. Surprisingly, the participants neither consid­
+ered the anthropomorphically framed robot as more human-like nor
+were they willing to donate for a later repair of the robot. The authors
+explained these findings with the fact that the functional value of the
+robot had probably receded due to the human-like framing. In a repli­
+cation of the experiment, they therefore added a section underlining the
+robot’s functional value to the framing texts. However, this did not
+considerably affect judgements of human-likeness but led to a compa­
+rable level of willingness to donate for both experimental groups. The
+authors took this as an argument for the relevance of the functional
+value and concluded that positive framing effects cannot be transferred
+from non-humanoid to humanoid robots such as Nao, since they are
+
+already represented as human-like due to their anthropomorphic design
+(Onnasch and Roesler, 2019). However, the unusual hierarchical
+constellation with a robot authorised to give instructions to humans and
+the use of students as a sample also limit the validity of this study, so that
+the empirical evidence for the existence of framing effects in the context
+of realistic and practical HRI applications remains very sparse overall.
+In summary, Fig. 2 demonstrates the relationships between the
+theoretical constructs and explicates the underlying idea of the experi­
+mental research. Linguistic framing as the experimental manipulation is
+expected to trigger changes in participants’ trust levels by modifying the
+mental models that represent the involved robot itself and the relation to
+the robot, particularly with regard to the robot’s perceived humanlikeness (first independent variable; IV1) and its perceived coopera­
+tiveness (second independent variable; IV2).
+3. Method and Materials
+3.1. Design and Participants
+We conducted a full-factorial 2 × 2 between-subject analysis of
+variance (ANOVA) with pre-post measurement and an additional control
+group, which was analysed separately via t-tests and then excluded from
+main analysis. Each between-subject factor had two levels and was
+manipulated actively by the experimenter. Table 1 displays the four
+resulting experimental groups with the number of participants randomly
+assigned. Further 27 participants were in the control group.
+Participants were recruited via the panel provider Toluna Germany.
+They could take part in the online experiment remotely at any time using
+their private computers. Screening questions ensured that participants
+were currently employed in manufacturing in an operational role and
+did not have previous experience with robots. A total of 180 participants
+completed the online experiment during the data collection which took
+place from October to December 2019. Data was cleaned of speeders,
+who finished in less than half of the median completion time, as well as
+straightliners, who chose the same answer options across all questions
+on Likert scales with more than five items, and outliers according to box
+plots. This led to a clean data set of 145 participants.
+The gender distribution (51 women, 94 men) seems fairly
+Table 1
+Experimental conditions in the 2 × 2 design with the respective number of
+participants assigned to each condition.
+Perceived human-likeness
+Human-like
+Machine-like
+Perceived cooperativeness
+
+Cooperative
+Competitive
+
+Fig. 2. Schematic model of the research design and involved variables.
+6
+
+n = 30
+n = 32
+
+n = 27
+n = 29
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+representative for the German manufacturing industry with 27% female
+and 73% male workers (German Federal Statistical Office 2020). Par­
+ticipants had on average approximately 16 years of professional expe­
+rience (M = 16.16; SD = 12.11) and were aged between 18 and 69 years
+(M = 47.06; SD = 12.06). Since all material was in German, we recruited
+only German native speakers. It took participants on average M = 12.51
+minutes (SD = 6.51min) to complete the experiment.
+
+Table 3
+Examples of textual differences in materials for framing perceived coopera­
+tiveness of the robot.
+Hierarchy of
+skills
+Benefits
+
+3.2. Materials
+
+Impact on
+working
+style
+
+One framing text was created for each level of each experimental
+factor.
+The texts for human-like versus machine-like framing were similar in
+length with 254 and 264 words, respectively, but differed in some re­
+spects, as visualised in Table 2.
+The control condition’s text with 264 words was about just-in-time
+production without any information about robots.
+The texts for framing the relationship as cooperative versus
+competitive were 143 and 161 words long, respectively. Participants
+were asked to imagine that the cobot would be introduced in their
+company soon and that they would have to work with it. The framing
+texts also differed in some crucial respects, which are specified in
+Table 3.
+The topic covered in the control condition’s text with 135 words was
+again just-in-time production without any information about robots.
+
+Value
+
+In order to check whether the experimental manipulation was
+effective, we measured the human-likeness of the cobot (IV1) and the
+perceived cooperativeness (IV2). For the former, we used the revised
+version of the Godspeed questionnaire (originally developed by Bart­
+neck et al., 2009) by Ho and MacDorman (2017). To complement
+Godspeed questionnaire with an indirect measure, we used content
+coding to analyse participants free-text descriptions of the cobot.
+Therefore, a codebook was created, according to which two independent
+raters analysed participants’ statements. Condition-specific robot names
+were replaced by neutral placeholders, before the texts were given to the
+raters. The ratings were based on a five–level scale ranging from
+machine-like to human-like. Data from three participants had to be
+Table 2
+Examples of textual differences in materials for framing perceived humanlikeness of the robot. Note. Since all texts were presented in German, it was
+impossible to use the impersonal pronoun it in the machine-like condition due to
+language characteristics.
+Human-like
+
+Machine-like
+
+Paul
+
+UR-5
+
+• needs one day per
+year to rest
+• is unable to speak
+• waits patiently during
+employees’ lunch break
+
+• requires one day of
+maintenance per year
+• is not equipped with speech
+output feature
+• is switched to idle mode
+during employees’ lunch
+break
+Tool:
+• tasks performed with the
+help of the UR-5
+Object, passive voice:
+• No threat of being harmed
+by UR-5 due to the
+programmed low maximum
+speed
+“the robot”
+
+Role
+(Kory Westlund et al.,
+2016)
+Autonomy
+(Stenzel et al., 2012a)
+
+Team member:
+• tasks performed
+together with Paul
+Agent, active voice:
+• Paul would not harm
+anybody due to his
+leisurely movements
+
+Pronouns
+(Coeckelbergh 2010;
+Kory Westlund et al.,
+2016)
+
+“he”
+
+Competitive relation
+
+The robot will take over all
+tasks in which it is useful for
+the human
+Benefits of joint human-robot
+teams are emphasized
+Employees were said to be
+motivated by the robot to
+achieve a comparable speed
+and to be able to work at eye
+level
+Employees’ value for the
+company was stressed
+
+The robot will take over all
+tasks in which the employee
+has inferior skills
+Benefits of robot use are
+emphasized
+Employees were said to feel
+pressured by the robot’s
+working speed and took great
+efforts to compete with it
+The robot’s value for the
+company was stressed
+
+removed due to meaningless text. Based on the evaluation using the
+codebook, a sufficiently high interrater reliability of Krippendorff’s α =
+.82 (Krippendorff 1970) was achieved. Remaining varying codings be­
+tween the two coders were resolved via discussion (Müller-Benedict
+1997, p. 2).
+In order to measure the perceived cooperativeness of the cobot, we
+created a multi-item-measure consisting of four items measured on a
+seven-level semantic differential analogous to Godspeed questionnaire:
+“In my opinion, due to the introduction of this robot at the workplace,
+employees will be i) replaced/complemented, ii) burdened/relieved, iii)
+threatened/supported, iv) more/less stressed:”
+Additionally, further participant-related characteristics were
+measured by typical instruments in the context of HRI in order to enrich
+descriptive analysis, as described in Table 4.
+As the dependent variable (DV), we used the pre-post deviation of
+trust, operationalised by the Trust in Automation scale (TAS) originally
+developed by Jian et al., (2000). TAS is the most frequently used vali­
+dated self-assessment measure for human’s trust in automation (French
+et al., 2018). It has already been used to assess human-robot trust in
+several studies (Desai et al., 2013; Sanders et al., 2017) and has also been
+validated in German (Pöhler et al., 2016). Due to an on-going debate in
+related research about whether trust and distrust are a pair of opposites
+on a one-dimensional scale or whether they represent endpoints of two
+independent scales (French et al., 2018), we created two subsets of items
+representing a measure for trust and for distrust each. The six items on
+trust and the five items on distrust were presented in randomized order.
+Because the analysis showed almost anti-proportional patterns for trust
+and distrust, we will exclusively focus on the analysis of trust in favour of
+intuitiveness.
+
+3.3. Measurements
+
+Name
+(Darling et al., 2015)
+Attitudes
+(Baker et al., 2018)
+
+Cooperative relation
+
+Table 4
+Operationalisation of additional participant-related characteristics for descrip­
+tive analysis.
+Variable
+
+Items
+
+Response scale
+
+Negative attitudes towards
+robots (NARS)
+
+14 items according to
+Nomura et al., 2004
+(German translation by
+Bartneck 2019)
+‘Dealing with new
+technologies is easy for
+me.’
+‘How intensively have
+you already looked into
+robots (e.g. in films,
+newspaper articles or
+materials on the
+Internet)?’
+
+5-level agreement scale
+ranging from strongly
+disagree to strongly agree
+(adapted German
+version according to
+Rohrmann 1978)
+
+Technology affinity
+Prior knowledge
+(operationalised as
+previous theoretical
+exposure to robot-related
+information)
+
+7
+
+5-level intensity scale
+ranging from not
+intensively to very
+intensively (adapted
+German version
+according to
+Rohrmann 1978)
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+3.4. Procedure
+
+Table 6
+Correlations between participant-specific attitudes with trust level before and
+after framing.
+
+The web-based experiment was implemented using the survey tool
+LimeSurvey. A description of the experimental procedure can be found in
+Table 5.
+
+Negative attitude
+Technology affinity
+Prior knowledge
+
+4. Results and Discussion
+
+Descriptive data from additional participant-specific variables indi­
+cated that participants had not looked into robots intensively (M = 2.38;
+SD = 1.01). They showed a fairly high affinity to dealing with new
+technologies (M = 3.54; SD = 0.90) and a moderate negative attitude
+towards robots (M = 2.93; SD = 0.63). Interestingly, all three variables
+correlated significantly with trust levels before and after framing, as
+displayed in Table 6.
+The consistently lower correlations after the experimental manipu­
+lation suggest that the influence of these person-specific attitudes on
+trust was overshadowed by condition-dependent framing effects.
+4.2. Effectiveness of Framing
+A two-sided independent t-test revealed significant differences be­
+tween the two experimental groups with regard to self-assessments of
+human-likeness, t(116) = 2.50, p = .014, η2 = .051 (cf. Fig. 3), as well as
+with regard to results from content coding of free-text cobot de­
+scriptions, t(113) = 3.37, p = .001, η2 = .091 (cf. Fig. 4). In line with
+expectations, the mean value for the perceived human-likeness in the
+experimental group that received the human-like framing (M = -0.45,
+SD = 1.23) was significantly higher than in the experimental group that
+Table 5
+Experimental procedure.
+Remark
+
+1
+2
+
+Introduction to the survey
+Screening questions
+
+3
+4
+
+NARS
+Introduction to cobots
+
+5
+
+7
+8
+
+Pre-framing trust assessment
+(TAS)
+Additional questions
+(covariates, demographics)
+Randomized group assignment
+Framing texts
+
+9
+
+Comprehension questions
+
+10
+
+Manipulation checks
+
+11
+
+Post-framing trust assessment
+(TAS)
+Robot description in free-text
+field
+General feedback in free-text
+field
+Thanks for participating /
+redirection to panel provider
+
+Brief information about the study’s topic.
+Check whether users are members of target
+population.
+Items were displayed in randomized order.
+Brief introduction to cobots in general.
+Information that the following experiment
+focusses on a particular cobot, which will
+be further described later.
+Items referred to a concrete cobot and
+were displayed in randomized order.
+Items on technology affinity, prior
+knowledge, and demographic data.
+See ch. 3.1 Design and Participants.
+Participants were explicitly asked to read
+the texts carefully and had to stay on the
+page for at least 20 seconds.
+Check whether participants read the texts
+carefully. False answers led to immediate
+exclusion from the experiment.
+See results of manipulation checks in ch.
+4.2 Effectiveness of Framing.
+Items referred to a concrete cobot and
+were displayed in randomized order.
+Participants were asked to briefly describe
+the robot.
+Voluntary.
+
+6
+
+12
+13
+14
+
+r = -.34; p < .001***
+r = .18; p = .030*
+r = .26; p = .001***
+
+received the machine-like framing (M = -1.02, SD = 1.22), as visualised
+in Fig. 3. Overall, robots in both experimental groups were perceived as
+rather machine- than human-like.
+Another two-sided independent t-test revealed significant differences
+between the two experimental groups regarding perceived coopera­
+tiveness, t(116) = 4.28, p < .001, η2 = .136. In line with expectations,
+the cooperative framing led to a significantly higher mean value for the
+perceived cooperativeness (M = 1.43, SD = 1.08) than the competitive
+one (M = 0.36, SD = 1.56), as shown in Fig. 5.
+Overall, the statistical results reveal significant differences among
+the experimental groups regarding participants’ perception of the
+cobot’s human-likeness and cooperativeness, respectively. These results
+suggest that the experimental manipulation, that is, providing partici­
+pants with differently framed descriptions of a cobot, did successfully
+affect their representation of the cobot itself and their relation to it. One
+participant in the human-like framing condition put this effect in a
+nutshell by stating that “the story gave [robot name] human traits for
+me, and I felt really sorry for him when I thought he would be excluded
+at breakfast. (…) I really like [robot name]”. However, it is challenging
+to contextualise the measured impact of framing against the background
+of comparable studies and derive behavioural implications, since the
+results of related studies can only be compared and interpreted to a very
+limited extent due to the lack of a sufficiently precise definition of
+framing (Stocké 2002, p. 23). .
+Although the effect sizes range from low to medium according the
+rule of thumb by Cohen (1988), we consider them as a remarkable hint
+for the power of framing given the following circumstances of our
+experimental setup. First, the presented descriptions were approxi­
+mately 410 words long, which indicates that little information might be
+sufficient to considerably influence mental representations. Second, we
+did not vary the information conveyed in the descriptions, but only the
+way of presenting the information by changing linguistic elements of the
+text. In this sense and in contrast to the majority of previous studies on
+framing, we applied a so-called strict framing approach (Stocké 2002, p.
+42). Third, comparably low effect sizes could stem from using the
+Godspeed questionnaire which is widely used as the current
+state-of-the-art measurement method but might lack sensitivity for
+detecting the effects of subtle variations, since it requires participants to
+conduct “far attributions” (Baker et al., 2018, p. 248) like biological
+movement and mortality which might sound eerie and unrealistic in the
+given industrial context. Thus, even in some studies in which a robot’s
+appearance was either designed anthropomorphically or mechanically,
+no differences were found in perceived human-likeness using the
+Godspeed questionnaire (cf. Roesler and Onnasch 2020b).
+Given the scarce literature base on the effectiveness of linguistic
+framing in (industrial) HRI contexts, these findings make an important
+contribution to the understanding of framing effects’ relevance in
+application-oriented scenarios and reflect the manifold role of language,
+which on the one hand constitutes and on the other hand represents the
+mental model of the robot and the human-robot-relation (cf. Coeck­
+elbergh 2011). The parallel use of a direct and an indirect measurement
+method, namely the self-assessments via Godspeed and the analysis of
+free-text verbal description of cobots, to assess perceived
+human-likeness increases the robustness of the research results and
+addresses previous demands to incorporate indirect measures (Bethel
+and Murphy 2010; Stenzel et al., 2012b).
+
+4.1. Descriptive Analysis
+
+Step
+
+Post-framing trust
+
+r = -.52; p < .001***
+r = .29; p < .001***
+r = .34; p < .001***
+
+Note. * p < .05, ** p < .01, *** p < .001.
+
+All data analyses were conducted using IBM SPSS Statistics 26. If not
+otherwise mentioned, data was normally distributed (Shapiro-Wilk p >
+.05) with equal variances across all groups (Levene-Test p > .05). All
+scales used showed sufficient internal consistency with Cronbach’s α >
+.80 (Nunnally and Bernstein 2008, p. 265).
+
+No.
+
+Pre-framing trust
+
+Participants were automatically rewarded
+by panel provider.
+
+8
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+Fig. 3. Perceived human-likeness per experimental condition, as measured via Godspeed questionnaire. Note. * p < .05, ** p < .01, *** p < .001.
+
+Fig. 4. Perceived human-likeness per experimental condition, as measured via content coding of free-text descriptions of the cobot. Note. * p < .05, ** p < .01, *** p
+< .001.
+
+Fig. 5. Perceived cooperativeness per experimental condition, as measured via own scale. Note. * p < .05, ** p < .01, *** p < .001.
+
+Fig. 6. Trust level for experimental and control group at both times of measurement. Note. Error bars represent standard error of means. * p < .05, ** p < .01, *** p
+< .001.
+
+The remarkable effectiveness of framing calls for a theoretical
+explanation. A reason for the comparably high impact of framing in the
+given context could be the perceived ambiguity of cobots, which makes
+it difficult for production workers to mentally categorize them, espe­
+cially in light of their lack of prior experience, which was a pre-condition
+for taking part in the study. This categorization problem is also debated
+in the context of uncanny valley hypothesis (Mori 1970) as a possible
+cause for the observed sharp decline in eeriness ratings at a certain range
+of human-likeness values (Burleigh and Schoenherr 2014). Hence, we
+assume that the fundamental ambiguity of cobots (Matthews et al.,
+2021, p. 60) might have caused feelings of uncertainty and imposed a
+high cognitive load on production workers. This perception of ambiguity
+
+is also reflected in qualitative statements by two participants. One
+participant found it “difficult (...) to predict (...) whether or not the robot
+would take my job in the future” (human-like competitive condition),
+while another considered cobots as “a relief in many professions (...) and
+a threat to jobs" (machine-like cooperative condition). As a consequence
+of a common ambiguity aversion (Stocké 2002, 37p; Ziegler 2010,
+144pp.) a high motivation and readiness to identify relevant information
+in order to disambiguate the situation might have arisen. In fact, framing
+information could have served as an welcome “tie breaker” to solve the
+categorization problem (Fagley and Miller 1987). Given the importance
+of ambiguity aversion as a character trait and the increasing adoption of
+cobots as a technology difficult to categorize in practice, ambiguity
+9
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+Additionally, a two-sided Welch’s t-test revealed significant differences
+in trust gains between all experimental groups and the control group, t
+(48,471) = 2.67, p = .010, after having excluded seven outliers with
+regard to the distribution of the trust level changes.
+These analyses suggest that the increases in trust in the experimental
+group are at least predominantly caused by the experimental manipu­
+lation. Therefore, the control group is excluded from further analyses,
+which merely focus on trust evolution in the experimental groups.
+Fig. 7 shows the trust levels before and after framing for all experi­
+mental groups. Pre-framing trust levels correlated significantly nega­
+tively with trust gains, r = -.58, p < .001, but did not differ significantly
+dependent on experimental group, F(3,114) = 0.76, p = .520.
+As it can be seen in Table 7, trust increased significantly in all
+experimental conditions except the machine-like cooperative condition
+across both times of measurement.
+The observed increase in trust levels suggests that reading a
+description of a cobot fosters trust regardless of the exact information
+conveyed in the text. This finding could possibly be explained by the
+well-known mere exposure effect (Bornstein 1989) from social psy­
+chology. This effect has been argued to cause trust gains on the course of
+actual interactions (Graaf et al., 2016; Müller-Abdelrazeq 2020, p. 42;
+Wullenkord et al., 2016). Remarkably, prior studies also found a sig­
+nificant impact of imagined contact with a robot on trust levels
+(Kuchenbrandt and Eyssel 2012; Wullenkord et al., 2016; Wullenkord
+and Eyssel 2019, 2014). Hence, it is suggested that one does not have to
+be exposed to a robot in real-life for trust to increase. Instead, it seems to
+be sufficient to imagine an interaction. Miles and Crisp (2014, p. 20)
+
+aversion should be more intensively researched as a potential individual
+precondition for the effectiveness of framing, that has been underrep­
+resented in previous research (Osmont et al., 2015) .
+Although we stressed the effectiveness of framing, it would be an
+overestimation to believe that framing had the potential to immediately
+convert a sceptical employee into an enthusiast concerning cobots.
+There have also been participants that explicitly mistrusted in the
+framing information and considered the cobot’s descriptions as an
+intentional approach to manipulate their attitude: "He [the robot] is
+portrayed sympathetically so that people see him as something positive.
+In reality, he should replace man and make them superfluous" (humanlike cooperative condition). Hence, framing effects can vary individually
+and it remains unclear, how changes in perception practically impact on
+employees’ behaviour.
+Nevertheless, our results contribute to the literature base by shed­
+ding light on the effectiveness of framing at least under certain cir­
+cumstances typically found in industrial settings. These circumstances
+include the interaction with an ambiguous technology, a high degree of
+ambiguity aversion and a lack of prior practical experiences. Overall, the
+framing effects call for more careful and sensitive language use, since
+even subtle cues seem to have a considerable impact, as long as there are
+no other credible information sources or practical experience. The cues
+are especially crucial within the communication towards inexperienced
+and insecure users of modern technology and again stress that findings
+from experiments with students as samples should not be uncritically
+applied to a real-world factory context.
+4.3. Trust Evolution
+
+Table 7
+Statistical results from paired t-tests with regard to trust levels in all experi­
+mental groups.
+
+After having found that framing served as an effective experimental
+manipulation, the further analysis focussed on changes in trust levels
+due to this manipulation. In order to rule out the possibility that trust
+levels changed over time due to a test-retest bias, we first analysed trust
+evolution within a control group, which received a text without any
+information about cobots. Two paired t-test (2-sided) revealed that trust
+did not change significantly over both times of measurement in the
+control group, t(26) = -1.218; p = .234, whereas the mean trust levels
+across all experimental groups did significantly increase, t(117) = -5.68;
+p < .001. The trust evolution in both groups can be seen in Fig. 6.
+
+Trust level
+
+t-test
+
+Human-like cooperative
+Human-like competitive
+Machine-like cooperative
+Machine-like competitive
+
+df
+29
+31
+26
+28
+
+t
+-4.94
+-2.61
+-1.44
+-2.60
+
+p
+< .001***
+.014*
+.161
+.015*
+
+Note. * p < .05, ** p < .01, *** p < .001.
+
+Fig. 7. Trust levels for all experimental groups at both times of measurement. Note. * p < .05, ** p < .01, *** p < .001.
+10
+
+Cohen’s d
+.90
+.46
+.28
+.48
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+name this a mere imagined exposure effect. This effect might also serve
+to explain the observed trust gains in our study: Whilst reading infor­
+mation about the cobot itself and its introduction at the workplace,
+employees might have automatically and subconsciously imagined an
+interaction with the cobot, being accompanied with feelings of famil­
+iarity and an increase in trust. In this sense, providing information about
+a cobot has a slight and unintended side-effect on trust, which seems to
+be largely independent from the framing of this information. Hence, our
+results provide support for recent findings about the positive impact of
+imagined contact. However, we assume that participants’ lack of prior
+experience and familiarity with robots could have been a necessary
+precondition for the mere imagined exposure effect occur in the
+experiment.
+
+anthropomorphisation and anthropomorphic design, very few re­
+searchers have taken this factor into account. This represents a serious
+flaw with regard to the external validity of research findings, because it
+is widely acknowledged that the industrial sector is characterized by the
+tension between frames of technology as complementing and
+substituting employees, respectively, and by an existential fear amongst
+employees of being replaced (Maurtua et al., 2017; You and Robert
+2018). Statistical results suggest that anthropomorphisation affects trust
+differently depending on how people relate to the robot and perceive its
+cooperativeness. More specifically, as statistical support for H1 dem­
+onstrates, human-like framing is only beneficial with regard to trust
+levels if the human-cobot relation is perceived as a cooperative. How­
+ever, we could not find statistical evidence for hypothesis H2. Therefore,
+we cannot conclude that the machine-like framing of a cobot, which the
+employee perceives as competing for its job, results in a more positive
+trust change than framing this cobot as human-like.
+Deriving a possible explanation for the diverging statistical results
+for both hypotheses requires a closer look at the assumptions underlying
+the hypotheses. The preference for a human-like cooperative cobot
+compared to a machine-like cooperating cobot (H1) was motivated by
+the basic assumptions from the three-factor theory of anthropomor­
+phism (Epley et al., 2007), that humans expect their social needs to be
+satisfied when interacting with anthropomorphised devices. The soci­
+ality motivation has been identified as a particularly important factor for
+anthropomorphisation in a study by Im Shin and Kim (2018). However,
+we assumed that sociality motivation would be irrelevant, when con­
+fronted with a competing cobot, since social interaction within
+competitive relationships should be less attractive. Instead, interactions
+between competitors are based on the aim to outperform the opponent.
+Based on the findings by Granulo et al., (2019), we expected that in the
+context of competition, a machine-like cobot is preferable, because the
+idea of being outperformed by a machine threatens one’s self-worth less
+than the idea of being outperformed by a human. Hence, both hypoth­
+eses are justified by different factors. Possibly, the sociality motivation
+which is especially relevant for H1 has a stronger effect on trust ratings
+than the threat to self-worth in terms of technological versus human
+replacement which has led to the formulation of H2. Thus, a potential
+gap in effect sizes could have caused the differences in statistical out­
+comes for H1 and H2, respectively, which calls for a replication of the
+study with a larger sample size.
+Additionally, one should bear in mind that the original study on the
+psychology of technological replacement (cf. Granulo et al., 2019),
+which made us assume the interaction effect, investigated psychological
+reactions in terms of technological replacement by machines compared
+to becoming substituted by a human being. However, in the study
+
+4.4. Interplay Between Anthropomorphism and Technological
+Replacement
+A 2 × 2 ANOVA revealed a significant disordinal interaction effect
+between perceived human-likeness and perceived cooperativeness
+regarding the evolution of trust, F(1,114) = 5.40, p = .022, η2 = .045, as
+shown in Fig. 8.
+Fig. 9 visualizes the increase in trust per experimental group. Bon­
+ferroni corrected post-hoc t-tests were carried out in order to examine
+the interaction effect in more detail and to test whether trust gains
+differed according to hypotheses H1 and H2. Consistent with H1, the
+anthropomorphic framing of the cobot led to a significantly higher in­
+crease in trust (M = 0.86, SD = 0.95) than the machine-like framing (M
+= 0.24, SD = 0.87), if the relation to the cobot was perceived as coop­
+erative, t(114) = 0.16, p = .023, η2 = .045. However, all further post-hoc
+tests were insignificant. In particular, inconsistent with H2, trust gains
+did not differ significantly between a cobot perceived as human-like (M
+= 0.39, SD = 0.83) and a cobot perceived as machine-like (M = 0.63, SD
+= 1.31), if the relation to the latter was perceived as competitive, t(114)
+= -0.96, p = .340, η2 = .008. Thus, H2 cannot be confirmed.
+In general, the statistical evidence for the expected interaction effect
+highlights the context-sensitivity of anthropomorphisation effects on
+trust. Recent studies have already identified the interaction context
+(functional or social), the task and the task allocation between the
+employee and the cobot as intervening variables, which have to be taken
+into account and make the deduction of general context-independent
+anthropomorphisation effects impossible (Ötting et al., 2020; Roesler
+and Onnasch 2020a, p. 172). The statistical results in the study pre­
+sented in this paper shed light on another contextual moderator for
+anthropomorphism effects, namely the human-robot relation. Despite
+the large body of literature examining the benefits and drawbacks of
+
+Fig. 8. Increases in trust between time points of measurement for all experimental groups. Note: Error bars represent standard errors of mean.
+11
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+Fig. 9. Increases in trust levels between both times of measurement per experimental group. Note. Error bars represent standard errors of mean. * p < .05, ** p <
+.01, *** p < .001.
+
+presented in this paper, participants are threatened by a cobot in any
+case. The sole difference between both conditions lies in the mental
+representation of this machine, which is framed either human-like or
+machine-like. Given this discrepancy in experimental setups between
+the study by Granulo et al., (2019) and our study, even small effects can
+be regarded as a hint for the importance of the human-cobot relation as a
+moderator for anthropomorphisation effects on trust.
+
+Table 8
+Practical implications for internal strategies to successfully introduce a cobot in
+a factory environment, derived from theoretical constructs and empirical
+findings.
+Theoretical constructs/
+Empirical findings
+
+Practical implications
+
+Initial trust
+
+• Be aware that trust evolution begins before actual
+interaction and that initial trust levels influence first
+usage experiences.
+• Implement communication and trust building
+strategies before cobot implementation process.
+• Provide employees with information about the
+cobot to foster imagined contact and early
+familiarisation with HRI.
+• Communicate that cobots are a means to support
+staff in cooperative scenarios instead of a technology
+to substitute them.
+• Describe the robot in a human-like manner, if
+employees consider the cobot as supporting and
+cooperative.
+• Take care of realistic expectations to prevent
+frustration during interaction, e.g. by accurately
+describing the cobot’s actual capabilities and
+limitations.
+• Be aware that over- and under-reliance are equally
+detrimental, and trust should therefore not be
+maximized but calibrated appropriately.
+• Avoid unforeseen failures especially at the
+beginning of HRI when trust evolution is vulnerable.
+
+5. Practical Implications
+Apart from the theoretical contributions described in the previous
+chapter, the findings of the study presented in this paper also have
+practical implications regarding adoption processes of cobots in com­
+panies. The observed increases in trust due to providing a description
+about the cobot highlight the benefits of informing employees in order to
+foster technology acceptance in companies. This is also in line with
+findings from previous case studies which stress that transparent topdown communication prevents the emergence of rumours that could
+cause negative expectations and thereby undermine initial trust
+(Wurhofer et al., 2015).
+However, for a cobot introduction process, initial trust is especially
+crucial because it shapes the way an employee will approach and
+interact with a cobot and hence provides a frame for understanding and
+evaluating first usage experiences. From an enterprise perspective, lin­
+guistic framing provides an attractive and free way of increasing trust
+and acceptance, without the need to adapt hardware characteristics.
+However, it is essential to implement well-targeted communication
+strategies that also take into account the organisational context to avoid
+negative over-trust effects (Choi and Swanson 2021, p. 136). Table 8
+presents an overview of key practical implications derived from the
+empirical work in conjunction with the theoretical considerations pre­
+sented in this paper.
+
+Impact of imagined contact
+Impact of fear of job loss
+Impact of appropriate
+linguistic framing
+
+Effects of misuse and disuse
+Vulnerability of trust
+
+do not incorporate affective components, which become relevant when
+physically confronted with a robot. Furthermore, another limitation of
+the fictitious scenario presented in the online study is that the partici­
+pants did not fear a real technological replacement and thus the pre­
+sumed negative influence of fear of job loss was possibly mitigated
+accordingly. Examining workers’ reactions during a real cobot intro­
+duction process in their company would probably reveal a higher impact
+of the perceived human-cobot relation on trust and strengthen the
+observed interaction effect within the study. Hence, the insignificance of
+the effect described in H2 could also be due to the fictitious scenario.
+The study presented in this paper explicitly focused on initial trust
+and hence, did not address questions regarding the longevity of framing
+effects and the dynamic evolution of trust during an interaction. Despite
+the significant practical relevance of these questions (Ahn et al., 2015;
+Baden and Lecheler 2012), they have rarely been investigated in
+
+6. Limitations and Future Research Avenues
+The comparably small sample size due to the specific target popu­
+lation as well as moderate effect sizes of linguistic framing led to low
+statistical power of the analyses. Therefore, it remains unclear whether
+the absence of statistically significant findings with regard to H2 stems
+from a lack of effects in reality or from a lack of statistical power. Due to
+the online setting, participants were aware that they would not physi­
+cally interact with a robot during the experiment. In consequence, we
+assume trust ratings to be attitude-based and limited in a sense that they
+12
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+description of a cobot, we chose a pre-post between-subject design
+ensuring a sufficiently high internal validity. Additionally, we included
+a control group that received a text without any reference to robots to
+rule out a possible test-retest bias.
+Two key contributions to research can be drawn from our work. First,
+our results demonstrate that framing the cobot’s human-likeness and its
+cooperativeness before an actual human-robot interaction can strongly
+influence the initial trust. Our research is therefore one of the first to
+encounter effects of linguistic framing at the industrial workplace by
+shaping humans’ mental models of the robot itself and of the humanrobot relation. Remarkably, even short texts of around 400 words
+were sufficient to significantly influence human-robot trust. The effec­
+tiveness of the framing is assumed to be due to the lack of factory
+workers’ prior experience with robots and the ambiguity of cobots as a
+technology and the conflicting narratives about it. This raises awareness
+for the potential of careful and appropriate communication strategies in
+companies in terms of fostering initial trust and paving the way for
+acceptance and adequate usage of cobots. Furthermore, our work sug­
+gests that the mere provision of information about the cobot irrespective
+of the actual content may already have a trust-increasing effect, possibly
+due to a familiarisation process analogous to the well-known mere
+exposure effect.
+Secondly, our research provides valuable insights into the contextsensitivity of anthropomorphisation effects, as indicated by a signifi­
+cant interaction effect between perceived human-likeness and cooper­
+ativeness with regard to human-robot trust. Consistent with H1, our
+findings suggest that human-like framing leads to a higher increase in
+trust compared to machine-like framing, only if the robot is perceived as
+cooperative. Thus, anthropomorphisation effects in the industrial
+context are moderated by how an employee perceives his/her relation to
+a cobot. Since this additional moderating variable has received only
+little attention in previous research on anthropomorphism and humanrobot trust, we therefore argue to consider the varying psychological
+reactions on the idea of being replaced by technology or by a human
+when researching anthropomorphisation effects, since ambivalent feel­
+ings towards robots and a general fear of job loss are highly prevalent in
+practice.
+Future studies should examine the practical and longer-term impact
+of framing and trust in real-world interactions with cobots, incorpo­
+rating intersubjective differences such as varying levels of prior expe­
+rience and the specific human-robot relation in the industrial context.
+
+previous studies, which points to a general lack of longitudinal
+long-term study designs in the HRI context (Nam et al., 2021, p. 446).
+However, even in other research contexts like communication science,
+the vast majority of studies deal with the existence of framing effects in
+lab studies, without evaluating their longevity beyond short-term initial
+HRI scenarios (Lecheler and de Vreese, 2011, 2016). As the presented
+trust model shows (cf. ch. 2.1), dynamic trust evolution during the
+course of an interaction might be much more influenced by factors like
+the perceived reliability of the robot. In fact, this indicates that framing
+effects might quickly deteriorate over the course of an interaction due to
+the availability of more salient cues about the robot and its behaviour
+(Abubshait and Wiese, 2017; Lecheler and de Vreese, 2016). However,
+some experimental studies could identify framing effects that lasted for
+several days and thus pointed to the possibility of a cross-situational
+persistence of framing effects (Dharshing et al., 2017; Lecheler and de
+Vreese, 2011). The distinction between situation-specific and
+cross-situational persistence calls for a more in-depth analysis of the
+formation conditions of framing effects, since cross-situational persis­
+tence requires changes in long-term memory (Baden and Lecheler
+2012).
+In the study presented in this paper, we focused on trust as a
+dependent variable without explicitly reporting distrust evolution.
+Overall, distrust evolution in fact showed almost anti-proportional
+patterns, but turned out to be more robust against framing effects,
+which could be taken as an argument for a conceptual separation of trust
+and distrust. However, the small differences could also be due to inci­
+dental statistical effects, especially given a significantly strong correla­
+tion between trust and distrust, which at least suggest a strong
+dependence between both constructs. Hence, it remains questionable
+whether treating trust and distrust as separate constructs has practical
+implications in real-life settings and needs further exploration in future
+studies.
+With regard to the scope of our study, it has to be noted that we
+focused on cobots, since they are characterized by a high level of
+interactivity and offer a broader variety of ways people can constitute
+their relation to them. However, the results are assumed to be trans­
+ferable to all kinds of robots that are designed in a way that humans tend
+to anthropomorphise and perceive them as either supporting or threat­
+ening with regard to their job. It could also be interesting to investigate
+whether similar effects exist for other modern technologies like appli­
+cations of artificial intelligence (AI), which are also said to threaten
+people’s jobs, but are disembodied and thus differ substantially in their
+appearance and physical interaction opportunities.
+Overall, the presented results call for further investigation of the
+complex interplay of anthropomorphism, technological replacement
+and trust in robots overcoming the limitations of this study by imple­
+menting an off-line experimental HRI with a larger sample size. Thereby,
+the practical and dynamic implications of initial trust levels on actual
+HRI (e.g. regarding employees’ well-being during interaction) could be
+examined. Furthermore, expectations associated with different types of
+human-robot relations, their qualitative aspects and consequences on
+trust should be analysed in more depth, accompanied by the validation
+of measurement instruments to assess the human-robot relation. Addi­
+tionally, it would be interesting to further investigate the effectiveness of
+linguistic framing in situations involving people with different traits and
+varying prior experiences with robots.
+
+8. Credit Author Statement
+Tobias Kopp: Writing – Original Draft, Writing - Review & Editing,
+Conceptualization, Methodology, Formal analysis, Funding acquisition
+Marco Baumgartner: Writing – Original Draft, Writing - Review &
+Editing, Methodology, Visualization, Software, Resources
+Steffen Kinkel: Writing - Review & Editing, Methodology, Super­
+vision, Funding acquisition
+Taken from:
+Term
+
+Definition
+
+Conceptualization
+
+Ideas; formulation or evolution of overarching research
+goals and aims
+Development or design of methodology; creation of
+models
+Programming, software development; designing computer
+programs; implementation of the computer code and
+supporting algorithms; testing of existing code
+components
+Verification, whether as a part of the activity or separate,
+of the overall replication/ reproducibility of results/
+experiments and other research outputs
+Application of statistical, mathematical, computational, or
+other formal techniques to analyze or synthesize study
+data
+
+Methodology
+Software
+
+7. Conclusion
+The study presented in this paper aimed at investigating the impact
+of linguistic framing on factory workers’ initial trust in a collaborative
+robot. We relied on manufacturing workers with no prior practical
+experience with robots as a sample to ensure high external validity. This
+also allows us to derive practical implications and recommendations for
+decision-makers from manufacturing companies (cf. ch. 5). In order to
+measure trust before and after participants received a differently framed
+
+Validation
+Formal analysis
+Investigation
+
+(continued on next page)
+
+13
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+(continued )
+
+Baumgartner, M., Kopp, T., Kinkel, S. 2020. Industrielle Mensch-Roboter-Kollaboration
+in KMU: KMU unterschätzen das Potenzial der Mensch-Roboter-Interaktion. wt
+WerkstattsTechnik online 110 (3), 146–150.
+Bernotat, J., Eyssel, F., Sachse, J., 2019. The (Fe)male robot: how robot body shape
+impacts first impressions and trust towards robots. Int. J. Soc. Robot. 85 (4), 1–13.
+https://doi.org/10.1007/s12369-019-00562-7.
+Bethel, C.L., Murphy, R.R, 2010. Review of human studies methods in HRI and
+recommendations. Int. J. Soc. Robotics 2 (4), 347–359. https://doi.org/10.1007/
+s12369-010-0064-9.
+Billings, D.R., Schafer, K.E., Chen, J.Y.C., Hancock, P.A, 2012. Human-robot interaction:
+developing trust in robots. In: Proceedings of the Seventh Annual ACM/IEEE
+International Conference on Human-Robot Interaction. ACM, Boston, Massachusetts,
+USA, pp. 109–110, 05.03.2012 - 08.03.2012New York, NY.
+Bornstein, R.F., 1989. Exposure and affect: overview and meta-analysis of research,
+1968–1987. Psychol. Bull. 106 (2), 265–289. https://doi.org/10.1037/00332909.106.2.265.
+Brandstetter, J., 2017. The Power of Robot Groups with a Focus on Persuasive and
+Linguistic Cues: Dissertation. Christchurch, New Zealand.
+Broadbent, E., 2017. Interactions with robots: the truths we reveal about ourselves.
+Annu. Rev. Psychol. 68, 627–652. https://doi.org/10.1146/annurev-psych-010416043958.
+Broadbent, E., Lee, Y.I., Stafford, R.Q., Kuo, I.H., MacDonald, B.A, 2011. Mental Schemas
+of Robots as More Human-Like Are Associated with Higher Blood Pressure and
+Negative Emotions in a Human-Robot Interaction. Int J of Soc Robotics 3 (3),
+291–297. https://doi.org/10.1007/s12369-011-0096-9.
+Burleigh, T.J., Schoenherr, J.R, 2014. A reappraisal of the uncanny valley: categorical
+perception or frequency-based sensitization? Front. Psychol. 1488, 1–19. https://
+doi.org/10.3389/fpsyg.2014.01488.
+Charalambous, G., Fletcher, S.R., Webb, P., 2013. Human-automation collaboration in
+manufacturing: identifying key implementation factors. In: Proceedings of the 11th
+International Conference on Manufacturing Research (ICMR2013). Cranfield
+University, UK, pp. 301–306, 19th –20th September 2013.
+Charalambous, G., Fletcher, S.R., Webb, P., 2016a. Development of a Human Factors
+Roadmap for the Successful Implementation of Industrial Human-Robot
+Collaboration. In: Schlick, C.M., Trzcieliński, S. (Eds.), Advances in Ergonomics of
+Manufacturing: Managing the Enterprise of the Future: Proceedings of the AHFE
+2016 International Conference on Human Aspects of Advanced Manufacturing, July
+27-31, 2016 Walt Disney World®, Florida, USA, 490. Springer International
+Publishing, Cham, pp. 195–206.
+Charalambous, G., Fletcher, S.R., Webb, P., 2016b. The development of a scale to
+evaluate trust in industrial human-robot collaboration. Int. J. Soc. Robot. 8 (2),
+193–209. https://doi.org/10.1007/s12369-015-0333-8.
+Choi, H., Swanson, N., 2021. Understanding worker trust in industrial robots for
+improving workplace safety. In: Nam, C.S., Lyons, J.B. (Eds.), Trust in Human-Robot
+Interaction. Elsevier Academic Press, pp. 123–141.
+Coeckelbergh, M., 2010. Talking to robots: on the linguistic construction of personal
+human-robot relations. In: Lamers, M.H., Verbeek, F.J. (Eds.), Human-Robot
+Personal Relationships: Third International Conference, HRPR 2010, Leiden, The
+Netherlands, June 2020, Revised Selected Papers. Springer, pp. 126–129. Revised
+Selected Papers.
+Coeckelbergh, M., 2011. You, robot: on the linguistic construction of artificial others. AI
+Soc. 26 (1), 61–69. https://doi.org/10.1007/s00146-010-0289-z.
+Coeckelbergh, M., 2017. Language and technology: maps, bridges, and pathways. AI Soc.
+32 (2), 175–189. https://doi.org/10.1007/s00146-015-0604-9.
+Coeckelbergh, M., 2018. Why care about robots? Empathy, moral standing, and the
+language of suffering. Kairos. J. Philosoph. Sci. 20 (1), 141–158. https://doi.org/
+10.2478/kjps-2018-0007.
+Cohen, J., 1988. Statistical Power Analysis for the Behavioral Sciences, 2nd ed. Erlbaum,
+Hillsdale, NJ, p. 567. Erlbaum, Hillsdale, NJ.
+Darling, K., 2017. Who’s Johnny? In: Lin, P., Abney, K., Jenkins, R. (Eds.),
+Antropomorphic Framing in Human-Robot Interaction, Integration, and Policy.
+Oxford University Press, Oxford. Robot ethics 2.0: From autonomous cars to artificial
+intelligence.
+Darling, K., Nandy, P., Breazeal, C.L, 2015. Empathic concern and the effect of stories in
+human-robot interaction. In: 2015 24th IEEE International Symposium on Robot and
+Human Interactive Communication (RO-MAN), Kobe, Japan, 2015, Piscataway, NJ.
+IEEE, pp. 770–775.
+Davis, F.D., 1989. Perceived usefulness, perceived ease of use, and user acceptance of
+information technology. MIS Quarterly 13 (3), 319. https://doi.org/10.2307/
+249008.
+de Visser, E.J., Peeters, M.M.M., Jung, M.F., Kohn, S.C., Shaw, T.H., Pak, R., Neerincx, M.
+A, 2019. Towards a theory of longitudinal trust calibration in human–robot teams.
+Int. J. Soc. Robot. 8 (3), 1393. https://doi.org/10.1007/s12369-019-00596-x.
+Desai, M., Kaniarasu, P., Medvedev, M., Steinfeld, A., Yanco, H., 2013. Impact of robot
+failures and feedback on real-time trust. In: HRI 2013: Proceedings of the 8th ACM/
+IEEE International Conference on Human-Robot Interaction, Tokyo, Japan. IEEE,
+Piscataway, NJ, pp. 251–258.
+Dharshing, S., Hille, S.L., Wüstenhagen, R., 2017. The Influence of Political Orientation
+on the Strength and Temporal Persistence of Policy Framing Effects. Ecol. Econ. 142,
+295–305. https://doi.org/10.1016/j.ecolecon.2017.05.014.
+Duffy, B.R., 2003. Anthropomorphism and the social robot. Rob. Autom. Syst. 42 (3-4),
+177–190. https://doi.org/10.1016/S0921-8890(02)00374-3.
+Edwards, A., Edwards, C., Westerman, D., Spence, P.R, 2019. Initial expectations,
+interactions, and beyond with social robots. Comput. Hum. Behav. 90, 308–314.
+https://doi.org/10.1016/j.chb.2018.08.042.
+
+Term
+
+Resources
+Data Curation
+
+Writing - Original Draft
+Writing - Review &
+Editing
+Visualization
+Supervision
+Project administration
+Funding acquisition
+
+Definition
+Conducting a research and investigation process,
+specifically performing the experiments, or data/evidence
+collection
+Provision of study materials, reagents, materials, patients,
+laboratory samples, animals, instrumentation, computing
+resources, or other analysis tools
+Management activities to annotate (produce metadata),
+scrub data and maintain research data (including software
+code, where it is necessary for interpreting the data itself)
+for initial use and later reuse
+Preparation, creation and/or presentation of the published
+work, specifically writing the initial draft (including
+substantive translation)
+Preparation, creation and/or presentation of the published
+work by those from the original research group,
+specifically critical review, commentary or revision –
+including pre-or postpublication stages
+Preparation, creation and/or presentation of the published
+work, specifically visualization/ data presentation
+Oversight and leadership responsibility for the research
+activity planning and execution, including mentorship
+external to the core team
+Management and coordination responsibility for the
+research activity planning and execution
+Acquisition of the financial support for the project leading
+to this publication
+
+Reference: https://www.elsevier.com/authors/policies-and-guide
+lines/credit-author-statement
+Declaration of Competing Interest
+The authors declare that they have no known competing financial
+interests or personal relationships that could have appeared to influence
+the work reported in this paper.
+Acknowledgments
+This work was conducted within the research project ProBot. This
+research and development project is financed with funding by the Fed­
+eral Ministry of Education and Research and the European Social Fund
+within the program “Future of Work” program and managed by the
+Project Management Agency Karlsruhe (PTKA). The authors are
+responsible for the content of this publication. We thank Tobias Kunkel
+for his valuable feedback on an earlier version of this manuscript.
+References
+Abubshait, A., Wiese, E., 2017. You look human, but act like a machine: agent
+appearance and behavior modulate different aspects of human-robot interaction.
+Front. Psychol. 8 (1393), 1–12. https://doi.org/10.3389/fpsyg.2017.01393.
+Ahn, S.J., Fox, J., Dale, K.R., Avant, J.A., 2015. Framing virtual experiences. Commun.
+Res. 42 (6), 839–863. https://doi.org/10.1177/0093650214534973.
+Airenti, G., 2015. The cognitive bases of anthropomorphism: from relatedness to
+empathy. Int. J. Soc. Robotics 7 (1), 117–127. https://doi.org/10.1007/s12369-0140263-x.
+Ajzen, I., Fishbein, M., 1980. Understanding attitudes and predicting social behavior.
+Prentice-Hall, Englewood Cliffs, NJ, p. 278.
+Baden, C., Lecheler, S., 2012. Fleeting, fading, or far-reaching? A knowledge-based
+model of the persistence of framing effects. Commun. Theor. 22 (4), 359–382.
+https://doi.org/10.1111/j.1468-2885.2012.01413.x.
+Baker, L.J., Hymel, A.M., Levin, D.T, 2018. Anthropomorphism and intentionality
+improve memory for events. Discourse Processes 55 (3), 241–255. https://doi.org/
+10.1080/0163853X.2016.1223517.
+Bartneck, C. 2019. Negative Attitudes Towards Robots Scale (NARS) Translations. htt
+p://www.bartneck.de/2019/03/11/negative-attitudes-towards-robots-scale-nars-t
+ranslations/ (accessed 28 February 2020).
+Bartneck, C., Kulić, D., Croft, E., Zoghbi, S., 2009. Measurement instruments for the
+anthropomorphism, animacy, likeability, perceived intelligence, and perceived
+safety of robots. Int. J. Soc. Robotics 1 (1), 71–81. https://doi.org/10.1007/s12369008-0001-3.
+Bartneck, C., Rosalia, C., Menges, R., Deckers, I., 2005. Robot Abuse – A Limitation of the
+Media Equation. In: Proceedings of the Interact 2005 Workshop on Abuse, Rome.
+
+14
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+Edwards, C., Edwards, A., Spence, P.R., Westerman, D., 2016. Initial interaction
+expectations with robots: testing the human-to-human interaction script.
+Communication Studies 67 (2), 227–238. https://doi.org/10.1080/
+10510974.2015.1121899.
+El Makrini, I., Elprama, S.A., van den Bergh, J., Vanderborght, B., Knevels, A.-J.,
+Jewell, C.I., Stals, F., de Coppel, G., Ravyse, I., Potargent, J., Berte, J., Diericx, B.,
+Waegeman, T., Jacobs, A., 2018. Working with Walt: How a Cobot Was Developed
+and Inserted on an Auto Assembly Line. IEEE Robot. Automat. Mag. 25 (2), 51–58.
+https://doi.org/10.1109/MRA.2018.2815947.
+Elprama, S.A., El Makrini, I., Vanderborght, B., Jacobs, A., 2016. Acceptance of
+collaborative robots by factory workers: a pilot study on the importance of social
+cues of anthropomorphic robots. In: The 25th IEEE International Symposium on
+Robot and Human Interactive Communication. New York, pp. 919–924.
+Elprama, S.A., Jewell, C.I., Jacobs, A., El Makrini, I., Vanderborght, B., 2017. Attitudes of
+Factory Workers towards Industrial and Collaborative Robots. In: Proceedings of the
+Companion of the 2017 ACM/IEEE International Conference on Human-Robot
+Interaction - HRI ’17, Vienna, Austria. 6/3/2017 - 9/3/2017. ACM Press, New York,
+NY, USA, pp. 113–114.
+Epley, N., Waytz, A., Akalis, S., Cacioppo, J.T, 2008. When We Need A Human:
+Motivational Determinants of Anthropomorphism. Soc. Cogn. 26 (2), 143–155.
+https://doi.org/10.1521/soco.2008.26.2.143.
+Epley, N., Waytz, A., Cacioppo, J.T, 2007. On seeing human: a three-factor theory of
+anthropomorphism. Psychol. Rev. 114 (4), 864–886. https://doi.org/10.1037/0033295X.114.4.864.
+European Commission 2015. Autonomous Systems: Special Eurobarometer 427, 25 pp.
+(accessed 10 August 2018).
+Fagley, N., Miller, P.M, 1987. The effects of decision framing on choice of risky vs certain
+options. Organ. Behav. Hum. Decis. Process. 39 (2), 264–277. https://doi.org/
+10.1016/0749-5978(87)90041-0.
+Ferrari, F., Eyssel, F, 2016. Toward a hybrid society. In: Agah, A., Howard, A.M.,
+Salichs, M.A., He, H., Cabibihan, J.-J. (Eds.), Social Robotics: Proceedings of the 8th
+International Conference, ICSR 2016, Kansas City, MO, USA, November 1–3, 2016.
+Springer International Publishing, pp. 909–918. ICSR 2016 Kansas City, MO, USA,
+November 1–3, 2016Cham.
+Fischer, K., 2011. Interpersonal variation in understanding robots as social actors. In:
+Proceedings of the 6th international conference on Human-robot interaction,
+Lausanne, Switzerland. ACM, New York, NY, pp. 53–60.
+Fischer, K., Lohan, K.S., Foth, K., 2012. Levels of embodiment: Linguistic Analyses of
+Factors Influencing HRI. In: HRI ’12 Proceedings of the seventh annual ACM/IEEE
+international conference on Human-Robot Interaction, pp. 463–470. https://doi.
+org/10.1145/2157689.2157839.
+Fishbein, M., Ajzen, I., 1975. Belief, Attitude, Intention And Behavior: An Introduction
+To Theory And Research. Addison-Wesley, Reading, Mass, p. 578.
+Fitzpatrick, P., Harada, K., Kemp, C.C., Matsumoto, Y., 2016. Humanoids. In:
+Siciliano, B., Khatib, O. (Eds.), Springer Handbook Of Robotics, 2nd ed. Springer,
+Berlin, Heidelberg, pp. 1789–1818.
+Flook, R., Shrinah, A., Wijnen, L., Eder, K., Melhuish, C., Lemaignan, S., 2019. Social
+Cues in Robot Interaction. Trust Acceptance. IS 20 (3), 455–486. https://doi.org/
+10.1075/is.18067.flo.
+French, B., Duenser, A., Heathcote, A., 2018. Trust in Automation - A Literature Review
+report. CSIRO, Australia. CSIRO Report EP184082.
+German Federal Statistical Office, 2020. Employed persons: Germany, years, economic
+sectors (WZ2008), gender. https://www-genesis.destatis.de/genesis/online?operat
+ion=previous&levelindex=1&step=1&titel=Ergebnis&levelid=1595922346681&a
+cceptscookies=false (accessed 28 July 2020).
+Gompei, T., Umemuro, H., 2018. Factors and development of cognitive and affective
+trust on social robots. In: Ge, S.S. (Ed.), Social robotics: Proceedings of the 10th
+International Conference, ICSR 2018, Qingdao, China, November 28 - 30, 2018,
+11357. Springer, Cham, pp. 45–54.
+Görke, M., Blankemeyer, S., Pischke, D., Oubari, A., Raatz, A., Nyhuis, P., 2017. Sichere
+und akzeptierte Kollaboration von Mensch und Maschine. ZWF Zeitschrift für
+wirtschaftlichen Fabrikbetrieb 112 (1-2), 41–45. https://doi.org/10.3139/
+104.111668.
+Graaf, M.M.A., de Ben Allouch, S., van Dijk, J.A.G.M., 2016. Long-term evaluation of a
+social robot in real homes. IS 17 (3), 461–490. https://doi.org/10.1075/
+is.17.3.08deg.
+Grahn, S., Gopinath, V., Wang, X.V., Johansen, K., 2018. Exploring a model for
+production system design to utilize large robots in human-robot collaborative
+assembly cells. Procedia Manufacturing 25, 612–619. https://doi.org/10.1016/j.
+promfg.2018.06.094.
+Granulo, A., Fuchs, C., Puntoni, S., 2019. Psychological reactions to human versus
+robotic job replacement. Nature Human Behaviour 3 (10), 1062–1069. https://doi.
+org/10.1038/s41562-019-0670-y.
+Groom, V., Srinivasan, V., Bethel, C.L., Murphy, R., Dole, L., Nass, C., 2011. Responses to
+robot social roles and social role framing. In: 2011 International Conference on
+Collaboration Technologies and Systems (CTS). Philadelphia, PA, USA, pp. 194–203.
+https://doi.org/10.1109/CTS.2011.5928687.
+Hancock, P.A., Billings, D.R., Schafer, K.E, 2011a. Can you trust your robot? Ergonomics
+in Design 19 (3), 24–29. https://doi.org/10.1177/1064804611415045.
+Hancock, P.A., Billings, D.R., Schafer, K.E., Chen, J.Y.C., de Visser, E.J., Parasuraman, R.,
+2011b. A meta-analysis of factors affecting trust in human-robot interaction. Hum.
+Factors 53 (5), 517–527. https://doi.org/10.1177/0018720811417254.
+Hancock, P.A., Kessler, T.T., Kaplan, A.D., Brill, J.C., Szalma, J.L. 2020. Evolving Trust in
+Robots: Specification Through Sequential and Comparative Meta-Analyses. Human
+factors, 18720820922080. https://doi.org/10.1177/0018720820922080.
+
+Heßler, M., 2019. Menschen – Maschinen – MenschMaschinen in Zeit und Raum.
+Perspektiven einer Historischen Technikanthropologie. In: Heßler, M., Weber, H.
+(Eds.), Provokationen der Technikgeschichte: Zum Reflexionszwang historischer
+Forschung. Verlag Ferdinand Schöningh, Paderborn. Verlag Ferdinand Schöningh,
+Paderborn.
+Hinds, P.J., Roberts, T.L., Jones, H., 2004. Whose Job Is It Anyway? A Study of HumanRobot Interaction in a Collaborative Task. Hum-Comput. Interact. (19), 151–181.
+Ho, C.-C., MacDorman, K.F, 2017. Measuring the Uncanny Valley Effect. Int. J. Soc.
+Robot. 9 (1), 129–139. https://doi.org/10.1007/s12369-016-0380-9.
+Hoff, K.A., Bashir, M., 2015. Trust in automation: integrating empirical evidence on
+factors that influence trust. Hum. Factors 57 (3), 407–434. https://doi.org/10.1177/
+0018720814547570.
+Horstmann, A.C., Bock, N., Linhuber, E., Szczuka, J.M., Straßmann, C., Krämer, N.C.,
+2018. Do a robot’s social skills and its objection discourage interactants from
+switching the robot off? PLoS One 13 (7), e0201581. https://doi.org/10.1371/
+journal.pone.0201581.
+Im Shin, H., Kim, J., 2018. My computer is more thoughtful than you: Loneliness,
+anthropomorphism and dehumanization. Curr. Psychol. 27, 1644. https://doi.org/
+10.1007/s12144-018-9975-7.
+Jian, J.-Y., Bisantz, A.M., Drury, C.G, 2000. Foundations for an empirically determined
+scale of trust in automated systems. Int. J. Cognit. Ergonom. 4 (1), 53–71. https://
+doi.org/10.1207/S15327566IJCE0401_04.
+Klapper, A., Ramsey, R., Wigboldus, D., Cross, E.S, 2014. The control of automatic
+imitation based on bottom-up and top-down cues to animacy: insights from brain
+and behavior. J. Cogn. Neurosci. 26 (11), 2503–2513. https://doi.org/10.1162/jocn_
+a_00651.
+Kopp, T., Baumgartner, M., Kinkel, S., 2021. Success factors for introducing industrial
+human-robot interaction in practice: an empirically driven framework. Int. J. Adv.
+Manuf. Technol. 112 (3–4), 685–704. https://doi.org/10.1007/s00170-020-063980.
+Kory, J., Kleinberger, R., 2014. Social agent or machine? An exploration of how the
+framing of a robot affects prosodic mimicry and expressivity. In: 2nd Workshop on
+Applications for Emotional Robots held in conjunction with the 9th ACM/IEEE
+International Conference on Human-Robot Interaction.
+Kory Westlund, J.M., Breazeal, C.L., 2019. Exploring the effects of a social robot’s speech
+entrainment and backstory on young children’s emotion, rapport, relationship, and
+learning. Front. Robot. AI 6, 54. https://doi.org/10.3389/frobt.2019.00054.
+Kory Westlund, J.M., Jeong, S., Park, H.W., Ronfard, S., Adhikari, A., Harris, P.L.,
+DeSteno, D., Breazeal, C.L., 2017. Flat vs. Expressive storytelling: young children’s
+learning and retention of a social robot’s narrative. Front. Human Neurosci. 11 295,
+1–20. https://doi.org/10.3389/fnhum.2017.00295.
+Kory Westlund, J.M., Martinez, M., Archie, M., Das, M., Breazeal, C.L., 2016. Effects of
+Framing a Robot as a Social Agent or as a Machine on Children’s Social Behavior. In:
+RO-MAN 2016: The 25th IEEE International Symposium on Robot and Human
+Interactive Communication, Teachers College, Columbia University, New York, U.S.
+A. August 26 to August 31, 2016. IEEE, Piscataway, NJ.
+Krippendorff, K., 1970. Bivariate Agreement Coefficients for Reliability of Data.
+Sociological Methodology 2, 139–150. https://doi.org/10.2307/270787.
+Kuchenbrandt, D., Eyssel, F., 2012. The mental simulation of a human-robot interaction:
+Positive effects on attitudes and anxiety toward robots. In: 2012 IEEE Ro-Man: The
+21st IEEE International Symposium on Robot and Human Interactive
+Communication, Paris, France. IEEE, pp. 463–468.
+Lecheler, S., de Vreese, C.H., 2011. Getting Real: The Duration of Framing Effects.
+J. Commun. 61 (5), 959–983. https://doi.org/10.1111/j.1460-2466.2011.01580.x.
+Lecheler, S., de Vreese, C.H., 2016. How long do news framing effects last? a systematic
+review of longitudinal studies. Ann. Internat. Commun. Ass. 40 (1), 3–30. https://
+doi.org/10.1080/23808985.2015.11735254.
+Lee, J.D., See, K.A, 2004. Trust in automation: designing for appropriate reliance. Hum
+Factors 46 (1), 50–80. https://doi.org/10.1518/hfes.46.1.50_30392.
+Lee, M.K., Kiesler, S., Forlizzi, J., Rybski, P., 2012. Ripple effects of an embedded social
+agent: A field study of a social robot in the workplace. In: Proceedings of the 2012
+ACM annual conference on Human Factors in Computing Systems - CHI ’12, Austin,
+Texas, USA. 05-10 May, 2012. ACM Press, New York, NY, USA, pp. 695–704.
+Lee, S., Kiesler, S., Lau, I.Y., Chiu, C.-Y., 2005. Human mental models of humanoid
+robots. In: 2005 IEEE International Conference on Robotics and Automation (ICRA):
+Barcelona, Spain: 18-22 April, 2005. IEEE, Piscataway, N.J, pp. 2767–2772.
+Lemaignan, S., Fink, J., Dillenbourg, P., Braboszcz, C. 2014. The Cognitive Correlates of
+Anthropomorphism. Human-Robot Interaction Conference, Workshop "HRI: a bridge
+between Robotics and Neuroscience".
+Letheren, K., Kuhn, K.-A.L., Lings, I., Pope, N.K.L, 2016. Individual difference factors
+related to anthropomorphic tendency. Eur. J. Mark. 50 (5/6), 973–1002. https://doi.
+org/10.1108/EJM-05-2014-0291.
+Lewis, M., Sycara, K., Walker, P. 2018. The Role of Trust in Human-Robot Interaction, in:
+Abbass, H.A., Scholz, J., Reid, D.J. (Eds.), Foundations of Trusted Autonomy.
+Springer International Publishing, Cham, pp. 135–160.
+Lotz, V., Himmel, S., Ziefle, M., 2019. You’re My Mate-Acceptance Factors for HumanRobot Collaboration in Industry. In: International Conference on Competitive
+Manufacturing (COMA 19), 31 January-2 February 2019, Stellenbosch, South Africa.
+Department of Industrial Engineering, Stellenbosch University, Stellenbosch,
+pp. 405–411.
+Luhmann, N., 1968/2014. Vertrauen: Ein Mechanismus der Reduktion sozialer
+Komplexität, 5th ed. UTB.
+Mabry, L., 2016. The Rhetoric of Social Robots: How Consumerism is Shaping
+Perceptions of Robotic Ontology. Master Thesis. Seattle, Washington, USA.
+
+15
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+
+Marquardt, M., 2017. Anthropomorphisierung in der Mensch-Roboter
+Interaktionsforschung: theoretische Zugänge und soziologisches Anschlusspotential.
+Working Papers - kultur- und techniksoziologische Studien 10 (1), 1–44.
+Matthews, G., Panganiban, A.R., Lin, J., Long, M.D., Schwing, M., 2021. Super-machines
+or sub-humans: mental models and trust in intelligent autonomous systems. In:
+Nam, C.S., Lyons, J.B. (Eds.), Trust in Human-Robot Interaction. Elsevier Academic
+Press, pp. 59–82.
+Maurtua, I., Ibarguren, A., Kildal, J., Susperregi, L., Sierra, B., 2017. Human–robot
+collaboration in industrial applications. Int. J. Adv. Rob. Syst. 14 (4), 1–10. https://
+doi.org/10.1177/1729881417716010.
+Meißner, A., Trübswetter, A., 2018a. Kollaborierende Roboter in der Produktion Akzeptanz durch die Beschäftigten. Betriebspraxis Arbeitsforschung (233), 24–27.
+Meißner, A., Trübswetter, A., 2018b. Mensch-Roboter-Kollaboration in der Produktion:
+Kritische Würdigung etablierter Technikakzeptanzmodelle und neue Erkenntnisse in
+der Akzeptanzforschung. In: Weidner, R., Karafillidis, A. (Eds.), Technische
+Unterstützungssysteme, die die Menschen wirklich wollen: Dritte transdisziplinäre
+Konferenz. Helmut-Schmidt-Universität, Hamburg, Deutschland, pp. 223–233.
+Meißner, A., Trübswetter, A., Conti-Kufner, A.S., Schmidtler, J., 2020. Friend or Foe?
+Understanding Assembly Workers’ Acceptance of Human-robot Collaboration.
+J. Hum.-Robot Interact. 10 (1), 1–30. https://doi.org/10.1145/3399433.
+Miles, E., Crisp, R.J, 2014. A meta-analytic test of the imagined contact hypothesis.
+Group Process. Intergroup Relations 17 (1), 3–26. https://doi.org/10.1177/
+1368430213510573.
+Mori, M., 1970. The Uncanny Valley. Energy 7, 33–35.
+Müller, S.L., Schröder, S., Jeschke, S., Richert, A., 2017. Design of a robotic workmate.
+In: Duffy, V.G. (Ed.), Digital Human Modeling. Applications in Health, Safety,
+Ergonomics, and Risk Management: Ergonomics and Design: Proceedings of the 8th
+International Conference, DHM 2017, Held as Part of HCI International, Vancouver,
+BC, Canada, July 9-14, 2017, Part I. Springer International Publishing, Cham,
+pp. 447–456.
+Müller-Abdelrazeq, S.L., 2020. Triadisches Phasenmodell des Zusammenspiels von
+Einstellungssubjekt, -objekt und -kontext bei der industriellen Mensch-RoboterInteraktion. Apprimus Verlag, Aachen, p. 240.
+Murashov, V., Hearl, F., Howard, J., 2016. Working safely with robot workers:
+Recommendations for the new workplace. J. Occup. Environ. Hyg. 13 (3), D61–D71.
+https://doi.org/10.1080/15459624.2015.1116700.
+Mutlu, B., Roy, N., Šabanović, S., 2016. Cognitive Human–Robot Interaction. In:
+Siciliano, B., Khatib, O. (Eds.), Springer handbook of robotics, 2nd ed. Springer,
+Berlin, Heidelberg, pp. 1907–1934.
+Nam, C.S., Eskander, E., Choo, S., 2021. Neural dynamics of trust in human-robot
+interaction. In: Nam, C.S., Lyons, J.B. (Eds.), Trust in Human-Robot Interaction.
+Elsevier Academic Press, pp. 477–489.
+Nass, C.I., Brave, S., 2007. Wired for Speech: How Voice Activates and Advances The
+Human-Computer Relationship. MIT, Cambridge Mass.
+Nijssen, S.R.R., Müller, B.C.N., van Baaren, R.B., Paulus, M., 2019. Saving the robot or
+the human? robots who feel deserve moral care. Soc. Cogn. 37 (1), 41–56. https://
+doi.org/10.1521/soco.2019.37.1.41.
+Nomura, T., Kanda, T., Suzuki, T., Kato, K., 2004. Psychology in human-robot
+communication: an attempt through investigation of negative attitudes and anxiety
+toward robots. RO-MAN 2004. 13th IEEE International Workshop on Robot and
+Human Interactive Communication, pp. 35–40. https://doi.org/10.1109/
+ROMAN.2004.1374726 (IEEE Catalog No. 04TH8759).
+Nunnally, J.C., Bernstein, I.H., 2008. Psychometric theory, 3rd ed. McGraw-Hill, New
+York, NY, p. 752.
+Obrist, M., Reitberger, W., Wurhofer, D., Förster, F., Tscheligi, M., 2011. User Experience
+Research in the Semiconductor Factory: A Contradiction? In: Campos, P.,
+Graham, N., Jorge, J., Nunes, N., Palanque, P., Winckler, M. (Eds.), Humancomputer interaction - INTERACT 2011: Proceedings of the 13th IFIP TC 13
+international conference, Lisbon, Portugal, September 5 - 9, 2011 Part IV, 6949.
+Springer, Berlin, pp. 144–151. Lisbon, Portugal, September 5 - 9, 2011, Part IV.
+Oistad, B.C., Sembroski, C.E., Gates, K.A., Krupp, M.M., Fraune, M.R., Šabanović, S,
+2016. Colleague or Tool? Interactivity Increases Positive Perceptions of and
+Willingness to Interact with a Robotic Co-worker. In: Agah, A., Howard, A.M.,
+Salichs, M.A., He, H., Cabibihan, J.-J. (Eds.), Social Robotics: Proceedings of the 8th
+International Conference, ICSR 2016, Kansas City, MO, USA, November 1–3, 2016.
+Springer International Publishing, Cham, pp. 774–785. November 1–3, 2016.
+Oliveira, R., Arriaga, P., Alves-Oliveira, P., Correia, F., Petisca, S., Paiva, A., 2018.
+Friends or Foes?. In: Proceedings of the 2018 ACM/IEEE International Conference on
+Human-Robot Interaction - HRI ’18, Chicago, IL, USA. 05-08 March, 2018. ACM
+Press, New York, NY, USA, pp. 279–288.
+Onnasch, L., Roesler, E., 2019. Anthropomorphizing robots: the effect of framing in
+human-robot collaboration. Proc. Human Factors Ergon. Soc. Ann. Meeting 63 (1),
+1311–1315. https://doi.org/10.1177/1071181319631209.
+Osmont, A., Cassotti, M., Agogué, M., Houdé, O., Moutier, S., 2015. Does ambiguity
+aversion influence the framing effect during decision making? Psychon. Bull. Rev. 22
+(2), 572–577. https://doi.org/10.3758/s13423-014-0688-0.
+Ötting, S.K., Masjutin, L., Steil, J.J., Maier, G.W, 2020. Let’s work together: a metaanalysis on robot design features that enable successful human–robot interaction at
+work. Human Factors Preprint Online, pp. 1–24.
+Paepcke, S., Takayama, L., 2010. Judging a bot by its cover: An experiment on
+expectation setting for personal robots. In: 5th ACM/IEEE International Conference
+on Human-Robot Interaction (HRI), 2010: 2 - 5 March 2010, Osaka, Japan. IEEE,
+Piscataway, NJ, pp. 45–52. Piscataway, NJ.
+Parasuraman, R., Riley, V., 1997. Humans and Automation: Use, Misuse, Disuse, Abuse.
+Hum. Factors 39 (2), 230–253. https://doi.org/10.1518/001872097778543886.
+
+Phillips, E.K., Ososky, S., Grove, J., Jentsch, F.G, 2011. From tools to teammates: toward
+the development of appropriate mental models for intelligent robots. Proc. Human
+Factors Ergon. Soc. Ann. Meeting 55 (1), 1491–1495. https://doi.org/10.1177/
+1071181311551310.
+Pöhler, G., Heine, T., Deml, B., 2016. Itemanalyse und Faktorstruktur eines Fragebogens
+zur Messung von Vertrauen im Umgang mit automatischen Systemen. Z. Arb. Wiss.
+70 (3), 151–160. https://doi.org/10.1007/s41449-016-0024-9.
+Powell, H., Michael, J., 2019. Feeling committed to a robot: why, what, when and how?
+Philosophical transactions of the Royal Society of London. Series B, Biol. Sci. 374,
+20180039 https://doi.org/10.1098/rstb.2018.0039.
+Reeves, B., Nass, C.I., 1998. The media equation: How people treat computers, television,
+and new media like real people and places, 1st ed. CSLI Publ, Stanford, Calif, p. 305.
+Remmers, P., 2020. Ethische Perspektiven der Mensch-Roboter-Kollaboration. In:
+Buxbaum, H.-J. (Ed.), Mensch-Roboter-Kollaboration. Springer, Fachmedien
+Wiesbaden, Wiesbaden, pp. 55–68.
+Richert, A., Müller, S.L., Schröder, S., Jeschke, S., 2017. Anthropomorphism in social
+robotics: empirical results on human–robot interaction in hybrid production
+workplaces. AI & Soc 1 (1), 71–80. https://doi.org/10.1007/s00146-017-0756-x.
+Roesler, E., Onnasch, L., 2020a. Teammitglied oder Werkzeug – Der Einfluss
+anthropomorpher Gestaltung in der Mensch-Roboter-Interaktion. In: Buxbaum, H.-J.
+(Ed.) (Ed.), Mensch-Roboter-Kollaboration. Springer Fachmedien Wiesbaden,
+Wiesbaden, pp. 163–175.
+Roesler, E., Onnasch, L., 2020b. The effect of anthropomorphism and failure
+comprehensibility on human-robot trust. In: Proceedings of the Human Factors and
+Ergonomics Society Annual Meeting, 64, pp. 107–111. https://doi.org/10.1177/
+1071181320641028.
+Rohrmann, B., 1978. Empirische Studien zur Entwicklung von Antwortskalen für die
+sozialwissenschaftliche Forschung. Zeitschrift für Sozialpsychologie 9, 222–245.
+Rueben, M., Bernieri, F.J., Grimm, C.M., Smart, W.D, 2017. Framing effects on privacy
+concerns about a home telepresence robot. In: Proceedings of the 2017 ACM/IEEE
+International Conference on Human-Robot Interaction, Vienna, Austria. 6/3/2017 9/3/2017. ACM Press, New York, NY, USA, pp. 435–444.
+Salvini, P., Laschi, C., Dario, P., 2010. Design for acceptability: improving robots’
+coexistence in human society. Int. J. Soc. Robot. 2 (4), 451–460. https://doi.org/
+10.1007/s12369-010-0079-2.
+Sanders, T.L., Kaplan, A.D., Koch, R., Schwartz, M., Hancock, P.A, 2019. The relationship
+between trust and use choice in human-robot interaction. Hum. Factors 61 (4),
+614–626. https://doi.org/10.1177/0018720818816838.
+Sanders, T.L., MacArthur, K., Volante, W., Hancock, G., MacGillivray, T., Shugars, W.,
+Hancock, P.A, 2017. Trust and prior experience in human-robot interaction. Proc.
+Human Factors Ergon. Soc. Ann. Meeting 61 (1), 1809–1813. https://doi.org/
+10.1177/1541931213601934.
+Sauppé, A., Mutlu, B., 2015. The social impact of a robot co-worker in industrial settings.
+In: CHI 2015 crossings: Proceedings of the 33rd Annual CHI Conference on Human
+Factors in Computing Systems; April 18 - 23, 2015, Seoul, Republic of Korea. ACM,
+New York, NY, USA, pp. 3613–3622.
+Schröder, J., Epley, N., 2016. Mistaking minds and machines: how speech affects
+dehumanization and anthropomorphism. J. Experimental Psychol. General 145 (11),
+1427–1437. https://doi.org/10.1037/xge0000214.
+Sheridan, T.B., 2016. Human-robot interaction: status and challenges. Hum. Factors 58
+(4), 525–532. https://doi.org/10.1177/0018720816644364.
+Smith, M.A.B., Wiese, E, 2016. Look at me now: investigating delayed disengagement for
+ambiguous human-robot stimuli. In: Agah, A., Howard, A.M., Salichs, M.A., He, H.,
+Cabibihan, J.-J. (Eds.), Social Robotics: Proceedings of the 8th International
+Conference, ICSR 2016 Kansas City, MO, USA, November 1–3, 2016, 9979. Springer
+International Publishing, Cham, pp. 950–960.
+Stadler, S., Weiss, A., Mirnig, N., Tscheligi, M., 2013. Anthropomorphism in the factory a paradigm change?. In: HRI 2013: Proceedings of the 8th ACM/IEEE International
+Conference on Human-Robot Interaction, Tokyo, Japan. 03-06 March, 2013. IEEE,
+Piscataway, NJ, pp. 231–232.
+Steil, J.J., Maier, G.W. 2017. Robots in the Digitalized Workplace, in: Hertel, G. (Ed.),
+The Wiley Blackwell handbook of the psychology of the Internet at work, vol. 19. John
+Wiley & Sons Ltd, Hoboken, NJ, pp. 401–422.
+Stenzel, A., Chinellato, E., Bou, M.A.T., del Pobil, Á.P., Lappe, M., Liepelt, R., 2012a.
+When humanoid robots become human-like interaction partners: corepresentation of
+robotic actions. J. Exp. Psychol. Hum. Percept. Perform. 38 (5), 1073–1077. https://
+doi.org/10.1037/a0029493.
+Stenzel, A., Chinellato, E., del Pobil, Á.P., Lappe, M., Liepelt, R., 2012b. How deeply do
+we include robotic agents in the self? Int. J. Humanoid Rob. 10 (1), 1–13.
+Stocké, V., 2002. Framing und Rationalität: Die Bedeutung der Informationsdarstellung
+für das Entscheidungsverhalten. De Gruyter Oldenbourg, Munich, p. 293. Zugl.:
+Mannheim, Univ., Dissertationsschrift, 2000.
+Turja, T., Oksanen, A., 2019. Robot acceptance at work: a multilevel analysis based on 27
+EU Countries. Int. J. Soc. Robot. 11 (4), 679–689. https://doi.org/10.1007/s12369019-00526-x.
+Vincent, J., Taipale, S., Sapio, B., Lugano, G., Fortunati, L., 2015. Social Robots from a
+Human Perspective. Springer International Publishing, Cham, p. 149.
+Waytz, A., Cacioppo, J.T., Epley, N., 2010. Who sees human? The stability and
+importance of individual differences in anthropomorphism. Perspect. Psychol. Sci. 5
+(3), 219–232. https://doi.org/10.1177/1745691610369336.
+Waytz, A., Heafner, J., Epley, N., 2014. The mind in the machine: Anthropomorphism
+increases trust in an autonomous vehicle. J. Exp. Soc. Psychol. 52, 113–117. https://
+doi.org/10.1016/j.jesp.2014.01.005.
+Weis, P.P., Wiese, E. 2020. Know Your Cognitive Environment! Mental Models as Crucial
+Determinant of Offloading Preferences. Human factors, 18720820956861. https://
+doi.org/10.1177/0018720820956861.
+
+16
+
+T. Kopp et al.
+
+International Journal of Human - Computer Studies 158 (2022) 102730
+Winckler, M. (Eds.), Proceedings of the 15th IFIP TC 13 International Conference,
+Bamberg, Germany, September 14 - 18, 2015, 9298. Springer, Cham, pp. 203–220.
+Xing, B., Marwala, T. 2018. Introduction to Human Robot Interaction, in: Xing, B.,
+Marwala, T. (Eds.), Smart maintenance for human-robot interaction: An intelligent
+search algorithmic perspective, vol. 129. Springer-Verlag, Cham, pp. 3–19.
+You, S., Robert, L., 2019. Trusting Robots in Teams: Examining the Impacts of Trusting
+Robots on Team Performance and Satisfaction. Forthcoming. In: Proceedings of the
+52nd Hawaii International Conference on System Sciences, pp. 1–10. https://doi.
+org/10.24251/HICSS.2019.031.
+You, S., Robert, L.P, 2018. Human-Robot Similarity and Willingness to Work with a
+Robotic Co-worker. In: Proceedings of the 2018 ACM/IEEE International Conference
+on Human-Robot Interaction - HRI ’18, Chicago, IL, USA. 05-08 March, 2018. ACM
+Press, New York, NY, USA, pp. 251–260.
+Zawieska, K., Duffy, B.R., Spronska, A., 2012. Understanding anthropomorphisation in
+social robotics. Pomiary automatyka Robotyka (11), 78–82.
+Ziegler, R., 2010. Ambiguität und Ambivalenz in der Psychologie: Begriffsverständnis
+und Begriffsverwendung. Zeitschrift für Literaturwissenschaft und Linguistik 40
+(158), 125–171.
+Złotowski, J., Proudfoot, D., Yogeeswaran, K., Bartneck, C., 2015. Anthropomorphism:
+Opportunities and Challenges in Human–Robot Interaction. Int. J. Soc. Robot. (7),
+347–360.
+Złotowski, J., Strasser, E., Bartneck, C., 2014. Dimensions of anthropomorphism. In: HRI
+2014: Proceedings of the 2014 ACM/IEEE International Conference on HumanRobot Interaction, Bielefeld, Germany. 03-06 March, 2014, New York, NY. ACM,
+pp. 66–73.
+Złotowski, J., Sumioka, H., Eyssel, F., Nishio, S., Bartneck, C., Ishiguro, H., 2018. Model
+of Dual Anthropomorphism: The Relationship Between the Media Equation Effect
+and Implicit Anthropomorphism. Int. J. Soc. Robot. 34 (4), 1–14. https://doi.org/
+10.1007/s12369-018-0476-5.
+Złotowski, J., Yogeeswaran, K., Bartneck, C., 2017. Can we control it?: Autonomous
+robots threaten human identity, uniqueness, safety, and resources. Int. J. Hum.
+Comput. Stud. 100, 48–54. https://doi.org/10.1016/j.ijhcs.2016.12.008.
+
+Weiss, A., Huber, A., 2016. User Experience of a Smart Factory Robot: Assembly Line
+Workers Demand Adaptive Robots. In: 5th International Symposium on New
+Frontiers in Human-Robot Interaction 2016.
+Weiss, A., Huber, A., Minichberger, J., Ikeda, M., 2016. First Application of Robot
+Teaching in an Existing Industry 4.0 Environment: Does It Really Work? Societies 6
+(3), 1–21. https://doi.org/10.3390/soc6030020.
+Wen, J., Stewart, A., Billinghurst, M., Dey, A., Tossell, C.C., Finomore, V.S, 2018. He who
+hesitates is lost (…in thoughts over a robot). In: Proceedings of the Technology,
+Mind, and Society on ZZZ - TechMindSociety ’18. the Technology, Mind, and
+Society, Washington, DC, USA. 4/5/2018 - 4/7/2018. ACM Press, New York, New
+York, USA, pp. 1–6.
+Wiese, E., Metta, G., Wykowska, A., 2017. Robots As Intentional Agents: Using
+Neuroscientific Methods to Make Robots Appear More Social. Frontiers in
+psychology 8 (1663). https://doi.org/10.3389/fpsyg.2017.01663.
+Wiese, E., Weis, P.P, 2020. It matters to me if you are human - Examining categorical
+perception in human and nonhuman agents. Int. J. Hum. Comput. Stud. 133, 1–12.
+https://doi.org/10.1016/j.ijhcs.2019.08.002.
+Wullenkord, R., Eyssel, F., 2014. Improving attitudes towards social robots using
+imagined contact. In: RO-MAN: the 23rd IEEE International Symposium on Robot
+and Human Interactive Communication, 2014, pp. 489–494.
+Wullenkord, R., Eyssel, F., 2019. Imagine how to behave: the influence of imagined
+contact on human-robot interaction. Philosophical transactions of the Royal Society
+of London. Series B, Biological sciences 374 (1771), 1–9. https://doi.org/10.1098/
+rstb.2018.0038.
+Wullenkord, R., Fraune, M.R., Eyssel, F., Šabanović, S., 2016. Getting in Touch: How
+Imagined, Actual, and Physical Contact Affect Evaluations of Robots. In: 2016 25th
+IEEE International Symposium on Robot and Human Interactive Communication
+(RO-MAN), August 26-31, 2016. Columbia University, NY, USA. IEEE Press,
+pp. 980–985.
+Wurhofer, D., Meneweger, T., Fuchsberger, V., Tscheligi, M., 2015. Deploying Robots in
+a Production Environment: A Study on Temporal Transitions of Workers’
+Experiences. In: Abascal González, J., Barbosa, S., Fetter, M., Gross, T., Palanque, P.,
+
+17
+
+
