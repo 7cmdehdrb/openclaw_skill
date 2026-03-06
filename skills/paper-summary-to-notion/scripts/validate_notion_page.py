@@ -28,6 +28,7 @@ def main():
     has_image = False
     has_file = False
     bad_directives = []
+    bad_fingerprint = []
 
     blocks = r.json().get("results", [])
     img_heading_idx = None
@@ -43,6 +44,9 @@ def main():
 
         if "(아래에" in text and "첨부" in text:
             bad_directives.append({"block": b.get("id"), "text": text[:200]})
+
+        if "source_fingerprint:" in text and i < 10:
+            bad_fingerprint.append({"block": b.get("id"), "reason": "fingerprint exposed too early", "text": text[:200]})
 
         if t == "image":
             has_image = True
@@ -75,7 +79,7 @@ def main():
         if not any(idx > pdf_heading_idx for idx in file_indices):
             bad_placement.append("file is not under '원본 PDF' section")
 
-    ok = (len(bad) == 0) and has_image and has_file and (len(bad_directives) == 0) and (len(bad_placement) == 0)
+    ok = (len(bad) == 0) and has_image and has_file and (len(bad_directives) == 0) and (len(bad_placement) == 0) and (len(bad_fingerprint) == 0)
     print(json.dumps({
         "ok": ok,
         "badHeadings": bad,
@@ -83,6 +87,7 @@ def main():
         "hasFile": has_file,
         "badDirectives": bad_directives,
         "badPlacement": bad_placement,
+        "badFingerprint": bad_fingerprint,
     }, ensure_ascii=False))
 
 
