@@ -12,7 +12,10 @@ Use a local-first pipeline. Do NOT depend on browser automation unless the user 
 1. Read PDF metadata/title (e.g., `pdfinfo`).
 2. Extract text from key sections (abstract/introduction/method/results/conclusion) with local tools (e.g., `pdftotext`).
 3. Fetch paper metadata (`scripts/paper_metadata.py --title "..."`) and prepare a new section:
-   - `0) 논문 정보` (citation APA/BibTeX in quote blocks, 출간 연도, 출간 저널, citation 수)
+   - `0) 논문 정보` (출간 연도, 출간 저널, citation 수)
+   - Citation formatting rule:
+     - `APA` / `BibTeX` 라벨은 quote가 아닌 `###` 또는 일반 **bold** 텍스트로 표기
+     - 실제 citation 본문만 quote 블록으로 기록
    - If metadata confidence is low, verify via browser flow on Google Scholar.
 4. Write structured markdown summary using schema from `references/prompt.txt`:
    - 문제 상황

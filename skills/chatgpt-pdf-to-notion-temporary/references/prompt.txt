@@ -4,8 +4,8 @@
 - 출간 연도
 - 출간 저널
 - citation 수
-- > APA citation
-- > BibTeX
+- `### APA` (또는 **APA**) 다음 줄에 citation 본문을 인용(quote)으로 기록
+- `### BibTeX` (또는 **BibTeX**) 다음 줄에 BibTeX 본문을 인용(quote)으로 기록
 
 # 1) 문제 상황
 - 연구가 해결하려는 핵심 문제

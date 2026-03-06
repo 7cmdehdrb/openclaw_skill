@@ -2,6 +2,7 @@
 
 - [ ] PDF title/metadata 확인 (`pdfinfo` 등)
 - [ ] 논문 메타데이터 조회 (`scripts/paper_metadata.py`) 및 `0) 논문 정보` 섹션 작성
+- [ ] citation 형식 확인: `APA`/`BibTeX` 라벨은 heading/bold, citation 본문만 quote
 - [ ] confidence 낮으면 Google Scholar 수동 검증(제목+저자+저널 기준)
 - [ ] 본문 텍스트 추출 완료 (`pdftotext` 등)
 - [ ] 핵심 섹션(문제/방법/결과) 근거 문장 확보
