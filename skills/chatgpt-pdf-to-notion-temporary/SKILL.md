@@ -1,11 +1,17 @@
 ---
 name: chatgpt-pdf-to-notion-temporary
-description: Use when the user asks to summarize/analyze attached PDFs and save to Notion with stable formatting. ChatGPT/browser relay is optional; default to low-cost local summary pipeline (PDF text extraction + structured summary + Notion upload). Trigger for requests like: "논문 PDF 정리해서 노션에", "문제상황/방법/결과 요약", "GPT 없이 안정적으로 노션 반영".
+description: Use only when the user asks to summarize/analyze attached **research paper PDFs** and save to Notion with stable formatting. Do not auto-apply to arbitrary PDFs. ChatGPT/browser relay is optional; default to low-cost local summary pipeline (PDF text extraction + structured summary + Notion upload). Trigger for requests like: "논문 PDF 정리해서 노션에", "문제상황/방법/결과 요약", "GPT 없이 안정적으로 노션 반영".
 ---
 
 # PDF Summary → Notion (Local-First)
 
-Use a local-first pipeline. Do NOT depend on browser automation unless the user explicitly demands ChatGPT web flow.
+Use a local-first pipeline for **paper PDFs**. Do NOT depend on browser automation unless the user explicitly demands ChatGPT web flow.
+
+## Scope Guard
+
+- This skill is for **논문 PDF** only.
+- Do not run this skill on non-paper documents (invoices, manuals, random reports, forms, scanned receipts, etc.) unless the user explicitly asks to treat them as paper-style summaries.
+- Even for paper PDFs, execute only when the user gives a direct run instruction.
 
 ## Fixed Workflow
 
