@@ -69,6 +69,9 @@ Rules:
 - Do not use low-value helper labels (e.g., `(의제별 상세)`).
 - Move all unresolved/open-check items into `지시 사항 / 액션 아이템`.
 - Keep evidence-based wording; avoid speculative claims.
+- 중요: 마크다운 기호를 텍스트로 남기지 말 것 (`-`, `|`, `##` 등).
+- 중첩 항목은 반드시 실제 Notion 자식 불릿(children)으로 생성.
+- 액션 아이템은 마크다운 테이블(`|`) 금지. (Notion 불릿/자식불릿으로 구조화)
 
 ## 5) Publish to Notion
 
